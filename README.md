@@ -14,26 +14,11 @@
   <b>A production-grade, high-throughput URL infrastructure designed for ultra-low latency edge redirects, GDPR-compliant privacy analytics, cryptographic security barriers, dynamic vector QR generation, and autonomous AI voice telemetry.</b>
 </p>
 
-<br/>
-
-<img src="./docs/preview.png" alt="LinkPulse Prototype UI & 4K Cosmic Canvas" width="820" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
-
-<br/>
-<br/>
-
 [Key Features](#-core-capabilities) • [System Architecture](#-system-architecture) • [Audio & AI Engine](#-multimedia--ai-audio-engine) • [API Reference](#-api-specification) • [Deployment](#-quickstart--deployment) • [Credentials](#-demo-credentials)
 
 ---
 
 </div>
-
-## 🖼 Platform Prototype & Walkthrough
-
-<div align="center">
-  <img src="./docs/architecture-ui.png" alt="LinkPulse Platform Interface & Architecture Flow" width="820" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
-</div>
-
----
 
 ## 📌 Executive Summary
 
