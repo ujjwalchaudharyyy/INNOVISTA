@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+export const API_BASE = import.meta.env.VITE_API_URL || "";
 
 export const api = axios.create({
-  baseURL: `${API_BASE}/api`,
+  baseURL: API_BASE ? `${API_BASE}/api` : "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,7 +21,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      if (!error.config.url.includes("/auth/login") && !error.config.url.includes("/auth/register")) {
+      if (!error.config.url?.includes("/auth/login") && !error.config.url?.includes("/auth/register")) {
         localStorage.removeItem("linkpulse_token");
         localStorage.removeItem("linkpulse_user");
         window.dispatchEvent(new Event("auth_logout"));

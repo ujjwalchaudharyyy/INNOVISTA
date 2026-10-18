@@ -173,9 +173,12 @@ export const LoginPage: React.FC = () => {
       sounds.stopBgMusic();
       login(res.data.token, res.data.user);
     } catch (err: any) {
+      console.error("Login attempt error:", err);
       sounds.playError();
-      sounds.speak("Authentication failed. Please check your credentials.");
-      setError(err.response?.data?.error || "Invalid email or password");
+      const serverError = err.response?.data?.error;
+      const errorMsg = serverError || (err.message === "Network Error" ? "Backend server unreachable. Make sure backend is running on port 5000." : err.message || "Invalid email or password");
+      sounds.speak(serverError ? "Authentication failed." : "Unable to reach server. Please retry.");
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
