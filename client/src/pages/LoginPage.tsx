@@ -18,6 +18,7 @@ export const LoginPage: React.FC = () => {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const isMutedRef = useRef(false);
 
   // Link khulte hi:
   // 1. Song immediately starts playing on loop
@@ -27,36 +28,45 @@ export const LoginPage: React.FC = () => {
     let hasTriggeredSpeech = false;
 
     const startIntroAfterDelay = () => {
-      if (hasTriggeredSpeech) return;
+      if (hasTriggeredSpeech || isMutedRef.current) return;
       hasTriggeredSpeech = true;
 
       speechTimer = setTimeout(() => {
+        if (isMutedRef.current) return;
         const welcomeText =
           "Welcome to Link Pulse. I am your autonomous A.I. link infrastructure. " +
           "I power ultra-fast edge redirects, automated fraud defense, and deep real-time analytics. " +
           "Let's get started.";
 
         // Duck song slightly so AI intro voice is crystal clear
-        if (audioRef.current) audioRef.current.volume = 0.16;
+        if (audioRef.current && !isMutedRef.current) audioRef.current.volume = 0.16;
 
         sounds.speak(welcomeText, () => {
-          if (audioRef.current) audioRef.current.volume = 0.38;
+          if (audioRef.current && !isMutedRef.current) audioRef.current.volume = 0.38;
         });
       }, 3000); // 3 seconds after song starts
     };
 
+    const removeGestureListeners = () => {
+      window.removeEventListener("click", onUserGesture);
+      window.removeEventListener("pointerdown", onUserGesture);
+      window.removeEventListener("keydown", onUserGesture);
+      window.removeEventListener("touchstart", onUserGesture);
+    };
+
     const tryStartAudio = () => {
-      if (!audioRef.current) return;
+      if (isMutedRef.current || !audioRef.current) return;
       audioRef.current.volume = 0.38;
       
       const playNow = () => {
-        if (!audioRef.current) return;
+        if (isMutedRef.current || !audioRef.current) return;
         const p = audioRef.current.play();
         if (p !== undefined) {
           p.then(() => {
             setIsAudioMuted(false);
             setAutoplayBlocked(false);
             startIntroAfterDelay();
+            removeGestureListeners();
           }).catch(() => {
             // Autoplay blocked: wait for gesture
             setAutoplayBlocked(true);
@@ -77,6 +87,7 @@ export const LoginPage: React.FC = () => {
 
     // 2. High-precision 40ms interval: sound ke last ke 3 second trim karke loop lagao
     const checkAudioLoop = () => {
+      if (isMutedRef.current) return;
       if (audioRef.current && !audioRef.current.paused) {
         const d = audioRef.current.duration;
         const c = audioRef.current.currentTime;
@@ -90,6 +101,7 @@ export const LoginPage: React.FC = () => {
 
     // 3. Agar browser ne bina click ke block kiya, pehle click/tap par turant chalu ho
     const onUserGesture = () => {
+      if (isMutedRef.current) return;
       tryStartAudio();
       setAutoplayBlocked(false);
     };
@@ -101,10 +113,7 @@ export const LoginPage: React.FC = () => {
     return () => {
       if (speechTimer) clearTimeout(speechTimer);
       clearInterval(loopInterval);
-      window.removeEventListener("click", onUserGesture);
-      window.removeEventListener("pointerdown", onUserGesture);
-      window.removeEventListener("keydown", onUserGesture);
-      window.removeEventListener("touchstart", onUserGesture);
+      removeGestureListeners();
       sounds.stopSpeech();
       if (audioRef.current) {
         audioRef.current.pause();
@@ -113,14 +122,23 @@ export const LoginPage: React.FC = () => {
     };
   }, []);
 
-  const toggleSound = () => {
+  const toggleSound = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     if (!audioRef.current) return;
-    if (audioRef.current.paused || isAudioMuted) {
-      audioRef.current.play().catch(() => {});
+
+    if (isAudioMuted || audioRef.current.paused) {
+      isMutedRef.current = false;
       setIsAudioMuted(false);
+      audioRef.current.volume = 0.38;
+      audioRef.current.play().catch(() => {});
     } else {
-      audioRef.current.pause();
+      isMutedRef.current = true;
       setIsAudioMuted(true);
+      audioRef.current.pause();
+      sounds.stopSpeech();
     }
   };
 
@@ -191,7 +209,8 @@ export const LoginPage: React.FC = () => {
         autoPlay
         preload="auto"
         onTimeUpdate={() => {
-          if (audioRef.current) {
+          if (isMutedRef.current) return;
+          if (audioRef.current && !audioRef.current.paused) {
             const d = audioRef.current.duration;
             const c = audioRef.current.currentTime;
             if (d && d > 4 && c >= d - 3) {
