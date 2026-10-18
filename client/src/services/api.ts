@@ -1,7 +1,18 @@
-import axios from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { handleMockRequest } from "./mockBackend";
 
 export const API_BASE = import.meta.env.VITE_API_URL || "";
+
+// Detect if we're on a deployed site (not localhost/dev server)
+const isLocalDev =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname.startsWith("192.168.") ||
+    window.location.hostname.startsWith("10."));
+
+// If deployed (no local dev server) AND no explicit backend URL configured → always use mock
+const USE_MOCK = !isLocalDev && !API_BASE;
 
 export const api = axios.create({
   baseURL: API_BASE ? `${API_BASE}/api` : "/api",
@@ -10,76 +21,87 @@ export const api = axios.create({
   },
 });
 
-// Track whether real backend is available
-let backendAlive: boolean | null = null;
-
-async function checkBackend(): Promise<boolean> {
-  if (backendAlive !== null) return backendAlive;
-  try {
-    const baseUrl = API_BASE || window.location.origin;
-    const res = await fetch(`${baseUrl}/api/auth/me`, {
-      method: "GET",
-      signal: AbortSignal.timeout(2500),
-    });
-    // 401 means server is alive (just unauthenticated)
-    backendAlive = res.status !== 404 && res.status !== 405;
-  } catch {
-    backendAlive = false;
-  }
-  return backendAlive;
-}
-
 // Auth token interceptor
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("linkpulse_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // On deployed sites: intercept request and return mock data instantly
+  if (USE_MOCK) {
+    const mockResult = handleMockRequest({
+      url: config.url,
+      method: config.method,
+      data: config.data,
+      params: config.params,
+    });
+
+    if (mockResult) {
+      config.adapter = (): Promise<AxiosResponse> =>
+        Promise.resolve({
+          data: mockResult.data,
+          status: mockResult.status,
+          statusText: "OK",
+          headers: {},
+          config: config as InternalAxiosRequestConfig,
+        });
+    }
+  }
+
   return config;
 });
 
-// Response interceptor: on failure, try mock backend
+// Response interceptor: handle errors + fallback to mock for local dev failures
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  (response) => {
+    // Even on local dev, if we get HTML back instead of JSON, fall back to mock
+    if (
+      !USE_MOCK &&
+      typeof response.data === "string" &&
+      response.data.includes("<!DOCTYPE") 
+    ) {
+      const mockResult = handleMockRequest({
+        url: response.config.url,
+        method: response.config.method,
+        data: response.config.data,
+        params: response.config.params,
+      });
+      if (mockResult) {
+        return { ...response, data: mockResult.data, status: mockResult.status };
+      }
+    }
+    return response;
+  },
+  (error) => {
     const config = error.config;
 
-    // If this was already a mock retry, don't loop
-    if (config?._mockRetried) {
-      if (error.response?.status === 401) {
-        if (!config.url?.includes("/auth/login") && !config.url?.includes("/auth/register")) {
-          localStorage.removeItem("linkpulse_token");
-          localStorage.removeItem("linkpulse_user");
-          window.dispatchEvent(new Event("auth_logout"));
+    // On local dev, if backend is down, fall back to mock
+    if (!USE_MOCK && config && !config._mockRetried) {
+      const status = error.response?.status;
+      const isNetworkError = !error.response;
+      const shouldMock = isNetworkError || status === 405 || status === 404;
+
+      if (shouldMock) {
+        config._mockRetried = true;
+        const mockResult = handleMockRequest({
+          url: config.url,
+          method: config.method,
+          data: config.data,
+          params: config.params,
+        });
+        if (mockResult) {
+          return { ...mockResult, headers: {}, config };
         }
       }
-      return Promise.reject(error);
     }
 
-    // Network error, 405, or 404 on API routes -> fallback to mock
-    const status = error.response?.status;
-    const isNetworkError = !error.response && error.message?.includes("Network Error");
-    const shouldMock = isNetworkError || status === 405 || status === 404;
-
-    if (shouldMock && config) {
-      config._mockRetried = true;
-      backendAlive = false; // Mark backend as down
-
-      const mockResult = handleMockRequest({
-        url: config.url,
-        method: config.method,
-        data: config.data,
-        params: config.params,
-      });
-
-      if (mockResult) {
-        return { ...mockResult, headers: {}, config };
-      }
-    }
-
-    // Normal 401 handling
-    if (status === 401) {
-      if (!config?.url?.includes("/auth/login") && !config?.url?.includes("/auth/register")) {
+    // 401 handling — logout if not on auth endpoints
+    if (error.response?.status === 401) {
+      if (
+        !config?.url?.includes("/auth/login") &&
+        !config?.url?.includes("/auth/register")
+      ) {
         localStorage.removeItem("linkpulse_token");
         localStorage.removeItem("linkpulse_user");
         window.dispatchEvent(new Event("auth_logout"));
@@ -89,31 +111,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// Pre-check backend on load; if down, install request interceptor for instant mock
-checkBackend().then((alive) => {
-  if (!alive) {
-    // Backend is down — intercept ALL requests before they go out
-    api.interceptors.request.use((config) => {
-      const mockResult = handleMockRequest({
-        url: config.url,
-        method: config.method,
-        data: config.data,
-        params: config.params,
-      });
-
-      if (mockResult) {
-        // Return a custom adapter that resolves immediately with mock data
-        config.adapter = () =>
-          Promise.resolve({
-            data: mockResult.data,
-            status: mockResult.status,
-            statusText: "OK",
-            headers: {},
-            config,
-          });
-      }
-      return config;
-    });
-  }
-});
