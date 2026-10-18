@@ -1,0 +1,133 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  name         String
+  role         String      @default("USER") // USER or ADMIN
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  links        Link[]
+  campaigns    Campaign[]
+  auditLogs    AuditLog[]
+}
+
+model Link {
+  id           String       @id @default(cuid())
+  title        String
+  originalUrl  String
+  shortCode    String       @unique
+  customAlias  String?      @unique
+  passwordHash String?
+  clickLimit   Int?
+  clickCount   Int          @default(0)
+  expiresAt    DateTime?
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  campaignId   String?
+  campaign     Campaign?    @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  tags         LinkTag[]
+  clicks       ClickEvent[]
+  abuseReports AbuseReport[]
+
+  @@index([shortCode])
+  @@index([customAlias])
+  @@index([userId])
+  @@index([campaignId])
+}
+
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#6366F1")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links       Link[]
+
+  @@index([userId])
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  links     LinkTag[]
+}
+
+model LinkTag {
+  linkId    String
+  tagId     String
+  link      Link      @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([linkId, tagId])
+}
+
+model ClickEvent {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  ipHash      String
+  userAgent   String?
+  browser     String?
+  os          String?
+  device      String?
+  country     String?
+  city        String?
+  referrer    String?
+  isBot       Boolean  @default(false)
+  isQrCode    Boolean  @default(false)
+
+  linkId      String
+  link        Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@index([linkId])
+  @@index([timestamp])
+}
+
+model AbuseReport {
+  id         String   @id @default(cuid())
+  linkId     String
+  link       Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  reason     String
+  status     String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  reportedAt DateTime @default(now())
+
+  @@index([linkId])
+}
+
+model BlockedDomain {
+  id        String   @id @default(cuid())
+  domain    String   @unique
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  targetType String
+  targetId   String?
+  details    String?
+  timestamp  DateTime @default(now())
+
+  @@index([timestamp])
+}
