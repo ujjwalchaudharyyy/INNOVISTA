@@ -27,15 +27,22 @@ export const QrStudioPage: React.FC = () => {
     }).finally(() => setLoading(false));
   }, []);
 
-  // Build a clean public-facing short URL
-  // In mock/dev mode, API_BASE is empty — use a placeholder domain so QR generates properly
+  // Build QR target URL smartly:
+  // - Real backend deployed (API_BASE set) → use short URL for click tracking
+  // - Mock/demo mode (no backend) → use originalUrl directly so QR scan actually WORKS
   const getShortUrl = () => {
     if (!selectedLink) return "";
-    const base = API_BASE && API_BASE !== "" ? API_BASE : "https://lnkpls.io";
-    return `${base}/r/${selectedLink.shortCode}?src=qr`;
+    if (API_BASE && API_BASE !== "") {
+      // Real backend — use short URL with tracking
+      return `${API_BASE}/r/${selectedLink.shortCode}?src=qr`;
+    }
+    // Mock mode — QR points to the actual destination so it's scannable
+    return selectedLink.originalUrl || "";
   };
 
   const shortUrl = getShortUrl();
+  const isMockMode = !API_BASE || API_BASE === "";
+
 
   // Dynamic resilient QR URL
   const cleanHexColor = color.replace("#", "");
@@ -160,12 +167,24 @@ export const QrStudioPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Short URL preview */}
+          {/* QR Target URL preview + mode indicator */}
           {shortUrl && (
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-              <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">QR Target URL</p>
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">QR Target URL</p>
+                {isMockMode ? (
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30">
+                    📱 Demo Mode — Direct Link
+                  </span>
+                ) : (
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30">
+                    ⚡ Live — Short URL Tracking
+                  </span>
+                )}
+              </div>
               <p className="font-mono text-xs text-indigo-600 dark:text-cyan-400 break-all">{shortUrl}</p>
             </div>
+
           )}
 
           <div className="pt-1 flex flex-col sm:flex-row gap-2">
