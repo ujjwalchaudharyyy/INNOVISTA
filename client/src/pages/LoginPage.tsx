@@ -143,24 +143,7 @@ export const LoginPage: React.FC = () => {
         preload="auto"
       />
 
-      {/* SVG 8K RESOLUTION CLARITY & UNSHARP MASK FILTER ENGINE */}
-      <svg className="fixed w-0 h-0 pointer-events-none" aria-hidden="true">
-        <defs>
-          <filter id="ultra-8k-enhancer" x="0%" y="0%" width="100%" height="100%">
-            {/* Real-time high-frequency unsharp mask convolution kernel */}
-            <feConvolveMatrix
-              order="3 3"
-              kernelMatrix="
-                 0  -0.35   0
-               -0.35  2.4 -0.35
-                 0  -0.35   0"
-              preserveAlpha="true"
-            />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* 8K ULTRA-HD MASTER BACKGROUND VIDEO */}
+      {/* 4K ULTRA-HD BACKGROUND VIDEO */}
       <video
         ref={videoRef}
         src="/login-bg.mp4"
@@ -172,10 +155,7 @@ export const LoginPage: React.FC = () => {
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         style={{
           transform: "translate3d(0, 0, 0)",
-          WebkitBackfaceVisibility: "hidden",
-          backfaceVisibility: "hidden",
-          imageRendering: "-webkit-optimize-contrast",
-          filter: "url(#ultra-8k-enhancer) contrast(1.18) brightness(1.06) saturate(1.22)",
+          filter: "contrast(1.1) brightness(1.02) saturate(1.15)",
         }}
       />
 
@@ -187,13 +167,13 @@ export const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* TOP RIGHT CONTROLS: 8K HDR BADGE & AUDIO */}
+      {/* TOP RIGHT CONTROLS: 4K BADGE & AUDIO */}
       <div className="fixed top-5 right-5 z-30 flex items-center gap-2">
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 text-xs font-semibold shadow-lg">
           <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-black border border-cyan-500/30">
-            8K
+            4K
           </span>
-          <span className="text-[11px] text-slate-300 font-medium">Ultra-HD HDR</span>
+          <span className="text-[11px] text-slate-300 font-medium">Ultra-HD</span>
         </div>
 
         <button
