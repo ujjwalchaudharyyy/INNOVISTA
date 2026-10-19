@@ -67,18 +67,18 @@ export const AdminShieldPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
               <ShieldAlert className="h-6 w-6 text-rose-500" />
               Admin Trust & Security Shield
             </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20">
               Active Defense
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Platform governance, phishing prevention, domain blacklists, and audit logs
           </p>
         </div>
@@ -86,47 +86,47 @@ export const AdminShieldPage: React.FC = () => {
 
       {/* Metrics Spark Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-[11px] uppercase font-bold tracking-wider">Registered Users</span>
-            <Users className="h-4 w-4 text-indigo-400" />
+            <Users className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-white">{totalUsers}</p>
+          <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">{totalUsers}</p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-[11px] uppercase font-bold tracking-wider">Platform Links</span>
-            <ShieldCheck className="h-4 w-4 text-cyan-400" />
+            <ShieldCheck className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-white">{totalLinks}</p>
+          <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">{totalLinks}</p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-[11px] uppercase font-bold tracking-wider">Total Stream Clicks</span>
-            <Activity className="h-4 w-4 text-emerald-400" />
+            <Activity className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-white">{totalClicks.toLocaleString()}</p>
+          <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">{totalClicks.toLocaleString()}</p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
             <span className="text-[11px] uppercase font-bold tracking-wider">Blocked Domains</span>
             <AlertTriangle className="h-4 w-4 text-rose-500" />
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-rose-400">{domains.length}</p>
+          <p className="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400">{domains.length}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Blocklist Manager */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-4">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <Globe className="h-4 w-4 text-rose-400" />
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Globe className="h-4 w-4 text-rose-500 dark:text-rose-400" />
             Security Domain Blocklist
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Prevent malicious phishing or malware domains from being shortened or redirected platform-wide.
           </p>
 
@@ -138,14 +138,14 @@ export const AdminShieldPage: React.FC = () => {
                 value={newDomain}
                 onChange={(e) => setNewDomain(e.target.value)}
                 placeholder="malicious-site.com"
-                className="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
               />
               <input
                 type="text"
                 value={domainReason}
                 onChange={(e) => setDomainReason(e.target.value)}
                 placeholder="Reason (phishing, drainer...)"
-                className="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
+                className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
               />
             </div>
             <button
@@ -159,20 +159,20 @@ export const AdminShieldPage: React.FC = () => {
 
           <div className="space-y-2 mt-4 max-h-64 overflow-y-auto">
             {domains.length === 0 ? (
-              <p className="text-xs text-slate-500 py-4 text-center">No domains currently in blocklist</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 py-4 text-center">No domains currently in blocklist</p>
             ) : (
               domains.map((d) => (
                 <div
                   key={d.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs"
+                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs"
                 >
                   <div className="overflow-hidden">
-                    <p className="font-bold text-rose-300 font-mono truncate">{d.domain}</p>
+                    <p className="font-bold text-rose-600 dark:text-rose-300 font-mono truncate">{d.domain}</p>
                     <p className="text-[11px] text-slate-500 truncate">{d.reason || "Manual restriction"}</p>
                   </div>
                   <button
                     onClick={() => handleUnblockDomain(d.id)}
-                    className="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition cursor-pointer shrink-0 ml-2"
+                    className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer shrink-0 ml-2"
                     title="Unblock domain"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -184,9 +184,9 @@ export const AdminShieldPage: React.FC = () => {
         </div>
 
         {/* Audit Logs */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-4">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <ShieldAlert className="h-4 w-4 text-indigo-400" />
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
             Administrative Audit Trail
           </h2>
           <div className="space-y-2.5 max-h-96 overflow-y-auto text-xs">
@@ -197,16 +197,16 @@ export const AdminShieldPage: React.FC = () => {
             ]).map((log: any) => (
               <div
                 key={log.id}
-                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-start justify-between gap-3"
+                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-start justify-between gap-3"
               >
                 <div>
-                  <span className="font-mono text-[10px] font-bold text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                  <span className="font-mono text-[10px] font-bold text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20">
                     {log.action}
                   </span>
-                  <p className="text-xs text-slate-200 mt-1 font-medium">{log.details}</p>
-                  <p className="text-[10px] text-slate-500 mt-0.5">By {log.actor?.name || "System"}</p>
+                  <p className="text-xs text-slate-800 dark:text-slate-200 mt-1 font-medium">{log.details}</p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">By {log.actor?.name || "System"}</p>
                 </div>
-                <span className="text-[10px] text-slate-500 whitespace-nowrap">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 whitespace-nowrap">
                   {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>

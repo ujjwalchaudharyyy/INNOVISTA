@@ -159,7 +159,7 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                 range === r
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500"
-                  : "bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800"
+                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800"
               }`}
             >
               Last {r.toUpperCase()}
@@ -178,67 +178,67 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
       {/* ── KPI Spark Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Clicks */}
-        <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md relative overflow-hidden group hover:border-indigo-500/50 transition">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-indigo-500/50 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Stream Clicks</span>
-            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-sm">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Stream Clicks</span>
+            <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20 shadow-sm">
               <TrendingUp className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-3xl font-black text-white mt-3">
+          <p className="text-3xl font-black text-slate-900 dark:text-white mt-3">
             {data?.summary?.totalClicks?.toLocaleString() ?? "14,840"}
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold mt-2">
+          <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-2">
             <ArrowUpRight className="h-3.5 w-3.5" />
             <span>+18.4% velocity vs last week</span>
           </div>
         </div>
 
         {/* Card 2: Unique Visitors */}
-        <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md relative overflow-hidden group hover:border-cyan-500/50 transition">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-cyan-500/50 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Unique Visitors</span>
-            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-sm">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Unique Visitors</span>
+            <div className="p-2 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/20 shadow-sm">
               <Users className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-3xl font-black text-white mt-3">
+          <p className="text-3xl font-black text-slate-900 dark:text-white mt-3">
             {data?.summary?.uniqueVisitors?.toLocaleString() ?? "10,980"}
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-cyan-400 font-semibold mt-2">
+          <div className="flex items-center gap-1.5 text-xs text-cyan-600 dark:text-cyan-400 font-semibold mt-2">
             <ShieldCheck className="h-3.5 w-3.5" />
             <span>Zero-cookie SHA-256 IP hash</span>
           </div>
         </div>
 
         {/* Card 3: Active Links */}
-        <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md relative overflow-hidden group hover:border-purple-500/50 transition">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-purple-500/50 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Routes</span>
-            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-sm">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Active Routes</span>
+            <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20 shadow-sm">
               <Link2 className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-3xl font-black text-white mt-3">
+          <p className="text-3xl font-black text-slate-900 dark:text-white mt-3">
             {data?.summary?.activeLinks ?? "6"}
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-2">
             <span>Out of {data?.summary?.totalLinks ?? 6} published links</span>
           </div>
         </div>
 
         {/* Card 4: QR Code Scans */}
-        <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md relative overflow-hidden group hover:border-emerald-500/50 transition">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-emerald-500/50 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">QR Mobile Scans</span>
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">QR Mobile Scans</span>
+            <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
               <QrCode className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-3xl font-black text-white mt-3">
+          <p className="text-3xl font-black text-slate-900 dark:text-white mt-3">
             {data?.summary?.qrClicks?.toLocaleString() ?? "2,374"}
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold mt-2">
+          <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-2">
             <Smartphone className="h-3.5 w-3.5" />
             <span>16.2% mobile camera attribution</span>
           </div>
@@ -324,20 +324,20 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
       {/* ── Main Timeseries Chart & Live Stream Ticker ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Main Chart (8 cols) */}
-        <div className="lg:col-span-8 p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md">
+        <div className="lg:col-span-8 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
             <div>
-              <h2 className="text-base font-bold text-white">Traffic Dynamics & Velocity</h2>
-              <p className="text-xs text-slate-400">Total visits vs unique visitor volume over time</p>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Traffic Dynamics & Velocity</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Total visits vs unique visitor volume over time</p>
             </div>
-            <div className="flex items-center gap-4 text-xs">
+            <div className="flex items-center gap-4 text-xs font-semibold">
               <div className="flex items-center gap-1.5">
                 <div className="h-2.5 w-2.5 rounded-full bg-indigo-500" />
-                <span className="text-slate-300">Total Visits</span>
+                <span className="text-slate-700 dark:text-slate-300">Total Visits</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-full bg-cyan-400" />
-                <span className="text-slate-300">Uniques</span>
+                <div className="h-2.5 w-2.5 rounded-full bg-cyan-500" />
+                <span className="text-slate-700 dark:text-slate-300">Uniques</span>
               </div>
             </div>
           </div>
@@ -356,15 +356,16 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
                       <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" stroke="#475569" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#475569" fontSize={11} tickLine={false} />
+                  <XAxis dataKey="date" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#0B0F19",
-                      borderColor: "#1E293B",
+                      backgroundColor: "#0F172A",
+                      borderColor: "#334155",
                       borderRadius: "12px",
                       color: "#F8FAFC",
                       fontSize: "12px",
+                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)",
                     }}
                   />
                   <Area type="monotone" dataKey="clicks" stroke="#6366F1" strokeWidth={2.5} fillOpacity={1} fill="url(#colorClicks)" />
@@ -376,14 +377,14 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
         </div>
 
         {/* Right: Real-Time Live Click Stream Ticker (4 cols) */}
-        <div className="lg:col-span-4 p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md flex flex-col justify-between">
+        <div className="lg:col-span-4 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Radio className="h-4 w-4 text-rose-500 animate-pulse" />
-                <h3 className="text-sm font-bold text-white">Live Click Stream</h3>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Live Click Stream</h3>
               </div>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-500/20">
                 PULSING
               </span>
             </div>
@@ -392,26 +393,26 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
               {liveStream.map((event) => (
                 <div
                   key={event.id}
-                  className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition animate-in fade-in duration-300"
+                  className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5">
                       <span>{event.country}</span>
-                      <span className="font-semibold text-slate-200">{event.city}</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{event.city}</span>
                     </div>
-                    <span className="font-mono text-[10px] text-cyan-400">{event.latency}</span>
+                    <span className="font-mono text-[10px] font-bold text-cyan-600 dark:text-cyan-400">{event.latency}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1">
-                    <span className="font-mono text-indigo-300 truncate max-w-[140px]">{event.link}</span>
-                    <span className="text-[10px] text-slate-500">{event.time}</span>
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                    <span className="font-mono font-medium text-indigo-600 dark:text-indigo-300 truncate max-w-[140px]">{event.link}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500">{event.time}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="pt-3 mt-3 border-t border-slate-800/80 text-center">
-            <p className="text-[11px] text-slate-500">
+          <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 text-center">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Live Edge telemetry streaming from 32 global PoPs
             </p>
           </div>
@@ -421,10 +422,10 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
       {/* ── Device Breakdown & Top Performing Routes ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Device breakdown */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md flex flex-col justify-between">
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div>
-            <h2 className="text-base font-bold text-white">Device Breakdown</h2>
-            <p className="text-xs text-slate-400 mb-3">Traffic category by client environment</p>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Device Breakdown</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Traffic category by client environment</p>
             <div className="h-44 w-full flex items-center justify-center">
               {data?.deviceBreakdown && (
                 <ResponsiveContainer width="100%" height="100%">
@@ -445,10 +446,11 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
                     </Pie>
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#0B0F19",
-                        borderColor: "#1E293B",
+                        backgroundColor: "#0F172A",
+                        borderColor: "#334155",
                         borderRadius: "8px",
                         fontSize: "12px",
+                        color: "#F8FAFC",
                       }}
                     />
                   </PieChart>
@@ -457,25 +459,25 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
             </div>
           </div>
 
-          <div className="space-y-2 mt-2 pt-3 border-t border-slate-800/80">
+          <div className="space-y-2 mt-2 pt-3 border-t border-slate-100 dark:border-slate-800/80">
             {data?.deviceBreakdown?.map((item: any, idx: number) => (
               <div key={item.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-                  <span className="text-slate-300 font-medium">{item.name}</span>
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{item.name}</span>
                 </div>
-                <span className="font-bold text-slate-100">{item.count} visits</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{item.count} visits</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Top links */}
-        <div className="lg:col-span-2 p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md">
+        <div className="lg:col-span-2 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-base font-bold text-white">Top Performing Destinations</h2>
-              <p className="text-xs text-slate-400">High engagement routes ranked by volume</p>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Top Performing Destinations</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">High engagement routes ranked by volume</p>
             </div>
           </div>
 
@@ -483,36 +485,36 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
             {data?.topLinks?.map((link: any, index: number) => (
               <div
                 key={link.id}
-                className="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition"
+                className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 font-black text-xs shrink-0 border border-indigo-500/20">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 font-black text-xs shrink-0 border border-indigo-200 dark:border-indigo-500/20">
                     0{index + 1}
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-xs font-bold text-slate-200 truncate">{link.title}</p>
-                    <span className="text-[11px] font-mono text-cyan-400">
+                    <p className="text-xs font-bold text-slate-900 dark:text-slate-200 truncate">{link.title}</p>
+                    <span className="text-[11px] font-mono font-medium text-cyan-600 dark:text-cyan-400">
                       linkpulse.io/r/{link.shortCode}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2.5 shrink-0">
-                  <span className="text-xs font-extrabold text-white px-2.5 py-1 bg-slate-800 rounded-lg border border-slate-700">
+                  <span className="text-xs font-extrabold text-slate-800 dark:text-white px-2.5 py-1 bg-slate-200/70 dark:bg-slate-800 rounded-lg border border-slate-300/80 dark:border-slate-700">
                     {link.clicks} clicks
                   </span>
                   <button
                     onClick={() => copyLink(link.shortCode, link.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition cursor-pointer"
                     title="Copy Link"
                   >
-                    {copiedId === link.id ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                    {copiedId === link.id ? <Check className="h-4 w-4 text-emerald-500 dark:text-emerald-400" /> : <Copy className="h-4 w-4" />}
                   </button>
                   <a
                     href={`${API_BASE}/r/${link.shortCode}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                    className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition"
                     title="Visit Destination"
                   >
                     <ExternalLink className="h-4 w-4" />

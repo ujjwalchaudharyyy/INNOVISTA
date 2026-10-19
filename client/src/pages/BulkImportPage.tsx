@@ -85,25 +85,25 @@ export const BulkImportPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-              <UploadCloud className="h-6 w-6 text-indigo-400" />
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+              <UploadCloud className="h-6 w-6 text-indigo-500 dark:text-indigo-400" />
               Bulk CSV Management
             </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/20">
               High Volume Engine
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Batch create hundreds of short links with real-time validation preview matrix
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={handleDownloadSample}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-medium transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium transition cursor-pointer shadow-sm"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Sample Template</span>
@@ -119,21 +119,21 @@ export const BulkImportPage: React.FC = () => {
       </div>
 
       {importSuccess && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2">
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           <span className="font-semibold">{importSuccess}</span>
         </div>
       )}
 
       {/* CSV Input Area */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-4">
+      <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
             Paste CSV Data (title, originalUrl, customAlias)
           </label>
           <button
             onClick={() => setCsvText(sampleCsv)}
-            className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition cursor-pointer"
+            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition cursor-pointer"
           >
             Fill Sample Rows
           </button>
@@ -144,7 +144,7 @@ export const BulkImportPage: React.FC = () => {
           value={csvText}
           onChange={(e) => setCsvText(e.target.value)}
           placeholder={`title,originalUrl,customAlias\nProduct Demo Video,https://youtube.com/watch?v=demo,demo-video`}
-          className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 shadow-inner"
+          className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 shadow-inner"
         />
 
         <div className="flex justify-end">
@@ -161,16 +161,16 @@ export const BulkImportPage: React.FC = () => {
 
       {/* Validation Matrix */}
       {validationResult && (
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-4 animate-in fade-in">
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 animate-in fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <Table className="h-4 w-4 text-indigo-400" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Table className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
                 Validation Preview Matrix
               </h2>
-              <p className="text-xs text-slate-400">
-                <strong className="text-emerald-400">{validationResult.validCount}</strong> valid rows ready for import,{" "}
-                <strong className="text-rose-400">{validationResult.invalidCount}</strong> with issues
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                <strong className="text-emerald-600 dark:text-emerald-400">{validationResult.validCount}</strong> valid rows ready for import,{" "}
+                <strong className="text-rose-600 dark:text-rose-400">{validationResult.invalidCount}</strong> with issues
               </p>
             </div>
             <button
@@ -182,9 +182,9 @@ export const BulkImportPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-slate-800">
+          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
             <table className="w-full text-left border-collapse text-xs">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <thead className="bg-slate-100 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                 <tr>
                   <th className="py-3 px-3">Row</th>
                   <th className="py-3 px-3">Title</th>
@@ -193,24 +193,24 @@ export const BulkImportPage: React.FC = () => {
                   <th className="py-3 px-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                 {(validationResult.rows || []).map((r: any, idx: number) => {
                   const rowNum = r.index ?? r.rowIndex ?? idx + 1;
                   const errorMsg = r.error || (Array.isArray(r.errors) ? r.errors[0] : null) || "Invalid URL";
 
                   return (
-                    <tr key={rowNum} className={r.isValid ? "hover:bg-slate-900/30" : "bg-rose-500/5 hover:bg-rose-500/10"}>
-                      <td className="py-3 px-3 font-mono text-slate-400">#{rowNum}</td>
-                      <td className="py-3 px-3 font-bold text-slate-200 truncate max-w-[150px]">{r.title || "—"}</td>
-                      <td className="py-3 px-3 text-slate-400 truncate max-w-xs">{r.originalUrl}</td>
-                      <td className="py-3 px-3 font-mono text-cyan-400">{r.customAlias || "Auto"}</td>
+                    <tr key={rowNum} className={r.isValid ? "hover:bg-slate-50 dark:hover:bg-slate-900/30" : "bg-rose-50 dark:bg-rose-500/5 hover:bg-rose-100/50 dark:hover:bg-rose-500/10"}>
+                      <td className="py-3 px-3 font-mono text-slate-500 dark:text-slate-400">#{rowNum}</td>
+                      <td className="py-3 px-3 font-bold text-slate-900 dark:text-slate-200 truncate max-w-[150px]">{r.title || "—"}</td>
+                      <td className="py-3 px-3 text-slate-500 dark:text-slate-400 truncate max-w-xs">{r.originalUrl}</td>
+                      <td className="py-3 px-3 font-mono text-cyan-600 dark:text-cyan-400 font-medium">{r.customAlias || "Auto"}</td>
                       <td className="py-3 px-3">
                         {r.isValid ? (
-                          <span className="text-emerald-400 font-bold inline-flex items-center gap-1">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold inline-flex items-center gap-1">
                             ✓ Ready
                           </span>
                         ) : (
-                          <span className="text-rose-400 font-bold inline-flex items-center gap-1" title={errorMsg}>
+                          <span className="text-rose-600 dark:text-rose-400 font-bold inline-flex items-center gap-1" title={errorMsg}>
                             ✕ {errorMsg}
                           </span>
                         )}

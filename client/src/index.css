@@ -88,6 +88,28 @@ html.light .bg-slate-900\/90 {
   border-color: #E2E8F0 !important;
 }
 
+/* All dark pill boxes and tags inside light mode */
+html.light .bg-slate-800,
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800\/60,
+html.light .bg-slate-800\/50,
+html.light .bg-slate-800\/40 {
+  background-color: #F1F5F9 !important;
+  color: #334155 !important;
+  border-color: #E2E8F0 !important;
+}
+
+html.light span[class*="bg-slate-800"],
+html.light div[class*="bg-slate-800"] {
+  background-color: #F1F5F9 !important;
+  color: #334155 !important;
+}
+
+html.light .border-slate-700,
+html.light .border-slate-700\/60 {
+  border-color: #E2E8F0 !important;
+}
+
 html.light .border-slate-800,
 html.light .border-slate-800\/80,
 html.light .border-slate-800\/60 {
