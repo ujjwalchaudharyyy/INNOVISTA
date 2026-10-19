@@ -19,46 +19,45 @@ export const LoginPage: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const isMutedRef = useRef(false);
 
-  // Background Audio loop with seamless last-3-seconds trim
+  // Background Audio — auto-start on first user interaction (browser policy)
   useEffect(() => {
-    const tryStartAudio = () => {
-      if (isMutedRef.current || !audioRef.current) return;
+    let started = false;
+
+    const startAudio = () => {
+      if (started || isMutedRef.current || !audioRef.current) return;
       audioRef.current.volume = 0.35;
       audioRef.current.play().then(() => {
+        started = true;
         setIsAudioMuted(false);
-      }).catch(() => {
-        const unlock = () => {
-          if (!isMutedRef.current && audioRef.current) {
-            audioRef.current.volume = 0.35;
-            audioRef.current.play().catch(() => {});
-            setIsAudioMuted(false);
-          }
-          window.removeEventListener("click", unlock);
-          window.removeEventListener("keydown", unlock);
-          window.removeEventListener("touchstart", unlock);
-        };
-        window.addEventListener("click", unlock, { once: true });
-        window.addEventListener("keydown", unlock, { once: true });
-        window.addEventListener("touchstart", unlock, { once: true });
-      });
+        // Remove all listeners once audio starts
+        cleanup();
+      }).catch(() => {});
     };
 
-    tryStartAudio();
+    // Try autoplay immediately (works if user already interacted with page)
+    startAudio();
 
-    const checkAudioLoop = () => {
-      if (isMutedRef.current) return;
-      if (audioRef.current && !audioRef.current.paused) {
-        const d = audioRef.current.duration;
-        const c = audioRef.current.currentTime;
-        if (d && d > 4 && c >= d - 3) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(() => {});
-        }
+    // Listen to ALL possible user interactions to unlock audio
+    const events = ["click", "touchstart", "keydown", "mousedown", "scroll", "pointerdown"];
+    events.forEach(e => window.addEventListener(e, startAudio, { passive: true }));
+
+    const cleanup = () => {
+      events.forEach(e => window.removeEventListener(e, startAudio));
+    };
+
+    // Seamless loop: jump back before track ends
+    const loopInterval = setInterval(() => {
+      if (isMutedRef.current || !audioRef.current || audioRef.current.paused) return;
+      const d = audioRef.current.duration;
+      const c = audioRef.current.currentTime;
+      if (d && d > 4 && c >= d - 3) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
       }
-    };
-    const loopInterval = setInterval(checkAudioLoop, 50);
+    }, 50);
 
     return () => {
+      cleanup();
       clearInterval(loopInterval);
       if (audioRef.current) {
         audioRef.current.pause();
