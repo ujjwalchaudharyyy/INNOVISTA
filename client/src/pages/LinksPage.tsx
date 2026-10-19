@@ -191,8 +191,8 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
           {/* 1. MOBILE CARD VIEW (visible on small/medium screens < lg) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
             {links.map((link) => {
-              const tagsList = Array.isArray(link.tags)
-                ? link.tags.map(extractTagName).filter(Boolean)
+              const tagsList: string[] = Array.isArray(link.tags)
+                ? (link.tags.map(extractTagName).filter(Boolean) as string[])
                 : [];
               const campaignName = link.campaign?.name || (typeof link.campaign === "string" ? link.campaign : null);
               const campaignColor = link.campaign?.color || "#6366F1";
@@ -261,7 +261,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                       </span>
                     )}
 
-                    {tagsList.slice(0, 2).map((t, idx) => (
+                    {tagsList.slice(0, 2).map((t: string, idx: number) => (
                       <span key={`${t}-${idx}`} className="text-[10px] text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">
                         #{t}
                       </span>
@@ -330,8 +330,8 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-xs">
                   {links.map((link) => {
-                    const tagsList = Array.isArray(link.tags)
-                      ? link.tags.map(extractTagName).filter(Boolean)
+                    const tagsList: string[] = Array.isArray(link.tags)
+                      ? (link.tags.map(extractTagName).filter(Boolean) as string[])
                       : [];
                     const campaignName = link.campaign?.name || (typeof link.campaign === "string" ? link.campaign : null);
                     const campaignColor = link.campaign?.color || "#6366F1";
@@ -358,7 +358,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                           </div>
                           {tagsList.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-1.5">
-                              {tagsList.map((t, idx) => (
+                              {tagsList.map((t: string, idx: number) => (
                                 <span key={`${t}-${idx}`} className="text-[10px] text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded">
                                   #{t}
                                 </span>
