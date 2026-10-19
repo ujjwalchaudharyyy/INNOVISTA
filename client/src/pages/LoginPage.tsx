@@ -152,17 +152,20 @@ export const LoginPage: React.FC = () => {
         playsInline
         preload="auto"
         onTimeUpdate={handleTimeUpdate}
-        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none scale-[1.02]"
+        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         style={{
-          filter: "contrast(1.1) brightness(0.98) saturate(1.15)",
+          transform: "translate3d(0, 0, 0)",
+          WebkitBackfaceVisibility: "hidden",
+          backfaceVisibility: "hidden",
+          filter: "contrast(1.12) brightness(1.04) saturate(1.2)",
         }}
       />
 
-      {/* HORIZONTAL VIGNETTE OVERLAY: Darker on sides for text/card contrast, clear in center for 3D Earth */}
+      {/* HORIZONTAL VIGNETTE OVERLAY: 100% CRYSTAL CLEAR (0% opacity) in the center over 3D Earth */}
       <div 
         className="fixed inset-0 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0.25) 55%, rgba(0, 0, 0, 0.8) 100%)",
+          background: "linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.85) 100%)",
         }}
       />
 
