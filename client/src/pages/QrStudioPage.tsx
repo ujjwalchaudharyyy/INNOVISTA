@@ -13,8 +13,10 @@ export const QrStudioPage: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    api.get("/links?limit=50").then((res) => {
-      const list = res.data.links || res.data || [];
+    api.get("/links", { params: { limit: 50 } }).then((res) => {
+      // Always ensure list is an array — never let an object sneak in
+      const raw = res.data?.links ?? res.data ?? [];
+      const list = Array.isArray(raw) ? raw : [];
       setLinks(list);
       if (list.length > 0) setSelectedLink(list[0]);
     }).catch(() => {
