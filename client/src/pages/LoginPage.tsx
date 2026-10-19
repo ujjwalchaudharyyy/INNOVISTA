@@ -250,13 +250,13 @@ export const LoginPage: React.FC = () => {
         {/* ── RIGHT SIDE OF EARTH: Compact, Interactive Glowing Login Card ── */}
         <div className="w-full lg:w-auto flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-6 duration-700">
           
-          <div className="w-full max-w-[360px] rounded-3xl bg-slate-950/65 hover:bg-slate-950/85 backdrop-blur-2xl border border-white/15 hover:border-cyan-400/50 p-6 sm:p-7 text-white shadow-2xl shadow-black/90 hover:shadow-[0_0_50px_-5px_rgba(6,182,212,0.35)] transition-all duration-300 group relative overflow-hidden">
+          <div className="w-full max-w-[400px] rounded-3xl bg-slate-950/65 hover:bg-slate-950/85 backdrop-blur-2xl border border-white/15 hover:border-cyan-400/50 p-7 sm:p-8 text-white shadow-2xl shadow-black/90 hover:shadow-[0_0_50px_-5px_rgba(6,182,212,0.35)] transition-all duration-300 group relative overflow-hidden">
             
             {/* Top Interactive Cyan Accent Glow Line */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
 
             {/* Segmented Tab Switcher */}
-            <div className="flex p-1 rounded-xl bg-white/5 border border-white/10 mb-5 group-hover:border-white/20 transition">
+            <div className="flex p-1 rounded-xl bg-white/5 border border-white/10 mb-6 group-hover:border-white/20 transition">
               <button
                 type="button"
                 onClick={() => {
@@ -264,7 +264,7 @@ export const LoginPage: React.FC = () => {
                   setIsRegister(false);
                   setError(null);
                 }}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   !isRegister
                     ? "bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-md shadow-cyan-500/25"
                     : "text-slate-400 hover:text-slate-200"
@@ -279,7 +279,7 @@ export const LoginPage: React.FC = () => {
                   setIsRegister(true);
                   setError(null);
                 }}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   isRegister
                     ? "bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-md shadow-cyan-500/25"
                     : "text-slate-400 hover:text-slate-200"
@@ -291,70 +291,70 @@ export const LoginPage: React.FC = () => {
 
             {/* Error Message */}
             {error && (
-              <div className="mb-4 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2 animate-in fade-in">
+              <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2 animate-in fade-in">
                 <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
-                <span className="text-[11px] leading-tight">{error}</span>
+                <span className="text-xs leading-tight">{error}</span>
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-3.5">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {isRegister && (
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-300 mb-1 uppercase tracking-wider">
+                  <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                     Full Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-hover:text-cyan-400 transition" />
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-hover:text-cyan-400 transition" />
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Sarah Chen"
-                      className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                      className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-300 mb-1 uppercase tracking-wider">
+                <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-hover:text-cyan-400 transition" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-hover:text-cyan-400 transition" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="demo@linkpulse.io"
-                    className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                    className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-300 mb-1 uppercase tracking-wider">
+                <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-hover:text-cyan-400 transition" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-hover:text-cyan-400 transition" />
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-9 pr-9 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                    className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-10 pr-10 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer p-1"
                   >
-                    {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
@@ -362,10 +362,10 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-cyan-500 hover:from-cyan-400 hover:to-indigo-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.45)] hover:brightness-110 text-white font-bold text-xs tracking-wider uppercase shadow-md shadow-cyan-500/25 transition active:scale-[0.98] disabled:opacity-50 mt-1 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-cyan-500 hover:from-cyan-400 hover:to-indigo-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.45)] hover:brightness-110 text-white font-bold text-xs tracking-wider uppercase shadow-md shadow-cyan-500/25 transition active:scale-[0.98] disabled:opacity-50 mt-1 cursor-pointer"
               >
                 <span>{loading ? "Authenticating..." : !isRegister ? "Sign In to Workspace" : "Create Account"}</span>
-                <ArrowRight className="h-3.5 w-3.5" />
+                <ArrowRight className="h-4 w-4" />
               </button>
             </form>
 
