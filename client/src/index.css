@@ -50,21 +50,103 @@
 }
 
 body {
-  @apply bg-[#0B0F19] text-slate-100 font-sans antialiased min-h-screen selection:bg-indigo-500/30 selection:text-indigo-200;
+  @apply bg-slate-50 text-slate-900 dark:bg-[#0B0F19] dark:text-slate-100 font-sans antialiased min-h-screen selection:bg-indigo-500/30 selection:text-indigo-200 transition-colors duration-200;
 }
 
-/* Custom Scrollbar */
+/* ── Light Mode Color Normalization & Contrast Rules ── */
+html.light body {
+  background-color: #F8FAFC;
+  color: #0F172A;
+}
+
+html.dark body {
+  background-color: #0B0F19;
+  color: #F8FAFC;
+}
+
+/* Card & Surface Adaptations in Light Mode */
+html.light .bg-\[\#0F172A\] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+}
+
+html.light .bg-\[\#0B0F19\] {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+html.light .bg-slate-900 {
+  background-color: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/90 {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Text adjustments for light mode (preserve white text on primary buttons) */
+html.light .text-white:not(button *):not(button):not(.bg-indigo-600 *):not(.bg-indigo-600):not(.bg-gradient-to-r *):not(.bg-gradient-to-r):not(.bg-gradient-to-tr *):not([class*="bg-emerald-"]):not([class*="bg-indigo-"]):not([class*="bg-purple-"]) {
+  color: #0F172A !important;
+}
+
+html.light .text-slate-100:not(button *):not(.bg-gradient-to-r *) {
+  color: #1E293B !important;
+}
+
+html.light .text-slate-200:not(button *):not(.bg-gradient-to-r *) {
+  color: #334155 !important;
+}
+
+html.light .text-slate-300:not(button *):not(.bg-gradient-to-r *) {
+  color: #475569 !important;
+}
+
+html.light .text-slate-400:not(button *):not(.bg-gradient-to-r *) {
+  color: #64748B !important;
+}
+
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-800\/50:hover,
+html.light .hover\:bg-slate-800\/60:hover {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .hover\:text-white:hover {
+  color: #0F172A !important;
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
   background: #0B0F19;
 }
-::-webkit-scrollbar-thumb {
+html.dark ::-webkit-scrollbar-thumb {
   background: #1E293B;
   border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
+html.dark ::-webkit-scrollbar-thumb:hover {
   background: #334155;
+}
+html.light ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }

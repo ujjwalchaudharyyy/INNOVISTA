@@ -509,34 +509,34 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
 
       {/* Interactive Social Share Modal */}
       {sharingLink && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md rounded-2xl bg-[#0F172A] border border-slate-800 shadow-2xl p-6 text-slate-100 space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 text-slate-800 dark:text-slate-100 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">
                   <Share2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-base">Share Short Link</h3>
-                  <p className="text-xs text-slate-400 truncate max-w-[240px]">{sharingLink.title || sharingLink.shortCode}</p>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base">Share Short Link</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[240px]">{sharingLink.title || sharingLink.shortCode}</p>
                 </div>
               </div>
               <button
                 onClick={() => setSharingLink(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Short Link Bar */}
-            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
-              <span className="font-mono text-xs text-cyan-400 truncate">
+            <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+              <span className="font-mono text-xs font-semibold text-indigo-600 dark:text-cyan-400 truncate">
                 {`${API_BASE}/r/${sharingLink.shortCode}`}
               </span>
               <button
                 onClick={() => copyUrl(sharingLink.shortCode, `share-${sharingLink.id}`)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition shrink-0 cursor-pointer"
               >
                 {copiedId === `share-${sharingLink.id}` ? (
                   <>
@@ -554,7 +554,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
 
             {/* 1-Click Social Broadcast Grid */}
             <div className="space-y-2">
-              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider block">
                 Broadcast Directly
               </span>
               <div className="grid grid-cols-2 gap-2">
@@ -564,7 +564,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-600/20 text-xs font-medium transition"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 text-xs font-semibold transition"
                 >
                   <span className="text-base">💬</span>
                   <span>WhatsApp</span>
@@ -575,7 +575,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-sky-600/10 text-sky-400 border border-sky-500/20 hover:bg-sky-600/20 text-xs font-medium transition"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 hover:bg-sky-500/20 text-xs font-semibold transition"
                 >
                   <span className="text-base">🐦</span>
                   <span>Twitter / X</span>
@@ -586,7 +586,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20 hover:bg-blue-600/20 text-xs font-medium transition"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 hover:bg-blue-500/20 text-xs font-semibold transition"
                 >
                   <span className="text-base">💼</span>
                   <span>LinkedIn</span>
@@ -597,7 +597,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                   )}&text=${encodeURIComponent(sharingLink.title || "Check this link")}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-600/20 text-xs font-medium transition"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 text-xs font-semibold transition"
                 >
                   <span className="text-base">✈️</span>
                   <span>Telegram</span>
@@ -606,23 +606,23 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
             </div>
 
             {/* QR Preview & Download */}
-            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
+            <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
                     `${API_BASE}/r/${sharingLink.shortCode}`
                   )}&color=6366f1`}
                   alt="QR Code"
-                  className="h-12 w-12 rounded-lg bg-white p-1"
+                  className="h-12 w-12 rounded-lg bg-white p-1 border border-slate-200 dark:border-slate-700"
                 />
                 <div>
-                  <span className="text-xs font-semibold text-white block">Instant QR Code</span>
-                  <span className="text-[10px] text-slate-400">Scannable on all iOS / Android cameras</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-white block">Instant QR Code</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">Scannable on all phone cameras</span>
                 </div>
               </div>
               <button
                 onClick={() => downloadQr(sharingLink.id, sharingLink.shortCode)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition shrink-0"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-medium transition shrink-0 cursor-pointer"
               >
                 Download
               </button>

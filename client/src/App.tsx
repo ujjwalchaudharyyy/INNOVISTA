@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
@@ -24,7 +24,9 @@ import {
   X,
   LogOut,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Sun,
+  Moon
 } from "lucide-react";
 
 export const App: React.FC = () => {
@@ -33,8 +35,23 @@ export const App: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    const saved = localStorage.getItem("linkpulse_theme");
+    return saved ? saved === "dark" : true;
+  });
   const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("light");
+      localStorage.setItem("linkpulse_theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+      localStorage.setItem("linkpulse_theme", "light");
+    }
+  }, [isDark]);
 
   if (isLoading) {
     return (
@@ -77,7 +94,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen flex bg-[#0B0F19] text-slate-100 ${isDark ? "dark" : "light"}`}>
+    <div className={`min-h-screen flex bg-slate-50 text-slate-900 dark:bg-[#0B0F19] dark:text-slate-100 transition-colors duration-200 ${isDark ? "dark" : "light"}`}>
 
       {/* ── Desktop Sidebar (hidden on mobile, visible lg+) ── */}
       <div className="hidden lg:flex">
@@ -87,6 +104,8 @@ export const App: React.FC = () => {
           collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
           onOpenCreate={() => setCreateModalOpen(true)}
+          isDark={isDark}
+          setIsDark={setIsDark}
         />
       </div>
 
@@ -119,32 +138,32 @@ export const App: React.FC = () => {
           {/* Backdrop */}
           <div 
             onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200" 
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200" 
           />
 
           {/* Drawer content panel */}
-          <div className="relative w-4/5 max-w-sm h-full bg-[#0F172A] border-r border-slate-800 flex flex-col justify-between p-5 z-10 shadow-2xl animate-in slide-in-from-left duration-200">
+          <div className="relative w-4/5 max-w-sm h-full bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between p-5 z-10 shadow-2xl animate-in slide-in-from-left duration-200">
             <div>
               {/* Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-base font-black text-white flex items-center gap-1.5">
+                    <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                       LinkPulse
-                      <span className="text-[10px] font-bold bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-500/30">
+                      <span className="text-[10px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-500/30">
                         PRO
                       </span>
                     </h2>
-                    <p className="text-[11px] text-slate-400">Enterprise Infrastructure</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Enterprise Infrastructure</p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -175,44 +194,53 @@ export const App: React.FC = () => {
                       onClick={() => handleTabSelect(item.id)}
                       className={`w-full flex items-center justify-between p-3 rounded-xl transition text-left cursor-pointer ${
                         isActive
-                          ? "bg-indigo-600/20 text-indigo-400 border border-indigo-500/30"
-                          : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                          ? "bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-bold"
+                          : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className={`h-5 w-5 shrink-0 ${isActive ? "text-indigo-400" : "text-slate-400"}`} />
+                        <Icon className={`h-5 w-5 shrink-0 ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-slate-500"}`} />
                         <div>
                           <p className="text-xs font-bold">{item.label}</p>
-                          <p className="text-[10px] text-slate-500">{item.desc}</p>
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500">{item.desc}</p>
                         </div>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-600" />
+                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600" />
                     </button>
                   );
                 })}
               </nav>
             </div>
 
-            {/* Bottom: User Card & Sign Out */}
-            <div className="pt-4 border-t border-slate-800">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
+            {/* Bottom: User Card, Theme Toggle & Sign Out */}
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-2.5 overflow-hidden">
                   <div className="h-9 w-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white uppercase shrink-0">
                     {user?.name?.slice(0, 2) || "LP"}
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-xs font-bold text-white truncate">{user?.name}</p>
-                    <p className="text-[10px] text-slate-400 truncate">{user?.email}</p>
+                    <p className="text-xs font-bold text-slate-800 dark:text-white truncate">{user?.name}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
                   </div>
                 </div>
 
-                <button
-                  onClick={logout}
-                  title="Sign Out"
-                  className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setIsDark(!isDark)}
+                    title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                    className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer"
+                  >
+                    {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-indigo-500" />}
+                  </button>
+                  <button
+                    onClick={logout}
+                    title="Sign Out"
+                    className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -221,11 +249,8 @@ export const App: React.FC = () => {
 
       {/* ── Mobile Bottom Navigation Bar (Fixed 5-Action Dock) ── */}
       <nav 
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-2"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-2 bg-white/95 dark:bg-[#0B0F19]/95 border-t border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-lg transition-colors duration-200"
         style={{
-          background: "rgba(11, 15, 25, 0.95)",
-          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-          backdropFilter: "blur(20px)",
           paddingTop: "6px",
           paddingBottom: "max(10px, env(safe-area-inset-bottom))",
         }}
@@ -235,10 +260,10 @@ export const App: React.FC = () => {
           onClick={() => setCurrentTab("overview")}
           className="flex flex-col items-center gap-1 min-w-[54px] py-1 cursor-pointer transition active:scale-95"
         >
-          <div className={`p-1.5 rounded-xl transition ${currentTab === "overview" ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400"}`}>
+          <div className={`p-1.5 rounded-xl transition ${currentTab === "overview" ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             <LayoutDashboard className="h-4 w-4" />
           </div>
-          <span className={`text-[10px] font-bold ${currentTab === "overview" ? "text-indigo-400" : "text-slate-500"}`}>
+          <span className={`text-[10px] font-bold ${currentTab === "overview" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             Home
           </span>
         </button>
@@ -248,10 +273,10 @@ export const App: React.FC = () => {
           onClick={() => setCurrentTab("links")}
           className="flex flex-col items-center gap-1 min-w-[54px] py-1 cursor-pointer transition active:scale-95"
         >
-          <div className={`p-1.5 rounded-xl transition ${currentTab === "links" ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400"}`}>
+          <div className={`p-1.5 rounded-xl transition ${currentTab === "links" ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             <Link2 className="h-4 w-4" />
           </div>
-          <span className={`text-[10px] font-bold ${currentTab === "links" ? "text-indigo-400" : "text-slate-500"}`}>
+          <span className={`text-[10px] font-bold ${currentTab === "links" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             Links
           </span>
         </button>
@@ -261,10 +286,10 @@ export const App: React.FC = () => {
           onClick={() => setCreateModalOpen(true)}
           className="flex flex-col items-center gap-1 -mt-5 cursor-pointer transition active:scale-90"
         >
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/40 text-white border-2 border-[#0B0F19]">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/40 text-white border-2 border-white dark:border-[#0B0F19]">
             <Plus className="h-6 w-6" strokeWidth={2.5} />
           </div>
-          <span className="text-[10px] font-black text-cyan-400">
+          <span className="text-[10px] font-black text-indigo-600 dark:text-cyan-400">
             Create
           </span>
         </button>
@@ -274,10 +299,10 @@ export const App: React.FC = () => {
           onClick={() => setCurrentTab("analytics")}
           className="flex flex-col items-center gap-1 min-w-[54px] py-1 cursor-pointer transition active:scale-95"
         >
-          <div className={`p-1.5 rounded-xl transition ${currentTab === "analytics" ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400"}`}>
+          <div className={`p-1.5 rounded-xl transition ${currentTab === "analytics" ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             <BarChart3 className="h-4 w-4" />
           </div>
-          <span className={`text-[10px] font-bold ${currentTab === "analytics" ? "text-indigo-400" : "text-slate-500"}`}>
+          <span className={`text-[10px] font-bold ${currentTab === "analytics" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             Analytics
           </span>
         </button>
@@ -287,10 +312,10 @@ export const App: React.FC = () => {
           onClick={() => setMobileMenuOpen(true)}
           className="flex flex-col items-center gap-1 min-w-[54px] py-1 cursor-pointer transition active:scale-95"
         >
-          <div className={`p-1.5 rounded-xl transition ${mobileMenuOpen ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400"}`}>
+          <div className={`p-1.5 rounded-xl transition ${mobileMenuOpen ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}>
             <Menu className="h-4 w-4" />
           </div>
-          <span className="text-[10px] font-bold text-slate-500">
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
             Menu
           </span>
         </button>

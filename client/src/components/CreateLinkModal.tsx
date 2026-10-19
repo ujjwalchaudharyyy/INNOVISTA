@@ -151,21 +151,21 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl rounded-2xl bg-[#0F172A] border border-slate-800 shadow-2xl p-5 sm:p-8 max-h-[92vh] overflow-y-auto text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xl rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-8 max-h-[92vh] overflow-y-auto text-slate-800 dark:text-slate-100">
         {/* Step Indicator Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 font-bold text-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-bold text-sm">
               {step === 3 ? "✓" : `0${step}`}
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 {step === 1 && "Destination & Link Code"}
                 {step === 2 && "Advanced Protection & Targeting"}
                 {step === 3 && "Short Link Published!"}
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {step === 1 && "Configure target URL and custom branded vanity alias"}
                 {step === 2 && "Set password lock, expiration, click caps, or campaign"}
                 {step === 3 && "Your link is active, fast, and collecting click telemetry"}
@@ -174,7 +174,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition"
+            className="rounded-lg p-2 text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
             <X className="h-5 w-5" />
           </button>
@@ -191,8 +191,8 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
         {step === 1 && (
           <div className="space-y-4 pt-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
-                Destination URL <span className="text-rose-400">*</span>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
+                Destination URL <span className="text-rose-500">*</span>
               </label>
               <input
                 type="url"
@@ -200,12 +200,12 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                 value={originalUrl}
                 onChange={(e) => setOriginalUrl(e.target.value)}
                 placeholder="https://example.com/long-landing-page-url..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
                 Link Title / Label
               </label>
               <input
@@ -213,16 +213,16 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Product Hunt Q4 Special Offer"
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
                 Custom Alias (Optional)
               </label>
-              <div className="flex items-center rounded-xl bg-slate-900 border border-slate-800 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 overflow-hidden transition">
-                <span className="px-3.5 py-2.5 bg-slate-800/60 text-slate-400 text-xs font-mono border-r border-slate-800">
+              <div className="flex items-center rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 overflow-hidden transition">
+                <span className="px-3.5 py-2.5 bg-slate-200/80 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 text-xs font-mono border-r border-slate-200 dark:border-slate-800">
                   linkpulse.io/r/
                 </span>
                 <input
@@ -230,7 +230,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                   value={customAlias}
                   onChange={(e) => setCustomAlias(e.target.value)}
                   placeholder="custom-slug"
-                  className="w-full bg-transparent px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none font-mono"
+                  className="w-full bg-transparent px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none font-mono"
                 />
               </div>
               <p className="text-[11px] text-slate-500 mt-1">Leave empty to generate a random 6-character code.</p>
@@ -363,14 +363,14 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
           <div className="space-y-4 pt-5 max-h-[60vh] overflow-y-auto pr-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-                  <FolderKanban className="h-3.5 w-3.5 text-indigo-400" />
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+                  <FolderKanban className="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400" />
                   Assign Campaign
                 </label>
                 <select
                   value={campaignId}
                   onChange={(e) => setCampaignId(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition"
+                  className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:border-indigo-500 transition"
                 >
                   <option value="">None (Independent Link)</option>
                   {campaigns.map((c) => (
@@ -382,8 +382,8 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5 text-cyan-400" />
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
                   Password Protection
                 </label>
                 <input
@@ -391,28 +391,28 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Optional access password"
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition"
+                  className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5 text-purple-400" />
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" />
                   Expiration Date
                 </label>
                 <input
                   type="datetime-local"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition"
+                  className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:border-indigo-500 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sliders className="h-3.5 w-3.5 text-amber-400" />
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sliders className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
                   Click Cap Limit
                 </label>
                 <input
@@ -421,27 +421,27 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                   value={clickLimit}
                   onChange={(e) => setClickLimit(e.target.value)}
                   placeholder="e.g. 100 max visits"
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition"
+                  className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
-                <Tag className="h-3.5 w-3.5 text-emerald-400" />
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+                <Tag className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                 Tags (Press Enter to add)
               </label>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {tags.map((t) => (
                   <span
                     key={t}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/20"
                   >
                     #{t}
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(t)}
-                      className="text-slate-400 hover:text-rose-400 ml-1"
+                      className="text-slate-400 hover:text-rose-500 ml-1"
                     >
                       ×
                     </button>
@@ -454,7 +454,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleAddTag}
                 placeholder="promo, twitter, launch (Press Enter)"
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition"
+                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
 
@@ -462,7 +462,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition"
+                className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
               >
                 ← Back
               </button>
@@ -481,19 +481,19 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
         {/* STEP 3: Success Result */}
         {step === 3 && createdLink && (
           <div className="space-y-5 pt-5 text-center">
-            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto text-2xl">
+            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 flex items-center justify-center mx-auto text-2xl">
               ✓
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white">Your Short Link is Live!</h3>
-              <p className="text-xs text-slate-400 mt-1">Ready for campaigns, social shares, and QR codes.</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Your Short Link is Live!</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Ready for campaigns, social shares, and QR codes.</p>
             </div>
 
-            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
-              <span className="font-mono text-sm text-indigo-400 truncate text-left">{fullShortUrl}</span>
+            <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+              <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400 font-semibold truncate text-left">{fullShortUrl}</span>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition shrink-0 cursor-pointer"
               >
                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 <span>{copied ? "Copied" : "Copy"}</span>
@@ -502,7 +502,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
 
             {/* Quick 1-Click Social Share */}
             <div className="pt-1">
-              <p className="text-[11px] font-semibold text-slate-400 mb-2 uppercase tracking-wider">
+              <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">
                 1-Click Social Broadcast
               </p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -512,7 +512,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/15 text-emerald-400 border border-emerald-500/30 text-xs font-medium hover:bg-emerald-600/25 transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-500/20 transition"
                 >
                   <span>💬 WhatsApp</span>
                 </a>
@@ -522,7 +522,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                   )}&url=${encodeURIComponent(fullShortUrl)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600/15 text-sky-400 border border-sky-500/30 text-xs font-medium hover:bg-sky-600/25 transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 text-xs font-semibold hover:bg-sky-500/20 transition"
                 >
                   <span>🐦 Twitter/X</span>
                 </a>
@@ -532,7 +532,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/15 text-blue-400 border border-blue-500/30 text-xs font-medium hover:bg-blue-600/25 transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-xs font-semibold hover:bg-blue-500/20 transition"
                 >
                   <span>💼 LinkedIn</span>
                 </a>
@@ -544,14 +544,14 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                 href={fullShortUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-medium transition"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span>Test Redirect</span>
               </a>
               <button
                 onClick={onClose}
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition"
+                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition cursor-pointer"
               >
                 Done
               </button>
