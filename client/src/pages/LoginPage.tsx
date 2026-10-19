@@ -176,12 +176,80 @@ export const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* HORIZONTAL VIGNETTE OVERLAY: 100% CRYSTAL CLEAR (0% opacity) in the center over 3D Earth */}
+      {/* HORIZONTAL VIGNETTE OVERLAY */}
       <div 
         className="fixed inset-0 z-10 pointer-events-none"
         style={{
           background: "linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.85) 100%)",
         }}
+      />
+
+      {/* 3D STAR FIELD CANVAS — depth parallax around Earth */}
+      <canvas
+        ref={(canvas) => {
+          if (!canvas || (canvas as any).__stars_init) return;
+          (canvas as any).__stars_init = true;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+
+          const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+          };
+          resize();
+          window.addEventListener("resize", resize);
+
+          // Generate stars with 3D depth
+          const stars: { x: number; y: number; z: number; size: number; twinkleSpeed: number; twinkleOffset: number }[] = [];
+          for (let i = 0; i < 200; i++) {
+            stars.push({
+              x: Math.random() * 2 - 1,
+              y: Math.random() * 2 - 1,
+              z: Math.random(),
+              size: Math.random() * 1.8 + 0.3,
+              twinkleSpeed: Math.random() * 0.02 + 0.005,
+              twinkleOffset: Math.random() * Math.PI * 2,
+            });
+          }
+
+          let frame = 0;
+          const render = () => {
+            frame++;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            for (const star of stars) {
+              // Skip stars in the center zone (where Earth video is)
+              const sx = cx + star.x * cx * 0.95;
+              const sy = cy + star.y * cy * 0.95;
+              const distFromCenter = Math.sqrt((sx - cx) ** 2 + (sy - cy) ** 2);
+              const maxDist = Math.min(cx, cy);
+              if (distFromCenter < maxDist * 0.3) continue;
+
+              const depthScale = 0.4 + star.z * 0.6;
+              const size = star.size * depthScale;
+              const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(frame * star.twinkleSpeed + star.twinkleOffset));
+              const alpha = twinkle * depthScale * 0.85;
+
+              ctx.beginPath();
+              ctx.arc(sx, sy, size, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+              ctx.fill();
+
+              // Subtle glow for larger stars
+              if (size > 1.2) {
+                ctx.beginPath();
+                ctx.arc(sx, sy, size * 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 220, 255, ${alpha * 0.12})`;
+                ctx.fill();
+              }
+            }
+            requestAnimationFrame(render);
+          };
+          render();
+        }}
+        className="fixed inset-0 z-[5] pointer-events-none"
       />
 
       {/* TOP RIGHT CONTROLS: AUDIO ONLY */}

@@ -69,7 +69,7 @@ const DEFAULT_LINKS: MockLink[] = [
     id: "link-github-repo",
     title: "Innovista GitHub Source Repository",
     shortCode: "github-repo",
-    originalUrl: "https://github.com/vaibhavi123-p/INNOVISTA",
+    originalUrl: "https://github.com/ujjwalchaudharyyy/INNOVISTA",
     clickCount: 4210,
     isActive: true,
     createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
