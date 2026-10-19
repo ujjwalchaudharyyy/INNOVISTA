@@ -167,15 +167,8 @@ export const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* TOP RIGHT CONTROLS: 4K BADGE & AUDIO */}
-      <div className="fixed top-5 right-5 z-30 flex items-center gap-2">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 text-xs font-semibold shadow-lg">
-          <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-black border border-cyan-500/30">
-            4K
-          </span>
-          <span className="text-[11px] text-slate-300 font-medium">Ultra-HD</span>
-        </div>
-
+      {/* TOP RIGHT CONTROLS: AUDIO ONLY */}
+      <div className="fixed top-5 right-5 z-30">
         <button
           onClick={toggleSound}
           className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/60 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
