@@ -18,7 +18,9 @@ import {
   Sparkles,
   ShieldAlert,
   Clock,
-  Layers
+  Layers,
+  Share2,
+  X
 } from "lucide-react";
 import { api, API_BASE } from "../services/api";
 
@@ -31,6 +33,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
   const [totalPages, setTotalPages] = useState(1);
   const [totalLinks, setTotalLinks] = useState(0);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [sharingLink, setSharingLink] = useState<any | null>(null);
 
   useEffect(() => {
     fetchLinks();
@@ -275,6 +278,13 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                     </span>
 
                     <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => setSharingLink(link)}
+                        className="p-2 rounded-lg text-indigo-400 hover:text-indigo-300 hover:bg-slate-800 transition"
+                        title="Share link"
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </button>
                       <a
                         href={`${API_BASE}/r/${link.shortCode}`}
                         target="_blank"
@@ -410,6 +420,14 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                         <td className="py-4 px-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
                             <button
+                              onClick={() => setSharingLink(link)}
+                              title="Share on Social Media"
+                              className="p-2 rounded-xl text-indigo-400 hover:text-indigo-300 hover:bg-slate-800 transition cursor-pointer"
+                            >
+                              <Share2 className="h-4 w-4" />
+                            </button>
+
+                            <button
                               onClick={() => copyUrl(link.shortCode, link.id)}
                               title="Copy Short URL"
                               className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
@@ -485,6 +503,130 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
             >
               <ChevronRight className="h-4 w-4" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Social Share Modal */}
+      {sharingLink && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md rounded-2xl bg-[#0F172A] border border-slate-800 shadow-2xl p-6 text-slate-100 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  <Share2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base">Share Short Link</h3>
+                  <p className="text-xs text-slate-400 truncate max-w-[240px]">{sharingLink.title || sharingLink.shortCode}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSharingLink(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Short Link Bar */}
+            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
+              <span className="font-mono text-xs text-cyan-400 truncate">
+                {`${API_BASE}/r/${sharingLink.shortCode}`}
+              </span>
+              <button
+                onClick={() => copyUrl(sharingLink.shortCode, `share-${sharingLink.id}`)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition shrink-0"
+              >
+                {copiedId === `share-${sharingLink.id}` ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-emerald-300" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* 1-Click Social Broadcast Grid */}
+            <div className="space-y-2">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+                Broadcast Directly
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    `Check this out: ${API_BASE}/r/${sharingLink.shortCode}`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-600/20 text-xs font-medium transition"
+                >
+                  <span className="text-base">💬</span>
+                  <span>WhatsApp</span>
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `Check out this link: ${API_BASE}/r/${sharingLink.shortCode}`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-sky-600/10 text-sky-400 border border-sky-500/20 hover:bg-sky-600/20 text-xs font-medium transition"
+                >
+                  <span className="text-base">🐦</span>
+                  <span>Twitter / X</span>
+                </a>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                    `${API_BASE}/r/${sharingLink.shortCode}`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20 hover:bg-blue-600/20 text-xs font-medium transition"
+                >
+                  <span className="text-base">💼</span>
+                  <span>LinkedIn</span>
+                </a>
+                <a
+                  href={`https://t.me/share/url?url=${encodeURIComponent(
+                    `${API_BASE}/r/${sharingLink.shortCode}`
+                  )}&text=${encodeURIComponent(sharingLink.title || "Check this link")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-600/20 text-xs font-medium transition"
+                >
+                  <span className="text-base">✈️</span>
+                  <span>Telegram</span>
+                </a>
+              </div>
+            </div>
+
+            {/* QR Preview & Download */}
+            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
+                    `${API_BASE}/r/${sharingLink.shortCode}`
+                  )}&color=6366f1`}
+                  alt="QR Code"
+                  className="h-12 w-12 rounded-lg bg-white p-1"
+                />
+                <div>
+                  <span className="text-xs font-semibold text-white block">Instant QR Code</span>
+                  <span className="text-[10px] text-slate-400">Scannable on all iOS / Android cameras</span>
+                </div>
+              </div>
+              <button
+                onClick={() => downloadQr(sharingLink.id, sharingLink.shortCode)}
+                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition shrink-0"
+              >
+                Download
+              </button>
+            </div>
           </div>
         </div>
       )}

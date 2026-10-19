@@ -39,6 +39,12 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
+  // UTM Builder
+  const [showUtm, setShowUtm] = useState(false);
+  const [utmSource, setUtmSource] = useState("");
+  const [utmMedium, setUtmMedium] = useState("");
+  const [utmCampaign, setUtmCampaign] = useState("");
+
   // Campaigns list
   const [campaigns, setCampaigns] = useState<any[]>([]);
 
@@ -63,9 +69,34 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
     setExpiresAt("");
     setCampaignId("");
     setTags([]);
+    setShowUtm(false);
+    setUtmSource("");
+    setUtmMedium("");
+    setUtmCampaign("");
     setError(null);
     setCreatedLink(null);
     setCopied(false);
+  };
+
+  const applyUtmPreset = (source: string, medium: string) => {
+    setUtmSource(source);
+    setUtmMedium(medium);
+    applyUtmParameters(source, medium, utmCampaign);
+  };
+
+  const applyUtmParameters = (src: string, med: string, cmp: string) => {
+    if (!originalUrl) return;
+    try {
+      let baseUrl = originalUrl.split("?")[0];
+      const params = new URLSearchParams(originalUrl.includes("?") ? originalUrl.split("?")[1] : "");
+      if (src.trim()) params.set("utm_source", src.trim()); else params.delete("utm_source");
+      if (med.trim()) params.set("utm_medium", med.trim()); else params.delete("utm_medium");
+      if (cmp.trim()) params.set("utm_campaign", cmp.trim()); else params.delete("utm_campaign");
+      const qs = params.toString();
+      setOriginalUrl(qs ? `${baseUrl}?${qs}` : baseUrl);
+    } catch {
+      // Fallback if URL is malformed
+    }
   };
 
   if (!isOpen) return null;
@@ -203,6 +234,107 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                 />
               </div>
               <p className="text-[11px] text-slate-500 mt-1">Leave empty to generate a random 6-character code.</p>
+            </div>
+
+            {/* UTM Tracking Builder Accordion */}
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setShowUtm(!showUtm)}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-slate-300 hover:text-white transition"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Sliders className="h-3.5 w-3.5 text-indigo-400" />
+                  UTM Campaign Builder {utmSource || utmMedium || utmCampaign ? "(Active)" : "(Optional)"}
+                </span>
+                <span className="text-[11px] text-indigo-400 hover:underline">
+                  {showUtm ? "Hide" : "+ Add UTMs"}
+                </span>
+              </button>
+
+              {showUtm && (
+                <div className="p-3.5 pt-0 space-y-3 border-t border-slate-800/60 mt-1">
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    <span className="text-[10px] text-slate-400 font-medium self-center mr-1">Presets:</span>
+                    <button
+                      type="button"
+                      onClick={() => applyUtmPreset("twitter", "social")}
+                      className="px-2 py-1 rounded-md text-[10px] bg-slate-800 hover:bg-slate-700 text-sky-400 transition"
+                    >
+                      🐦 Twitter/X
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyUtmPreset("linkedin", "social")}
+                      className="px-2 py-1 rounded-md text-[10px] bg-slate-800 hover:bg-slate-700 text-blue-400 transition"
+                    >
+                      💼 LinkedIn
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyUtmPreset("newsletter", "email")}
+                      className="px-2 py-1 rounded-md text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 transition"
+                    >
+                      📧 Newsletter
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyUtmPreset("google", "cpc")}
+                      className="px-2 py-1 rounded-md text-[10px] bg-slate-800 hover:bg-slate-700 text-emerald-400 transition"
+                    >
+                      🎯 Google Ads
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-semibold text-slate-400 mb-1">
+                        utm_source
+                      </label>
+                      <input
+                        type="text"
+                        value={utmSource}
+                        onChange={(e) => {
+                          setUtmSource(e.target.value);
+                          applyUtmParameters(e.target.value, utmMedium, utmCampaign);
+                        }}
+                        placeholder="e.g. twitter"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-semibold text-slate-400 mb-1">
+                        utm_medium
+                      </label>
+                      <input
+                        type="text"
+                        value={utmMedium}
+                        onChange={(e) => {
+                          setUtmMedium(e.target.value);
+                          applyUtmParameters(utmSource, e.target.value, utmCampaign);
+                        }}
+                        placeholder="e.g. social"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-semibold text-slate-400 mb-1">
+                        utm_campaign
+                      </label>
+                      <input
+                        type="text"
+                        value={utmCampaign}
+                        onChange={(e) => {
+                          setUtmCampaign(e.target.value);
+                          applyUtmParameters(utmSource, utmMedium, e.target.value);
+                        }}
+                        placeholder="e.g. launch_v1"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="pt-4 flex justify-end gap-3">
@@ -366,6 +498,45 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
+            </div>
+
+            {/* Quick 1-Click Social Share */}
+            <div className="pt-1">
+              <p className="text-[11px] font-semibold text-slate-400 mb-2 uppercase tracking-wider">
+                1-Click Social Broadcast
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    `Check out this link: ${fullShortUrl}`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/15 text-emerald-400 border border-emerald-500/30 text-xs font-medium hover:bg-emerald-600/25 transition"
+                >
+                  <span>💬 WhatsApp</span>
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `Check this out:`
+                  )}&url=${encodeURIComponent(fullShortUrl)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600/15 text-sky-400 border border-sky-500/30 text-xs font-medium hover:bg-sky-600/25 transition"
+                >
+                  <span>🐦 Twitter/X</span>
+                </a>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                    fullShortUrl
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/15 text-blue-400 border border-blue-500/30 text-xs font-medium hover:bg-blue-600/25 transition"
+                >
+                  <span>💼 LinkedIn</span>
+                </a>
+              </div>
             </div>
 
             <div className="flex gap-3 justify-center pt-2">
