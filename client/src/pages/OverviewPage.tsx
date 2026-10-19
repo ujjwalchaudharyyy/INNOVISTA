@@ -246,17 +246,17 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
       </div>
 
       {/* ── INTERACTIVE EDGE REDIRECT BENCHMARK SIMULATOR ── */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#111C38] to-[#0F172A] border border-indigo-500/30 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 dark:from-[#0F172A] dark:via-[#111C38] dark:to-[#0F172A] border border-indigo-100 dark:border-indigo-500/30 shadow-md dark:shadow-xl relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-indigo-100 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-400" />
-              <h2 className="text-base font-bold text-white">Live Edge Redirect Speed Benchmark</h2>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <Zap className="h-5 w-5 text-amber-500 dark:text-amber-400" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Live Edge Redirect Speed Benchmark</h2>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300/60 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20">
                 Interactive Lab
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
               Simulate an edge redirect hot-path request to verify sub-50ms atomic routing latency
             </p>
           </div>
@@ -287,34 +287,34 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
               key={step.label}
               className={`p-3.5 rounded-xl border transition-all ${
                 step.status === "done"
-                  ? "bg-slate-900/90 border-emerald-500/40 shadow-sm"
+                  ? "bg-white dark:bg-slate-900/90 border-emerald-500/60 dark:border-emerald-500/40 shadow-sm"
                   : step.status === "pending"
-                  ? "bg-indigo-950/40 border-indigo-500 animate-pulse"
-                  : "bg-slate-900/40 border-slate-800/80 opacity-60"
+                  ? "bg-indigo-100/70 dark:bg-indigo-950/40 border-indigo-500 animate-pulse"
+                  : "bg-white/80 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 opacity-90 dark:opacity-60"
               }`}
             >
               <div className="flex items-center justify-between text-xs mb-1">
-                <span className="text-[10px] font-mono text-slate-500">STAGE 0{idx + 1}</span>
-                <span className="font-mono font-bold text-emerald-400">
+                <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400">STAGE 0{idx + 1}</span>
+                <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
                   {step.status === "done" ? `~${step.time}ms` : "—"}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-slate-200 leading-tight">{step.label}</p>
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">{step.label}</p>
             </div>
           ))}
         </div>
 
         {/* Benchmark Result Badge */}
         {pingFinished && (
-          <div className="mt-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between flex-wrap gap-2 animate-in fade-in">
+          <div className="mt-4 p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-between flex-wrap gap-2 animate-in fade-in">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-400" />
-              <span className="text-xs font-bold text-white">
+              <ShieldCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-xs font-bold text-slate-900 dark:text-white">
                 Benchmark Passed: Verified Edge Response in{" "}
-                <strong className="text-emerald-400 font-mono text-sm">{totalLatency}ms</strong> (Hot-Path SLA &lt;50ms)
+                <strong className="text-emerald-600 dark:text-emerald-400 font-mono text-sm">{totalLatency}ms</strong> (Hot-Path SLA &lt;50ms)
               </span>
             </div>
-            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">
+            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 shadow-sm">
               Protocol: HTTP/3 QUIC Edge Redirect
             </span>
           </div>
