@@ -143,7 +143,21 @@ export const LoginPage: React.FC = () => {
         preload="auto"
       />
 
-      {/* BACKGROUND VIDEO — pure GPU render, no CSS filters for max sharpness */}
+      {/* SVG Sharpen Filter — unsharp mask to maximize perceived clarity */}
+      <svg width="0" height="0" style={{ position: "absolute" }}>
+        <defs>
+          <filter id="lp-sharpen" x="0%" y="0%" width="100%" height="100%" colorInterpolationFilters="sRGB">
+            <feConvolveMatrix
+              order="3"
+              kernelMatrix="0 -0.4 0  -0.4 2.6 -0.4  0 -0.4 0"
+              divisor="1"
+              preserveAlpha="true"
+            />
+          </filter>
+        </defs>
+      </svg>
+
+      {/* BACKGROUND VIDEO — GPU rendered + SVG unsharp mask sharpening */}
       <video
         ref={videoRef}
         src="/login-bg.mp4"
@@ -158,6 +172,7 @@ export const LoginPage: React.FC = () => {
           willChange: "transform",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
+          filter: "url(#lp-sharpen) contrast(1.06) saturate(1.08)",
         }}
       />
 
