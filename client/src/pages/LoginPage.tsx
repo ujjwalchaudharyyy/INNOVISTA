@@ -143,7 +143,7 @@ export const LoginPage: React.FC = () => {
         preload="auto"
       />
 
-      {/* 4K ULTRA-HD BACKGROUND VIDEO */}
+      {/* BACKGROUND VIDEO — pure GPU render, no CSS filters for max sharpness */}
       <video
         ref={videoRef}
         src="/login-bg.mp4"
@@ -155,7 +155,9 @@ export const LoginPage: React.FC = () => {
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         style={{
           transform: "translate3d(0, 0, 0)",
-          filter: "contrast(1.1) brightness(1.02) saturate(1.15)",
+          willChange: "transform",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
         }}
       />
 
