@@ -11,6 +11,7 @@ import { AnalyticsPage } from "./pages/AnalyticsPage";
 import { QrStudioPage } from "./pages/QrStudioPage";
 import { BulkImportPage } from "./pages/BulkImportPage";
 import { AdminShieldPage } from "./pages/AdminShieldPage";
+import { PageErrorBoundary } from "./components/PageErrorBoundary";
 import {
   LayoutDashboard,
   Link2,
@@ -121,13 +122,41 @@ export const App: React.FC = () => {
         {/* Page Content: pb-28 on mobile ensures nothing is cut off by bottom bar */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-28 lg:pb-8">
           <div className="max-w-7xl mx-auto">
-            {currentTab === "overview"   && <OverviewPage key={refreshKey} onOpenCreate={() => setCreateModalOpen(true)} />}
-            {currentTab === "links"      && <LinksPage key={refreshKey} onOpenCreate={() => setCreateModalOpen(true)} />}
-            {currentTab === "campaigns"  && <CampaignsPage key={refreshKey} />}
-            {currentTab === "analytics"  && <AnalyticsPage key={refreshKey} />}
-            {currentTab === "qr"         && <QrStudioPage key={refreshKey} />}
-            {currentTab === "bulk"       && <BulkImportPage key={refreshKey} />}
-            {currentTab === "admin"      && <AdminShieldPage key={refreshKey} />}
+            {currentTab === "overview" && (
+              <PageErrorBoundary pageName="Dashboard" onRetry={() => setRefreshKey(k => k + 1)}>
+                <OverviewPage key={refreshKey} onOpenCreate={() => setCreateModalOpen(true)} />
+              </PageErrorBoundary>
+            )}
+            {currentTab === "links" && (
+              <PageErrorBoundary pageName="My Links" onRetry={() => setRefreshKey(k => k + 1)}>
+                <LinksPage key={refreshKey} onOpenCreate={() => setCreateModalOpen(true)} />
+              </PageErrorBoundary>
+            )}
+            {currentTab === "campaigns" && (
+              <PageErrorBoundary pageName="Campaigns" onRetry={() => setRefreshKey(k => k + 1)}>
+                <CampaignsPage key={refreshKey} />
+              </PageErrorBoundary>
+            )}
+            {currentTab === "analytics" && (
+              <PageErrorBoundary pageName="Analytics" onRetry={() => setRefreshKey(k => k + 1)}>
+                <AnalyticsPage key={refreshKey} />
+              </PageErrorBoundary>
+            )}
+            {currentTab === "qr" && (
+              <PageErrorBoundary pageName="QR Studio" onRetry={() => setRefreshKey(k => k + 1)}>
+                <QrStudioPage key={refreshKey} />
+              </PageErrorBoundary>
+            )}
+            {currentTab === "bulk" && (
+              <PageErrorBoundary pageName="Bulk Import" onRetry={() => setRefreshKey(k => k + 1)}>
+                <BulkImportPage key={refreshKey} />
+              </PageErrorBoundary>
+            )}
+            {currentTab === "admin" && (
+              <PageErrorBoundary pageName="Admin Shield" onRetry={() => setRefreshKey(k => k + 1)}>
+                <AdminShieldPage key={refreshKey} />
+              </PageErrorBoundary>
+            )}
           </div>
         </main>
       </div>
