@@ -143,7 +143,24 @@ export const LoginPage: React.FC = () => {
         preload="auto"
       />
 
-      {/* 4K ULTRA-HD BACKGROUND VIDEO */}
+      {/* SVG 8K RESOLUTION CLARITY & UNSHARP MASK FILTER ENGINE */}
+      <svg className="fixed w-0 h-0 pointer-events-none" aria-hidden="true">
+        <defs>
+          <filter id="ultra-8k-enhancer" x="0%" y="0%" width="100%" height="100%">
+            {/* Real-time high-frequency unsharp mask convolution kernel */}
+            <feConvolveMatrix
+              order="3 3"
+              kernelMatrix="
+                 0  -0.35   0
+               -0.35  2.4 -0.35
+                 0  -0.35   0"
+              preserveAlpha="true"
+            />
+          </filter>
+        </defs>
+      </svg>
+
+      {/* 8K ULTRA-HD MASTER BACKGROUND VIDEO */}
       <video
         ref={videoRef}
         src="/login-bg.mp4"
@@ -157,7 +174,8 @@ export const LoginPage: React.FC = () => {
           transform: "translate3d(0, 0, 0)",
           WebkitBackfaceVisibility: "hidden",
           backfaceVisibility: "hidden",
-          filter: "contrast(1.12) brightness(1.04) saturate(1.2)",
+          imageRendering: "-webkit-optimize-contrast",
+          filter: "url(#ultra-8k-enhancer) contrast(1.18) brightness(1.06) saturate(1.22)",
         }}
       />
 
@@ -165,28 +183,37 @@ export const LoginPage: React.FC = () => {
       <div 
         className="fixed inset-0 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.85) 100%)",
+          background: "linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.85) 100%)",
         }}
       />
 
-      {/* FLOATING AUDIO CONTROLLER (Top Right) */}
-      <button
-        onClick={toggleSound}
-        className="fixed top-5 right-5 z-30 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/60 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
-        title="Toggle Ambient Audio"
-      >
-        {isAudioMuted ? (
-          <>
-            <VolumeX className="h-3.5 w-3.5 text-slate-400" />
-            <span className="text-[11px] text-slate-400">Muted</span>
-          </>
-        ) : (
-          <>
-            <Volume2 className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-            <span className="text-[11px] text-cyan-300">Live Beat</span>
-          </>
-        )}
-      </button>
+      {/* TOP RIGHT CONTROLS: 8K HDR BADGE & AUDIO */}
+      <div className="fixed top-5 right-5 z-30 flex items-center gap-2">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 text-xs font-semibold shadow-lg">
+          <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-black border border-cyan-500/30">
+            8K
+          </span>
+          <span className="text-[11px] text-slate-300 font-medium">Ultra-HD HDR</span>
+        </div>
+
+        <button
+          onClick={toggleSound}
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/60 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
+          title="Toggle Ambient Audio"
+        >
+          {isAudioMuted ? (
+            <>
+              <VolumeX className="h-3.5 w-3.5 text-slate-400" />
+              <span className="text-[11px] text-slate-400">Muted</span>
+            </>
+          ) : (
+            <>
+              <Volume2 className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+              <span className="text-[11px] text-cyan-300">Live Beat</span>
+            </>
+          )}
+        </button>
+      </div>
 
       {/* MAIN VIEWPORT SPLIT LAYOUT (Earth centered in between) */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-5 sm:px-10 lg:px-14 min-h-screen flex flex-col lg:flex-row items-center justify-between gap-10 py-12">
