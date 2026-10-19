@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: linkpulse-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build && npx prisma migrate deploy
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: linkpulse-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        value: https://your-frontend.vercel.app
+      - key: BASE_SHORT_URL
+        value: https://your-backend.onrender.com/r
+
+databases:
+  - name: linkpulse-db
+    plan: free

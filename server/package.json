@@ -7,10 +7,14 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "prisma:generate": "prisma generate",
+    "postinstall": "prisma generate",
     "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate deploy",
     "seed": "tsx prisma/seed.ts",
     "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
