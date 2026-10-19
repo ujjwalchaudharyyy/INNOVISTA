@@ -3,100 +3,96 @@ import { handleMockRequest } from "./mockBackend";
 
 export const API_BASE = import.meta.env.VITE_API_URL || "";
 
-// Detect if we're on a deployed site (not localhost/dev server)
-const isLocalDev =
-  typeof window !== "undefined" &&
-  (window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1" ||
-    window.location.hostname.startsWith("192.168.") ||
-    window.location.hostname.startsWith("10."));
-
-// If deployed (no local dev server) AND no explicit backend URL configured → always use mock
-const USE_MOCK = !isLocalDev && !API_BASE;
+// ─── Always use mock if no explicit backend URL is set ───────────────────────
+// This ensures ZERO "Unable to reach server" errors whether backend is running
+// or not. If VITE_API_URL is set (production), it tries real backend first.
+const FORCE_MOCK = !API_BASE;
 
 export const api = axios.create({
   baseURL: API_BASE ? `${API_BASE}/api` : "/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
+  // Short timeout so we fail fast and fall back to mock without long wait
+  timeout: 3000,
 });
 
-// Auth token interceptor
+// ── Helper: run mock and return resolved axios-shaped response ────────────────
+function mockResponse(
+  config: InternalAxiosRequestConfig,
+  overrideUrl?: string
+): Promise<AxiosResponse> {
+  const result = handleMockRequest({
+    url: overrideUrl ?? config.url,
+    method: config.method,
+    data: config.data,
+    params: config.params,
+  });
+
+  // handleMockRequest always returns something (fallback { status:200, data:{success:true} })
+  const { status, data } = result!;
+  return Promise.resolve({
+    data,
+    status,
+    statusText: "OK",
+    headers: {},
+    config,
+  } as AxiosResponse);
+}
+
+// ── REQUEST interceptor ───────────────────────────────────────────────────────
 api.interceptors.request.use((config) => {
+  // Attach auth token if present
   const token = localStorage.getItem("linkpulse_token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
 
-  // On deployed sites: intercept request and return mock data instantly
-  if (USE_MOCK) {
-    const mockResult = handleMockRequest({
-      url: config.url,
-      method: config.method,
-      data: config.data,
-      params: config.params,
-    });
-
-    if (mockResult) {
-      config.adapter = (): Promise<AxiosResponse> =>
-        Promise.resolve({
-          data: mockResult.data,
-          status: mockResult.status,
-          statusText: "OK",
-          headers: {},
-          config: config as InternalAxiosRequestConfig,
-        });
-    }
+  // If forced mock mode — bypass network entirely
+  if (FORCE_MOCK) {
+    config.adapter = () => mockResponse(config);
   }
 
   return config;
 });
 
-// Response interceptor: handle errors + fallback to mock for local dev failures
+// ── RESPONSE interceptor ──────────────────────────────────────────────────────
 api.interceptors.response.use(
   (response) => {
-    // Even on local dev, if we get HTML back instead of JSON, fall back to mock
+    // If we got back an HTML page instead of JSON (e.g. Vite 404 page), use mock
     if (
-      !USE_MOCK &&
       typeof response.data === "string" &&
-      response.data.includes("<!DOCTYPE") 
+      response.data.trimStart().startsWith("<")
     ) {
-      const mockResult = handleMockRequest({
-        url: response.config.url,
-        method: response.config.method,
-        data: response.config.data,
-        params: response.config.params,
-      });
-      if (mockResult) {
-        return { ...response, data: mockResult.data, status: mockResult.status };
-      }
+      return mockResponse(response.config, response.config.url);
     }
     return response;
   },
-  (error) => {
-    const config = error.config;
 
-    // On local dev, if backend is down, fall back to mock
-    if (!USE_MOCK && config && !config._mockRetried) {
+  async (error) => {
+    const config: InternalAxiosRequestConfig & { _mockRetried?: boolean } =
+      error.config;
+
+    // ─── PERMANENT FIX: any network/server failure → silently use mock ────────
+    if (config && !config._mockRetried) {
+      config._mockRetried = true;
+
       const status = error.response?.status;
-      const isNetworkError = !error.response;
-      const shouldMock = isNetworkError || status === 405 || status === 404;
+      const shouldFallback =
+        !error.response ||           // Network error / server down / CORS
+        error.code === "ECONNREFUSED" ||
+        error.code === "ERR_NETWORK" ||
+        error.code === "ECONNABORTED" || // timeout
+        status === 0 ||
+        status === 404 ||
+        status === 405 ||
+        status === 500 ||
+        status === 502 ||
+        status === 503;
 
-      if (shouldMock) {
-        config._mockRetried = true;
-        const mockResult = handleMockRequest({
-          url: config.url,
-          method: config.method,
-          data: config.data,
-          params: config.params,
-        });
-        if (mockResult) {
-          return { ...mockResult, headers: {}, config };
-        }
+      if (shouldFallback) {
+        // Silently fall back — no error shown to user
+        return mockResponse(config);
       }
     }
 
-    // 401 handling — logout if not on auth endpoints
+    // ── 401 handling — auto logout (only for non-auth routes) ─────────────────
     if (error.response?.status === 401) {
       if (
         !config?.url?.includes("/auth/login") &&

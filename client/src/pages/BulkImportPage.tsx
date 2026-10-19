@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UploadCloud, Download, CheckCircle2, AlertCircle, FileText, ArrowRight } from "lucide-react";
+import { UploadCloud, Download, CheckCircle2, AlertCircle, FileText, ArrowRight, Table } from "lucide-react";
 import { api, API_BASE } from "../services/api";
 
 export const BulkImportPage: React.FC = () => {
@@ -17,6 +17,7 @@ export const BulkImportPage: React.FC = () => {
     a.href = url;
     a.download = "linkpulse-import-template.csv";
     a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleExportAll = () => {
@@ -49,7 +50,7 @@ export const BulkImportPage: React.FC = () => {
   const handleValidate = async () => {
     const rows = parseCsvToRows(csvText);
     if (rows.length === 0) {
-      alert("Please paste valid CSV data with headers");
+      alert("Please paste valid CSV data with header row (title,originalUrl,customAlias)");
       return;
     }
 
@@ -72,7 +73,7 @@ export const BulkImportPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await api.post("/bulk/import", { rows: validRows });
-      setImportSuccess(res.data.message);
+      setImportSuccess(res.data.message || `Successfully imported ${validRows.length} links`);
       setValidationResult(null);
       setCsvText("");
     } catch (err: any) {
@@ -83,30 +84,36 @@ export const BulkImportPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/80">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-12">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            Bulk CSV Management
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+              <UploadCloud className="h-6 w-6 text-indigo-400" />
+              Bulk CSV Management
+            </h1>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              High Volume Engine
+            </span>
+          </div>
           <p className="text-xs text-slate-400 mt-1">
             Batch create hundreds of short links with real-time validation preview matrix
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={handleDownloadSample}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-medium transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-medium transition cursor-pointer"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>Sample CSV</span>
+            <span>Sample Template</span>
           </button>
           <button
             onClick={handleExportAll}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30 transition"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30 transition cursor-pointer"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>Export All Links</span>
+            <span>Export Active</span>
           </button>
         </div>
       </div>
@@ -114,21 +121,21 @@ export const BulkImportPage: React.FC = () => {
       {importSuccess && (
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
           <CheckCircle2 className="h-5 w-5 shrink-0" />
-          <span className="font-medium">{importSuccess}</span>
+          <span className="font-semibold">{importSuccess}</span>
         </div>
       )}
 
       {/* CSV Input Area */}
-      <div className="p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-sm space-y-4">
+      <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-4">
         <div className="flex items-center justify-between">
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-            Paste CSV Contents (title, originalUrl, customAlias)
+          <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+            Paste CSV Data (title, originalUrl, customAlias)
           </label>
           <button
             onClick={() => setCsvText(sampleCsv)}
-            className="text-xs text-indigo-400 hover:underline"
+            className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition cursor-pointer"
           >
-            Fill Sample Data
+            Fill Sample Rows
           </button>
         </div>
 
@@ -136,17 +143,17 @@ export const BulkImportPage: React.FC = () => {
           rows={6}
           value={csvText}
           onChange={(e) => setCsvText(e.target.value)}
-          placeholder={`title,originalUrl,customAlias\nMy Link,https://example.com,my-link`}
-          className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-indigo-500"
+          placeholder={`title,originalUrl,customAlias\nProduct Demo Video,https://youtube.com/watch?v=demo,demo-video`}
+          className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 shadow-inner"
         />
 
         <div className="flex justify-end">
           <button
             onClick={handleValidate}
             disabled={loading || !csvText.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md shadow-indigo-600/30 disabled:opacity-50 transition"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-indigo-600/30 disabled:opacity-50 transition cursor-pointer"
           >
-            <span>Preview & Validate Rows</span>
+            <span>{loading ? "Validating..." : "Preview & Validate Rows"}</span>
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
@@ -154,18 +161,22 @@ export const BulkImportPage: React.FC = () => {
 
       {/* Validation Matrix */}
       {validationResult && (
-        <div className="p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-sm space-y-4 animate-in fade-in">
-          <div className="flex items-center justify-between">
+        <div className="p-5 sm:p-6 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-4 animate-in fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-base font-bold text-white">Validation Preview Matrix</h2>
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <Table className="h-4 w-4 text-indigo-400" />
+                Validation Preview Matrix
+              </h2>
               <p className="text-xs text-slate-400">
-                {validationResult.validCount} valid rows ready for import, {validationResult.invalidCount} with issues
+                <strong className="text-emerald-400">{validationResult.validCount}</strong> valid rows ready for import,{" "}
+                <strong className="text-rose-400">{validationResult.invalidCount}</strong> with issues
               </p>
             </div>
             <button
               onClick={handleExecuteImport}
               disabled={loading || validationResult.validCount === 0}
-              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-md shadow-emerald-600/30 disabled:opacity-50 transition"
+              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 disabled:opacity-50 transition cursor-pointer self-start sm:self-auto"
             >
               Import {validationResult.validCount} Valid Links
             </button>
@@ -173,35 +184,40 @@ export const BulkImportPage: React.FC = () => {
 
           <div className="overflow-x-auto rounded-xl border border-slate-800">
             <table className="w-full text-left border-collapse text-xs">
-              <thead className="bg-slate-900/60 border-b border-slate-800 text-[11px] text-slate-400 uppercase">
+              <thead className="bg-slate-900/80 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 <tr>
-                  <th className="py-2.5 px-3">Row</th>
-                  <th className="py-2.5 px-3">Title</th>
-                  <th className="py-2.5 px-3">Original URL</th>
-                  <th className="py-2.5 px-3">Alias</th>
-                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-3 px-3">Row</th>
+                  <th className="py-3 px-3">Title</th>
+                  <th className="py-3 px-3">Destination URL</th>
+                  <th className="py-3 px-3">Alias</th>
+                  <th className="py-3 px-3">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
-                {validationResult.rows.map((r: any) => (
-                  <tr key={r.rowIndex} className={r.isValid ? "" : "bg-rose-500/5"}>
-                    <td className="py-2.5 px-3 font-mono text-slate-400">#{r.rowIndex}</td>
-                    <td className="py-2.5 px-3 font-semibold text-slate-200">{r.title}</td>
-                    <td className="py-2.5 px-3 text-slate-400 truncate max-w-xs">{r.originalUrl}</td>
-                    <td className="py-2.5 px-3 font-mono text-indigo-400">{r.customAlias || "Auto"}</td>
-                    <td className="py-2.5 px-3">
-                      {r.isValid ? (
-                        <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                          ✓ Ready
-                        </span>
-                      ) : (
-                        <span className="text-rose-400 font-semibold flex items-center gap-1" title={r.errors.join(", ")}>
-                          ✕ {r.errors[0]}
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {(validationResult.rows || []).map((r: any, idx: number) => {
+                  const rowNum = r.index ?? r.rowIndex ?? idx + 1;
+                  const errorMsg = r.error || (Array.isArray(r.errors) ? r.errors[0] : null) || "Invalid URL";
+
+                  return (
+                    <tr key={rowNum} className={r.isValid ? "hover:bg-slate-900/30" : "bg-rose-500/5 hover:bg-rose-500/10"}>
+                      <td className="py-3 px-3 font-mono text-slate-400">#{rowNum}</td>
+                      <td className="py-3 px-3 font-bold text-slate-200 truncate max-w-[150px]">{r.title || "—"}</td>
+                      <td className="py-3 px-3 text-slate-400 truncate max-w-xs">{r.originalUrl}</td>
+                      <td className="py-3 px-3 font-mono text-cyan-400">{r.customAlias || "Auto"}</td>
+                      <td className="py-3 px-3">
+                        {r.isValid ? (
+                          <span className="text-emerald-400 font-bold inline-flex items-center gap-1">
+                            ✓ Ready
+                          </span>
+                        ) : (
+                          <span className="text-rose-400 font-bold inline-flex items-center gap-1" title={errorMsg}>
+                            ✕ {errorMsg}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

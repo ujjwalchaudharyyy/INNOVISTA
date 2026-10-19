@@ -203,7 +203,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-12 overflow-hidden select-none bg-black font-sans">
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-12 overflow-y-auto overflow-x-hidden select-none bg-black font-sans py-8">
       
       {/* Background Loop Audio (Last 3s Trimmed on every Loop) */}
       <audio
@@ -228,11 +228,11 @@ export const LoginPage: React.FC = () => {
       {autoplayBlocked && (
         <div
           onClick={toggleSound}
-          className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-2.5 rounded-full bg-cyan-500/30 backdrop-blur-xl border border-cyan-400 text-white shadow-2xl shadow-cyan-500/40 cursor-pointer animate-pulse"
+          className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-2 rounded-full bg-cyan-500/30 backdrop-blur-xl border border-cyan-400 text-white shadow-2xl shadow-cyan-500/40 cursor-pointer animate-pulse"
         >
           <Volume2 className="h-4 w-4 text-cyan-300 animate-spin" style={{ animationDuration: "3s" }} />
           <span className="text-xs font-semibold tracking-wide">
-            🎵 Click anywhere to start Sound & AI Intro
+            🎵 Tap anywhere to start Sound & AI Voice
           </span>
         </div>
       )}
@@ -246,7 +246,7 @@ export const LoginPage: React.FC = () => {
         playsInline
         preload="auto"
         onTimeUpdate={handleTimeUpdate}
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         style={{
           transform: "translate3d(0, 0, 0)",
           filter: "contrast(1.1) brightness(1.02) saturate(1.15)",
@@ -255,27 +255,38 @@ export const LoginPage: React.FC = () => {
 
       {/* 2. SUBTLE CINEMATIC GRADIENT */}
       <div 
-        className="absolute inset-0 z-10 pointer-events-none"
+        className="fixed inset-0 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 45%, rgba(0, 0, 0, 0.75) 100%)"
+          background: "linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.85) 100%)"
         }}
       />
 
       {/* Sound Toggle Floating Button */}
       <button
         onClick={toggleSound}
-        className="absolute top-6 right-6 z-30 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/15 text-slate-300 hover:text-white transition text-xs font-medium cursor-pointer shadow-lg"
+        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
         title="Toggle Background Music"
       >
         {isAudioMuted ? <VolumeX className="h-4 w-4 text-slate-400" /> : <Volume2 className="h-4 w-4 text-cyan-400 animate-pulse" />}
-        <span>{isAudioMuted ? "Sound Off" : "Beat Active"}</span>
+        <span className="hidden sm:inline">{isAudioMuted ? "Sound Off" : "Beat Active"}</span>
       </button>
 
       {/* 3. CONTENT WRAPPER */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      <div className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
         
-        {/* LEFT COLUMN: Clean Futuristic Branding */}
-        <div className="lg:col-span-7 space-y-6 text-white pl-2 sm:pl-4">
+        {/* MOBILE COMPACT BRAND (shown only on < lg) */}
+        <div className="lg:hidden text-center space-y-2 text-white pt-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-cyan-300 text-[10px] font-bold tracking-wider uppercase">
+            <Globe2 className="h-3 w-3 text-cyan-400 animate-spin" style={{ animationDuration: "12s" }} />
+            <span>Autonomous Engine v2.0</span>
+          </div>
+          <h1 className="text-3xl font-black tracking-tight text-white">
+            Link<span className="text-cyan-400">Pulse</span>
+          </h1>
+        </div>
+
+        {/* LEFT COLUMN: Clean Futuristic Branding (Desktop only) */}
+        <div className="hidden lg:block lg:col-span-7 space-y-6 text-white pl-2 sm:pl-4">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-cyan-300 text-xs font-semibold tracking-wider uppercase">
             <Globe2 className="h-3.5 w-3.5 text-cyan-400 animate-spin" style={{ animationDuration: "12s" }} />

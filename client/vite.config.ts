@@ -12,11 +12,18 @@ export default defineConfig({
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
+        bypass(req) {
+          // Never proxy static assets
+          if (/\.(jpg|jpeg|png|webp|svg|gif|mp4|mp3|ico|woff2?)(\?.*)?$/.test(req.url ?? '')) return req.url;
+        },
       },
       '/r': {
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
+        bypass(req) {
+          if (/\.(jpg|jpeg|png|webp|svg|gif|mp4|mp3|ico|woff2?)(\?.*)?$/.test(req.url ?? '')) return req.url;
+        },
       },
     },
   },

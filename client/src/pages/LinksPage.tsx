@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { 
   Search, 
-  Filter, 
   ExternalLink, 
   Copy, 
   Check, 
@@ -12,8 +11,14 @@ import {
   Power,
   ChevronLeft,
   ChevronRight,
-  Download,
-  AlertCircle
+  Plus,
+  Link2,
+  TrendingUp,
+  Tag,
+  Sparkles,
+  ShieldAlert,
+  Clock,
+  Layers
 } from "lucide-react";
 import { api, API_BASE } from "../services/api";
 
@@ -35,20 +40,23 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
     try {
       setLoading(true);
       const res = await api.get("/links", {
-        params: { search, status, page, limit: 10 },
+        params: { search, status, page, limit: 12 },
       });
-      setLinks(res.data.links);
-      setTotalPages(res.data.pagination.totalPages);
-      setTotalLinks(res.data.pagination.total);
+      const fetchedLinks = res?.data?.links || [];
+      setLinks(fetchedLinks);
+      setTotalPages(res?.data?.pagination?.totalPages || 1);
+      setTotalLinks(res?.data?.pagination?.total || fetchedLinks.length);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching links:", err);
+      setLinks([]);
     } finally {
       setLoading(false);
     }
   };
 
   const copyUrl = (shortCode: string, id: string) => {
-    navigator.clipboard.writeText(`${API_BASE}/r/${shortCode}`);
+    const fullUrl = `${API_BASE}/r/${shortCode}`;
+    navigator.clipboard.writeText(fullUrl);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -77,25 +85,47 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
     window.open(`${API_BASE}/api/links/${id}/qr?format=png`, "_blank");
   };
 
+  // Safe tag extraction helper (handles { tag: { name } }, { name }, or string)
+  const extractTagName = (t: any): string => {
+    if (!t) return "";
+    if (typeof t === "string") return t;
+    if (t.tag?.name) return String(t.tag.name);
+    if (t.name) return String(t.name);
+    return "";
+  };
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/80">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-12">
+      {/* Top Banner Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">My Short Links</h1>
-          <p className="text-xs text-slate-400 mt-1">Manage, filter, monitor and secure your published URLs ({totalLinks} Total)</p>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+              <Link2 className="h-6 w-6 text-indigo-400" />
+              My Short Links
+            </h1>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              {totalLinks} Active
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 mt-1">
+            Real-time redirect management, atomic click metrics, and vanity routing rules
+          </p>
         </div>
+
         <button
           onClick={onOpenCreate}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md shadow-indigo-600/30 transition self-start sm:self-auto"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-indigo-500/20 transition active:scale-95 self-start sm:self-auto cursor-pointer"
         >
-          <span>+ Create Link</span>
+          <Plus className="h-4 w-4" />
+          <span>Create Short Link</span>
         </button>
       </div>
 
-      {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+      {/* Filters & Search Toolbar */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
             value={search}
@@ -103,18 +133,17 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
               setSearch(e.target.value);
               setPage(1);
             }}
-            placeholder="Search links, aliases or URLs..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition"
+            placeholder="Search titles, short alias, or destination URLs..."
+            className="w-full bg-[#0F172A] border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition shadow-inner"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+        {/* Status filter pills (horizontal scrollable on mobile) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           {[
             { id: "all", label: "All Links" },
             { id: "active", label: "Active" },
-            { id: "expired", label: "Expired" },
-            { id: "disabled", label: "Disabled" },
-            { id: "protected", label: "Password Lock" },
+            { id: "inactive", label: "Disabled" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -122,10 +151,10 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                 setStatus(tab.id);
                 setPage(1);
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                 status === tab.id
-                  ? "bg-slate-800 text-white border border-slate-700"
-                  : "bg-slate-900/60 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500"
+                  : "bg-slate-900/80 text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-800/80"
               }`}
             >
               {tab.label}
@@ -134,188 +163,331 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
         </div>
       </div>
 
-      {/* Links Data Table */}
-      <div className="rounded-2xl bg-[#0F172A] border border-slate-800 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/40 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                <th className="py-3 px-4">Link Details</th>
-                <th className="py-3 px-4">Campaign</th>
-                <th className="py-3 px-4">Clicks</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Created</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-xs">
-              {loading ? (
-                <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
-                    Loading links telemetry...
-                  </td>
-                </tr>
-              ) : links.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
-                    No short links matching query. Click "+ Create Link" to start.
-                  </td>
-                </tr>
-              ) : (
-                links.map((link) => (
-                  <tr key={link.id} className="hover:bg-slate-900/40 transition">
-                    <td className="py-3.5 px-4 max-w-xs">
+      {/* Content View: Responsive Cards on Mobile / Clean Table on Desktop */}
+      {loading ? (
+        <div className="p-12 text-center rounded-2xl bg-[#0F172A] border border-slate-800/80">
+          <div className="inline-block h-8 w-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin mb-3" />
+          <p className="text-xs font-semibold text-slate-400">Loading links telemetry...</p>
+        </div>
+      ) : links.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl bg-[#0F172A] border border-slate-800/80 space-y-3">
+          <div className="h-12 w-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto border border-indigo-500/20">
+            <Link2 className="h-6 w-6" />
+          </div>
+          <h3 className="text-base font-bold text-white">No short links found</h3>
+          <p className="text-xs text-slate-400 max-w-sm mx-auto">
+            {search ? "No links matched your search filter." : "Get started by generating your first high-speed shortened link."}
+          </p>
+          <button
+            onClick={onOpenCreate}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-md shadow-indigo-600/25"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Create Link Now</span>
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* 1. MOBILE CARD VIEW (visible on small/medium screens < lg) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+            {links.map((link) => {
+              const tagsList = Array.isArray(link.tags)
+                ? link.tags.map(extractTagName).filter(Boolean)
+                : [];
+              const campaignName = link.campaign?.name || (typeof link.campaign === "string" ? link.campaign : null);
+              const campaignColor = link.campaign?.color || "#6366F1";
+
+              return (
+                <div
+                  key={link.id}
+                  className="p-4 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-md space-y-3 relative overflow-hidden"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-100 truncate">{link.title}</span>
+                        <h3 className="font-bold text-sm text-white truncate">{link.title || link.shortCode}</h3>
                         {link.hasPassword && (
                           <span title="Password Protected" className="p-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
                             <Lock className="h-3 w-3" />
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="font-mono text-indigo-400 text-xs">
-                          {link.shortCode}
-                        </span>
-                        <span className="text-slate-500">→</span>
-                        <span className="text-slate-400 truncate text-[11px] max-w-[200px]" title={link.originalUrl}>
-                          {link.originalUrl}
-                        </span>
-                      </div>
-                      {link.tags && link.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1.5">
-                          {link.tags.map((t: string) => (
-                            <span key={t} className="text-[10px] text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded">
-                              #{t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </td>
+                      <p className="text-[11px] text-slate-400 truncate mt-0.5" title={link.originalUrl}>
+                        {link.originalUrl}
+                      </p>
+                    </div>
 
-                    <td className="py-3.5 px-4">
-                      {link.campaign ? (
-                        <span
-                          className="px-2 py-0.5 rounded-md text-[11px] font-semibold"
-                          style={{
-                            backgroundColor: `${link.campaign.color}20`,
-                            color: link.campaign.color,
-                            border: `1px solid ${link.campaign.color}40`,
-                          }}
-                        >
-                          {link.campaign.name}
-                        </span>
-                      ) : (
-                        <span className="text-slate-500 text-[11px]">—</span>
-                      )}
-                    </td>
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
+                        link.isActive
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                      }`}
+                    >
+                      {link.isActive ? "Active" : "Disabled"}
+                    </span>
+                  </div>
 
-                    <td className="py-3.5 px-4">
-                      <div className="font-bold text-white text-sm">{link.clickCount}</div>
-                      {link.clickLimit && (
-                        <div className="text-[10px] text-slate-400">Cap: {link.clickLimit}</div>
-                      )}
-                    </td>
+                  {/* Short Link display pill */}
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+                    <span className="font-mono text-xs font-semibold text-cyan-400 truncate">
+                      linkpulse.io/r/{link.shortCode}
+                    </span>
+                    <button
+                      onClick={() => copyUrl(link.shortCode, link.id)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition shrink-0"
+                    >
+                      {copiedId === link.id ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                    </button>
+                  </div>
 
-                    <td className="py-3.5 px-4">
-                      {!link.isActive ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                          Disabled
-                        </span>
-                      ) : link.isExpired ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                          Expired
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                          Active
-                        </span>
-                      )}
-                    </td>
+                  {/* Metadata Row: Clicks + Campaign + Tags */}
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-white font-bold">
+                      <TrendingUp className="h-3.5 w-3.5 text-indigo-400" />
+                      <span>{link.clickCount || 0} Clicks</span>
+                    </div>
 
-                    <td className="py-3.5 px-4 text-slate-400 text-[11px]">
+                    {campaignName && (
+                      <span
+                        className="px-2 py-0.5 rounded-md text-[10px] font-semibold"
+                        style={{
+                          backgroundColor: `${campaignColor}15`,
+                          color: campaignColor,
+                          border: `1px solid ${campaignColor}30`,
+                        }}
+                      >
+                        {campaignName}
+                      </span>
+                    )}
+
+                    {tagsList.slice(0, 2).map((t, idx) => (
+                      <span key={`${t}-${idx}`} className="text-[10px] text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Mobile Actions Toolbar */}
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
+                    <span className="text-[10px] text-slate-500 font-medium">
                       {new Date(link.createdAt).toLocaleDateString()}
-                    </td>
+                    </span>
 
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => copyUrl(link.shortCode, link.id)}
-                          title="Copy Link"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
-                        >
-                          {copiedId === link.id ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
-                        </button>
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={`${API_BASE}/r/${link.shortCode}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                        title="Visit destination"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                      <button
+                        onClick={() => downloadQr(link.id, link.shortCode)}
+                        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                        title="Download QR"
+                      >
+                        <QrCode className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => toggleLinkStatus(link)}
+                        className={`p-2 rounded-lg transition ${
+                          link.isActive ? "text-emerald-400 hover:bg-slate-800" : "text-slate-500 hover:bg-slate-800"
+                        }`}
+                        title={link.isActive ? "Deactivate" : "Activate"}
+                      >
+                        <Power className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => deleteLink(link.id)}
+                        className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+                        title="Delete link"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-                        <a
-                          href={`${API_BASE}/r/${link.shortCode}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title="Visit Short URL"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-
-                        <button
-                          onClick={() => downloadQr(link.id, link.shortCode)}
-                          title="Download QR Code"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
-                        >
-                          <QrCode className="h-4 w-4" />
-                        </button>
-
-                        <button
-                          onClick={() => toggleLinkStatus(link)}
-                          title={link.isActive ? "Deactivate Link" : "Activate Link"}
-                          className={`p-1.5 rounded-lg transition ${
-                            link.isActive ? "text-emerald-400 hover:bg-slate-800" : "text-slate-500 hover:bg-slate-800"
-                          }`}
-                        >
-                          <Power className="h-4 w-4" />
-                        </button>
-
-                        <button
-                          onClick={() => deleteLink(link.id)}
-                          title="Delete Link"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
+          {/* 2. DESKTOP TABLE VIEW (visible on lg screens) */}
+          <div className="hidden lg:block rounded-2xl bg-[#0F172A] border border-slate-800 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-slate-900/60 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <th className="py-3.5 px-4">Link Details & Short Route</th>
+                    <th className="py-3.5 px-4">Campaign</th>
+                    <th className="py-3.5 px-4">Clicks</th>
+                    <th className="py-3.5 px-4">Status</th>
+                    <th className="py-3.5 px-4">Created</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-xs">
+                  {links.map((link) => {
+                    const tagsList = Array.isArray(link.tags)
+                      ? link.tags.map(extractTagName).filter(Boolean)
+                      : [];
+                    const campaignName = link.campaign?.name || (typeof link.campaign === "string" ? link.campaign : null);
+                    const campaignColor = link.campaign?.color || "#6366F1";
 
-        {/* Pagination Footer */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between p-4 border-t border-slate-800 text-xs text-slate-400">
-            <span>
-              Page {page} of {totalPages}
-            </span>
-            <div className="flex gap-2">
-              <button
-                disabled={page <= 1}
-                onClick={() => setPage(page - 1)}
-                className="p-1.5 rounded-lg border border-slate-800 hover:bg-slate-800 disabled:opacity-40 transition"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                disabled={page >= totalPages}
-                onClick={() => setPage(page + 1)}
-                className="p-1.5 rounded-lg border border-slate-800 hover:bg-slate-800 disabled:opacity-40 transition"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
+                    return (
+                      <tr key={link.id} className="hover:bg-slate-900/40 transition">
+                        <td className="py-4 px-4 max-w-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-100 truncate text-sm">{link.title || link.shortCode}</span>
+                            {link.hasPassword && (
+                              <span title="Password Protected" className="p-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                <Lock className="h-3 w-3" />
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="font-mono text-cyan-400 font-semibold text-xs">
+                              {link.shortCode}
+                            </span>
+                            <span className="text-slate-600">→</span>
+                            <span className="text-slate-400 truncate text-[11px] max-w-[220px]" title={link.originalUrl}>
+                              {link.originalUrl}
+                            </span>
+                          </div>
+                          {tagsList.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1.5">
+                              {tagsList.map((t, idx) => (
+                                <span key={`${t}-${idx}`} className="text-[10px] text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded">
+                                  #{t}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="py-4 px-4">
+                          {campaignName ? (
+                            <span
+                              className="px-2.5 py-1 rounded-md text-[11px] font-semibold"
+                              style={{
+                                backgroundColor: `${campaignColor}15`,
+                                color: campaignColor,
+                                border: `1px solid ${campaignColor}35`,
+                              }}
+                            >
+                              {campaignName}
+                            </span>
+                          ) : (
+                            <span className="text-slate-500 text-[11px]">—</span>
+                          )}
+                        </td>
+
+                        <td className="py-4 px-4">
+                          <div className="font-extrabold text-white text-sm">{link.clickCount || 0}</div>
+                          {link.clickLimit && (
+                            <div className="text-[10px] text-slate-400">Cap: {link.clickLimit}</div>
+                          )}
+                        </td>
+
+                        <td className="py-4 px-4">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold ${
+                              link.isActive
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                            }`}
+                          >
+                            {link.isActive ? "Active" : "Disabled"}
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-4 text-slate-400 text-[11px]">
+                          {new Date(link.createdAt).toLocaleDateString()}
+                        </td>
+
+                        <td className="py-4 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => copyUrl(link.shortCode, link.id)}
+                              title="Copy Short URL"
+                              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                            >
+                              {copiedId === link.id ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                            </button>
+
+                            <a
+                              href={`${API_BASE}/r/${link.shortCode}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              title="Visit Destination"
+                              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+
+                            <button
+                              onClick={() => downloadQr(link.id, link.shortCode)}
+                              title="Download QR Code"
+                              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                            >
+                              <QrCode className="h-4 w-4" />
+                            </button>
+
+                            <button
+                              onClick={() => toggleLinkStatus(link)}
+                              title={link.isActive ? "Deactivate Link" : "Activate Link"}
+                              className={`p-2 rounded-xl transition cursor-pointer ${
+                                link.isActive ? "text-emerald-400 hover:bg-slate-800" : "text-slate-500 hover:bg-slate-800"
+                              }`}
+                            >
+                              <Power className="h-4 w-4" />
+                            </button>
+
+                            <button
+                              onClick={() => deleteLink(link.id)}
+                              title="Delete Link"
+                              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition cursor-pointer"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
+
+      {/* Pagination Footer */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-[#0F172A] border border-slate-800 text-xs text-slate-400">
+          <span>
+            Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong>
+          </span>
+          <div className="flex gap-2">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+              className="p-2 rounded-xl border border-slate-800 hover:bg-slate-800 disabled:opacity-40 transition cursor-pointer"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              disabled={page >= totalPages}
+              onClick={() => setPage(page + 1)}
+              className="p-2 rounded-xl border border-slate-800 hover:bg-slate-800 disabled:opacity-40 transition cursor-pointer"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
