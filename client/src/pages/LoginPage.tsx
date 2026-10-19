@@ -184,7 +184,7 @@ export const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* 3D STAR FIELD CANVAS — depth parallax around Earth */}
+      {/* 3D STAR FIELD — edges only, Earth center 100% clear */}
       <canvas
         ref={(canvas) => {
           if (!canvas || (canvas as any).__stars_init) return;
@@ -199,49 +199,87 @@ export const LoginPage: React.FC = () => {
           resize();
           window.addEventListener("resize", resize);
 
-          // Generate stars with 3D depth
-          const stars: { x: number; y: number; z: number; size: number; twinkleSpeed: number; twinkleOffset: number }[] = [];
-          for (let i = 0; i < 200; i++) {
+          // Color palette for realistic stars
+          const starColors = [
+            [255, 255, 255],   // pure white
+            [200, 220, 255],   // cool blue
+            [255, 240, 220],   // warm yellow
+            [180, 200, 255],   // icy blue
+            [255, 210, 180],   // soft orange
+          ];
+
+          // Generate stars — ONLY in edge zones, never near center
+          interface Star {
+            x: number; y: number; z: number; size: number;
+            speed: number; offset: number; color: number[];
+            driftX: number; driftY: number;
+          }
+          const stars: Star[] = [];
+          for (let i = 0; i < 120; i++) {
+            let x: number, y: number;
+            // Keep generating until star is far from center
+            do {
+              x = Math.random() * 2 - 1;
+              y = Math.random() * 2 - 1;
+            } while (Math.sqrt(x * x + y * y) < 0.55); // 55% exclusion = Earth fully clear
+
             stars.push({
-              x: Math.random() * 2 - 1,
-              y: Math.random() * 2 - 1,
+              x, y,
               z: Math.random(),
-              size: Math.random() * 1.8 + 0.3,
-              twinkleSpeed: Math.random() * 0.02 + 0.005,
-              twinkleOffset: Math.random() * Math.PI * 2,
+              size: Math.random() * 1.4 + 0.2,
+              speed: Math.random() * 0.008 + 0.002,
+              offset: Math.random() * Math.PI * 2,
+              color: starColors[Math.floor(Math.random() * starColors.length)],
+              driftX: (Math.random() - 0.5) * 0.00008,
+              driftY: (Math.random() - 0.5) * 0.00008,
             });
           }
 
-          let frame = 0;
+          let t = 0;
           const render = () => {
-            frame++;
+            t++;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
 
             for (const star of stars) {
-              // Skip stars in the center zone (where Earth video is)
-              const sx = cx + star.x * cx * 0.95;
-              const sy = cy + star.y * cy * 0.95;
-              const distFromCenter = Math.sqrt((sx - cx) ** 2 + (sy - cy) ** 2);
-              const maxDist = Math.min(cx, cy);
-              if (distFromCenter < maxDist * 0.3) continue;
+              // Gentle drift
+              star.x += star.driftX;
+              star.y += star.driftY;
+              // Wrap around edges
+              if (star.x > 1.1) star.x = -1.1;
+              if (star.x < -1.1) star.x = 1.1;
+              if (star.y > 1.1) star.y = -1.1;
+              if (star.y < -1.1) star.y = 1.1;
 
-              const depthScale = 0.4 + star.z * 0.6;
-              const size = star.size * depthScale;
-              const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(frame * star.twinkleSpeed + star.twinkleOffset));
-              const alpha = twinkle * depthScale * 0.85;
+              const sx = cx + star.x * cx;
+              const sy = cy + star.y * cy;
 
+              // Double-check: skip if somehow drifted into center
+              const dist = Math.sqrt((sx - cx) ** 2 + (sy - cy) ** 2);
+              if (dist < Math.min(cx, cy) * 0.5) continue;
+
+              const depth = 0.3 + star.z * 0.7;
+              const sz = star.size * depth;
+              // Smooth sine twinkle
+              const twinkle = 0.5 + 0.5 * Math.sin(t * star.speed + star.offset);
+              const alpha = twinkle * depth * 0.7;
+              const [r, g, b] = star.color;
+
+              // Star core
               ctx.beginPath();
-              ctx.arc(sx, sy, size, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+              ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
               ctx.fill();
 
-              // Subtle glow for larger stars
-              if (size > 1.2) {
+              // Soft glow halo for brighter stars
+              if (sz > 0.8) {
+                const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, sz * 4);
+                grad.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.2})`);
+                grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
                 ctx.beginPath();
-                ctx.arc(sx, sy, size * 2.5, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(200, 220, 255, ${alpha * 0.12})`;
+                ctx.arc(sx, sy, sz * 4, 0, Math.PI * 2);
+                ctx.fillStyle = grad;
                 ctx.fill();
               }
             }
