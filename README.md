@@ -369,27 +369,36 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 <table>
   <tr>
-    <td align="center" width="180">
-      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Vaibhavi%20Pandey&backgroundColor=6C5CE7&radius=50" width="90" alt="Vaibhavi Pandey" /><br/>
-      <b>Vaibhavi Pandey</b><br/>
-      <sub>💜 Team Member</sub>
+    <td align="center" width="200">
+      <a href="https://github.com/vaibhavi123-p">
+        <img src="https://github.com/vaibhavi123-p.png" width="100" alt="Vaibhavi Pandey" /><br/>
+        <b>Vaibhavi Pandey</b>
+      </a><br/>
+      <sub>Team Member</sub>
     </td>
-    <td align="center" width="180">
-      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Tushar&backgroundColor=00B894&radius=50" width="90" alt="Tushar" /><br/>
-      <b>Tushar</b><br/>
-      <sub>💚 Team Member</sub>
+    <td align="center" width="200">
+      <a href="https://github.com/Tushar-Gahlout">
+        <img src="https://github.com/Tushar-Gahlout.png" width="100" alt="Tushar Gahlout" /><br/>
+        <b>Tushar Gahlout</b>
+      </a><br/>
+      <sub>Team Member</sub>
     </td>
-    <td align="center" width="180">
-      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Sumit&backgroundColor=0984E3&radius=50" width="90" alt="Sumit" /><br/>
-      <b>Sumit</b><br/>
-      <sub>💙 Team Member</sub>
+    <td align="center" width="200">
+      <a href="https://github.com/sumitsanwal07">
+        <img src="https://github.com/sumitsanwal07.png" width="100" alt="Sumit Sanwal" /><br/>
+        <b>Sumit Sanwal</b>
+      </a><br/>
+      <sub>Team Member</sub>
     </td>
-    <td align="center" width="180">
-      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Sapna&backgroundColor=E84393&radius=50" width="90" alt="Sapna" /><br/>
-      <b>Sapna</b><br/>
-      <sub>💖 Team Member</sub>
+    <td align="center" width="200">
+      <a href="https://github.com/sapna-bisht0103">
+        <img src="https://github.com/sapna-bisht0103.png" width="100" alt="Sapna Bisht" /><br/>
+        <b>Sapna Bisht</b>
+      </a><br/>
+      <sub>Team Member</sub>
     </td>
   </tr>
 </table>
 
 </div>
+
