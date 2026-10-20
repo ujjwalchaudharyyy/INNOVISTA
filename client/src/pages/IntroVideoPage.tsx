@@ -9,7 +9,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showSkip, setShowSkip] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false); // Sound on by default!
   const hasCompletedRef = useRef(false);
 
   // Seamless zero-freeze transition to Login Page
@@ -31,7 +31,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
     }, 150);
   }, [onComplete]);
 
-  // Audio Toggle (unmutes and plays audio via user gesture)
+  // Audio Toggle
   const toggleSound = useCallback((e?: React.MouseEvent | React.TouchEvent) => {
     if (e) {
       e.stopPropagation();
@@ -47,18 +47,6 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
     } else {
       video.muted = true;
       setIsMuted(true);
-    }
-  }, []);
-
-  // Unmute on first screen touch/click (required by mobile browsers)
-  const enableSound = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.muted) {
-      video.muted = false;
-      video.volume = 1.0;
-      video.play().catch(() => {});
-      setIsMuted(false);
     }
   }, []);
 
@@ -78,10 +66,11 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
 
     video.playsInline = true;
     video.preload = "auto";
-
-    // Attempt unmuted playback first; if browser blocks, fallback to muted autoplay
+    video.defaultMuted = false;
     video.muted = false;
     video.volume = 1.0;
+
+    // Direct sound playback: starts automatically with full audio!
     const playPromise = video.play();
 
     if (playPromise !== undefined) {
@@ -90,9 +79,26 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
           setIsMuted(false);
         })
         .catch(() => {
-          // Browser requires user interaction for audio
+          // If browser policy temporarily pauses unmuted playback,
+          // play with audio as soon as any subtle interaction occurs (mousemove, key, touch, scroll)
+          const autoUnmuteOnActivity = () => {
+            if (videoRef.current) {
+              videoRef.current.muted = false;
+              videoRef.current.volume = 1.0;
+              videoRef.current.play().catch(() => {});
+              setIsMuted(false);
+            }
+            ["mousemove", "pointerdown", "touchstart", "keydown", "scroll", "wheel"].forEach((evt) => {
+              window.removeEventListener(evt, autoUnmuteOnActivity);
+            });
+          };
+
+          ["mousemove", "pointerdown", "touchstart", "keydown", "scroll", "wheel"].forEach((evt) => {
+            window.addEventListener(evt, autoUnmuteOnActivity, { passive: true, once: true });
+          });
+
+          // Play muted in the interim so video never stalls
           video.muted = true;
-          setIsMuted(true);
           video.play().catch(() => {});
         });
     }
@@ -127,14 +133,11 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
 
   return (
     <div
-      onClick={enableSound}
-      onTouchStart={enableSound}
-      className={`fixed inset-0 z-[9999] bg-black overflow-hidden flex items-center justify-center transition-opacity duration-200 select-none cursor-pointer ${
+      className={`fixed inset-0 z-[9999] bg-black overflow-hidden flex items-center justify-center transition-opacity duration-200 select-none ${
         fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
-      style={{ touchAction: "manipulation" }}
     >
-      {/* High-Definition Master Video */}
+      {/* High-Definition Master Video with Full Audio Enabled by Default */}
       <video
         ref={videoRef}
         src="/intro.mp4"
@@ -182,38 +185,24 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
           onTouchEnd={toggleSound}
           className={`pointer-events-auto flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full backdrop-blur-xl border shadow-xl transition-all duration-200 cursor-pointer active:scale-95 ${
             isMuted
-              ? "bg-amber-500/20 border-amber-400/40 text-amber-300 animate-pulse hover:bg-amber-500/30"
-              : "bg-black/60 border-cyan-400/50 text-cyan-300 hover:bg-black/80"
+              ? "bg-slate-900/80 border-white/20 text-slate-300 hover:text-white"
+              : "bg-cyan-500/20 border-cyan-400/50 text-cyan-300 hover:bg-cyan-500/30"
           }`}
-          title={isMuted ? "Tap to Unmute Audio" : "Audio Active"}
+          title={isMuted ? "Audio Muted (Click to Unmute)" : "Audio Playing (Click to Mute)"}
         >
           {isMuted ? (
             <>
-              <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-300" />
-              <span className="text-[10px] sm:text-xs font-semibold">Tap for Sound 🔊</span>
+              <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
+              <span className="text-[10px] sm:text-xs font-semibold text-slate-400">Muted</span>
             </>
           ) : (
             <>
               <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-400" />
-              <span className="text-[10px] sm:text-xs font-semibold">Sound ON</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-cyan-300">Sound ON</span>
             </>
           )}
         </button>
       </div>
-
-      {/* Interactive Floating Unmute Prompt if audio is muted */}
-      {isMuted && (
-        <div 
-          className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-40 pointer-events-auto animate-in fade-in slide-in-from-top-2 duration-300"
-          onClick={enableSound}
-          onTouchStart={enableSound}
-        >
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 hover:bg-black backdrop-blur-xl border border-cyan-400/40 text-cyan-200 shadow-2xl text-xs sm:text-sm font-semibold tracking-wide cursor-pointer active:scale-95">
-            <Volume2 className="h-4 w-4 text-cyan-400 animate-bounce" />
-            <span>Tap anywhere to unmute sound 🔊</span>
-          </div>
-        </div>
-      )}
 
       {/* Skip Button (Responsive, thumb-friendly on mobile) */}
       {showSkip && (
