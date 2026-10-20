@@ -45,20 +45,86 @@ https://innovista-black.vercel.app/
 
 ## 📌 Executive Summary
 
-Modern link routing is more than a simple HTTP `302` redirect. Enterprise platforms require **atomic click enforcement**, **zero-latency destination lookup**, **fraud/malware domain screening**, **campaign attribution funnels**, and **deep privacy-preserving analytics** without relying on invasive client-side cookies.
+<div align="center">
 
-**LinkPulse** is engineered as a resilient full-stack platform that delivers:
-- **Sub-15ms Hot-Path Redirection (`/r/:code`)** with atomic click increments.
-- **Privacy-First Telemetry Engine** using daily salted SHA-256 IP hashing and User-Agent heuristic parsing.
-- **Dynamic Vector QR Studio** rendering scalable vector QR matrices with scan-attribution tags.
-- **Automated Security Shield** with domain reputation screening and password-protected enclaves.
-- **Immersive 4K Sci-Fi Interface** powered by Web Audio synth loops and Web Speech API narration.
+![Atomic](https://img.shields.io/badge/⚡_Atomic-Click_Enforcement-22C55E?style=for-the-badge)
+![Latency](https://img.shields.io/badge/🚀_Zero-Latency_Lookup-3B82F6?style=for-the-badge)
+![Screening](https://img.shields.io/badge/🛡️_Fraud-Domain_Screening-EF4444?style=for-the-badge)
+![Privacy](https://img.shields.io/badge/🕵️_No-Invasive_Cookies-F59E0B?style=for-the-badge)
 
+</div>
+
+> ### 💭 Modern link routing is more than a simple HTTP `302` redirect.
+> Enterprise platforms require **atomic click enforcement**, **zero-latency destination lookup**, **fraud/malware domain screening**, **campaign attribution funnels**, and **deep privacy-preserving analytics**, all **without relying on invasive client-side cookies**.
+
+<br/>
+
+<div align="center">
+
+### ⚡ LinkPulse is engineered as a resilient full-stack platform that delivers:
+
+</div>
+
+<table>
+<tr>
+<td width="20%" align="center" valign="top">
+
+### ⚡
+**Sub-15ms Hot-Path**
+
+![Route](https://img.shields.io/badge/-/r/:code-22C55E?style=flat-square)
+
+Redirection with **atomic click increments**
+
+</td>
+<td width="20%" align="center" valign="top">
+
+### 🕵️
+**Privacy-First Telemetry**
+
+![SHA](https://img.shields.io/badge/-SHA--256-3B82F6?style=flat-square)
+
+Daily salted **IP hashing** and User-Agent heuristic parsing
+
+</td>
+<td width="20%" align="center" valign="top">
+
+### 🔳
+**Vector QR Studio**
+
+![QR](https://img.shields.io/badge/-SVG_QR-F59E0B?style=flat-square)
+
+Scalable QR matrices with **scan-attribution tags**
+
+</td>
+<td width="20%" align="center" valign="top">
+
+### 🛡️
+**Automated Security Shield**
+
+![Shield](https://img.shields.io/badge/-Reputation-EF4444?style=flat-square)
+
+Domain reputation screening and **password-protected enclaves**
+
+</td>
+<td width="20%" align="center" valign="top">
+
+### 🎙
+**Immersive 4K Sci-Fi UI**
+
+![Audio](https://img.shields.io/badge/-Web_Audio-8B5CF6?style=flat-square)
+
+Web Audio synth loops and **Web Speech API** narration
+
+</td>
+</tr>
+</table>
+
+---
 ---
 
 ## 🏛 System Architecture
 
-## 🏛 System Architecture
 
 ```mermaid
 flowchart TB
