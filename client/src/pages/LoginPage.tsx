@@ -363,11 +363,11 @@ export const LoginPage: React.FC = () => {
         onTimeUpdate={handleTimeUpdate}
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         style={{
-          transform: "translate3d(0, 0, 0)",
+          transform: "translate3d(0, 0, 0) scale(1.04)",
           willChange: "transform",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
-          filter: "contrast(1.06) saturate(1.08) brightness(1.02)",
+          filter: "contrast(1.22) saturate(1.45) brightness(1.15)",
         }}
       />
 
@@ -375,7 +375,7 @@ export const LoginPage: React.FC = () => {
       <div 
         className="fixed inset-0 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to right, rgba(2, 6, 23, 0.94) 0%, rgba(2, 6, 23, 0.6) 25%, rgba(0, 0, 0, 0.15) 50%, rgba(2, 6, 23, 0.6) 75%, rgba(2, 6, 23, 0.94) 100%)",
+          background: "linear-gradient(to right, rgba(2, 6, 23, 0.65) 0%, rgba(2, 6, 23, 0.30) 30%, rgba(0, 0, 0, 0.05) 50%, rgba(2, 6, 23, 0.30) 70%, rgba(2, 6, 23, 0.65) 100%)",
         }}
       />
 
