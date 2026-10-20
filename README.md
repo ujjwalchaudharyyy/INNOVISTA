@@ -237,44 +237,34 @@ LinkPulse features an audio and visual presentation layer on the Login and Onboa
 
 ## 📂 Project Directory Structure
 
-```
-INNOVISTA/
-├── client/                      # Frontend Application (Vite + React)
-│   ├── public/
-│   │   ├── bg-music.mp3         # High-energy looping background audio
-│   │   ├── login-bg.mp4         # 4K Cinematic space video background
-│   │   └── favicon.svg          # Vector branding asset
-│   ├── src/
-│   │   ├── components/          # Reusable UI (Sidebar, Header, CreateLinkModal)
-│   │   ├── context/             # Authentication State & Session Context
-│   │   ├── pages/               # Views (Overview, Links, Campaigns, Analytics, QR, Bulk, Admin)
-│   │   ├── services/            # API client (Axios) & Sound Engine (TTS/Beat)
-│   │   ├── App.tsx              # Application Root Router
-│   │   ├── main.tsx             # React Mount Entry Point
-│   │   └── index.css            # Tailwind Directives & Custom Scrollbars
-│   ├── vercel.json              # Client SPA Routing Config for Vercel
-│   ├── vite.config.ts           # Vite Build & Proxy Configuration
-│   └── tailwind.config.js       # Design System Tokens
-│
-├── server/                      # Backend API Gateway (Express + TypeScript)
-│   ├── prisma/
-│   │   ├── schema.prisma        # Prisma Database Schema (User, Link, ClickEvent, etc.)
-│   │   └── seed.ts              # Database Seeder (Users, Links, 120+ Telemetry events)
-│   ├── src/
-│   │   ├── middleware/          # JWT Verification, RBAC Permission Guards
-│   │   ├── routes/              # Modular Endpoints (auth, links, redirect, analytics, etc.)
-│   │   ├── utils/               # Analytics Processing, IP Hasher, UA Classifier
-│   │   ├── prisma.ts            # Singleton Prisma Client Instance
-│   │   └── index.ts             # Express Server Initialization & Route Mounts
-│   ├── tsconfig.json            # Node TypeScript Compiler Options
-│   └── package.json             # Backend Dependencies & Scripts
-│
-├── vercel.json                  # Root Monorepo Deployment Descriptor for Vercel
-├── .gitignore                   # Ignore rules (node_modules, dev.db, logs)
-└── README.md                    # Platform Documentation
-```
+## 📂 Project Structure
 
----
+```mermaid
+flowchart LR
+  ROOT["📦 INNOVISTA<br/>Monorepo"]
+
+  ROOT --> CLIENT["🎨 client/<br/>Vite + React 18"]
+  ROOT --> SERVER["⚙️ server/<br/>Express + TypeScript"]
+  ROOT --> RF["☁️ vercel.json<br/>🙈 .gitignore<br/>📘 README.md"]
+
+  CLIENT --> CP["📁 public/<br/>🎵 bg-music.mp3<br/>🎬 login-bg.mp4<br/>🖼️ favicon.svg"]
+  CLIENT --> CS["📁 src/<br/>🧩 components<br/>🔐 context<br/>📄 pages<br/>🔌 services<br/>⚛️ App.tsx · main.tsx"]
+  CLIENT --> CC["🔧 Config<br/>⚡ vite.config.ts<br/>🌈 tailwind.config.js<br/>☁️ vercel.json"]
+
+  SERVER --> SP["🗄️ prisma/<br/>📐 schema.prisma<br/>🌱 seed.ts"]
+  SERVER --> SS["📁 src/<br/>🛡️ middleware<br/>🛣️ routes<br/>🧰 utils<br/>💎 prisma.ts<br/>🚀 index.ts"]
+  SERVER --> SC["🔧 Config<br/>tsconfig.json<br/>package.json"]
+
+  classDef root fill:#F5C4B3,stroke:#993C1D,color:#4A1B0C,stroke-width:2px
+  classDef client fill:#CECBF6,stroke:#534AB7,color:#26215C,stroke-width:1.5px
+  classDef server fill:#9FE1CB,stroke:#0F6E56,color:#04342C,stroke-width:1.5px
+  classDef misc fill:#FAC775,stroke:#854F0B,color:#412402,stroke-width:1.5px
+
+  class ROOT root
+  class CLIENT,CP,CS,CC client
+  class SERVER,SP,SS,SC server
+  class RF misc
+```
 
 ## 📡 API Specification
 
