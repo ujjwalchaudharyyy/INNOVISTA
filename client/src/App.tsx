@@ -64,6 +64,11 @@ export const App: React.FC = () => {
     return <RedirectPage />;
   }
 
+  // ── Welcome to LinkPulse Video (MUST PLAY FIRST on every link open) ────
+  if (showIntro) {
+    return <IntroVideoPage onComplete={() => setShowIntro(false)} />;
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center">
