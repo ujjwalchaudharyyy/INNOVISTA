@@ -1,5 +1,4 @@
 
-https://github.com/user-attachments/assets/b9a00a15-3000-4f3c-be0f-9864d93a625f
 <div align="center">
 
 # ⚡ LinkPulse (INNOVISTA)
