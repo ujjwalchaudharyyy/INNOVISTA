@@ -17,7 +17,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
     if (hasCompletedRef.current) return;
     hasCompletedRef.current = true;
 
-    // Immediately stop video decoding to free hardware decoder
+    // Immediately stop video decoding to prevent GPU clash with Earth video
     const video = videoRef.current;
     if (video) {
       try {
@@ -31,7 +31,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
     }, 150);
   }, [onComplete]);
 
-  // Audio Toggle
+  // Audio Toggle (unmutes and plays audio via user gesture)
   const toggleSound = useCallback((e?: React.MouseEvent | React.TouchEvent) => {
     if (e) {
       e.stopPropagation();
@@ -42,6 +42,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
     if (video.muted) {
       video.muted = false;
       video.volume = 1.0;
+      video.play().catch(() => {});
       setIsMuted(false);
     } else {
       video.muted = true;
@@ -49,18 +50,19 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
     }
   }, []);
 
-  // Unmute on first screen interaction
+  // Unmute on first screen touch/click (required by mobile browsers)
   const enableSound = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     if (video.muted) {
       video.muted = false;
       video.volume = 1.0;
+      video.play().catch(() => {});
       setIsMuted(false);
     }
   }, []);
 
-  // Timeupdate watchdog: fires continuously as video plays.
+  // Timeupdate watchdog: fires smoothly as video plays.
   // When it reaches 0.25s before the end, smoothly complete! (Never stalls on last frame)
   const handleTimeUpdate = useCallback(() => {
     const video = videoRef.current;
@@ -132,7 +134,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
       }`}
       style={{ touchAction: "manipulation" }}
     >
-      {/* 4K Master Video (3840x2160 UHD Lanczos) */}
+      {/* High-Definition Master Video */}
       <video
         ref={videoRef}
         src="/intro.mp4"
@@ -158,16 +160,19 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
       <div
         className="fixed inset-0 pointer-events-none z-10"
         style={{
-          background: "radial-gradient(ellipse at center, transparent 70%, rgba(0,0,0,0.4) 100%)",
+          background: "radial-gradient(ellipse at center, transparent 75%, rgba(0,0,0,0.35) 100%)",
         }}
       />
 
-      {/* TOP DECK: Live 4K Tag & Audio Control */}
-      <div className="fixed top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 z-30 flex items-center justify-between pointer-events-none">
+      {/* TOP DECK: Clean Brand Badge & Audio Control (Safe-area padded for phones) */}
+      <div 
+        className="fixed top-3 left-3 right-3 sm:top-5 sm:left-6 sm:right-6 z-30 flex items-center justify-between pointer-events-none"
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+      >
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/15 text-white shadow-lg pointer-events-auto">
           <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
           <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-cyan-300">
-            LinkPulse 4K
+            LinkPulse
           </span>
         </div>
 
@@ -175,7 +180,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
           type="button"
           onClick={toggleSound}
           onTouchEnd={toggleSound}
-          className={`pointer-events-auto flex items-center gap-2 px-3.5 py-1.5 rounded-full backdrop-blur-xl border shadow-xl transition-all duration-200 cursor-pointer active:scale-95 ${
+          className={`pointer-events-auto flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full backdrop-blur-xl border shadow-xl transition-all duration-200 cursor-pointer active:scale-95 ${
             isMuted
               ? "bg-amber-500/20 border-amber-400/40 text-amber-300 animate-pulse hover:bg-amber-500/30"
               : "bg-black/60 border-cyan-400/50 text-cyan-300 hover:bg-black/80"
@@ -184,31 +189,33 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
         >
           {isMuted ? (
             <>
-              <VolumeX className="h-4 w-4 text-amber-300" />
-              <span className="text-[11px] sm:text-xs font-semibold">Tap for Sound 🔊</span>
+              <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-300" />
+              <span className="text-[10px] sm:text-xs font-semibold">Tap for Sound 🔊</span>
             </>
           ) : (
             <>
-              <Volume2 className="h-4 w-4 text-cyan-400" />
-              <span className="text-[11px] sm:text-xs font-semibold">Sound ON</span>
+              <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-400" />
+              <span className="text-[10px] sm:text-xs font-semibold">Sound ON</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Bottom Center Audio Prompt (disappears when sound is unmuted) */}
+      {/* Interactive Floating Unmute Prompt if audio is muted */}
       {isMuted && (
-        <div className="fixed bottom-24 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-none animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white shadow-2xl">
+        <div 
+          className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-40 pointer-events-auto animate-in fade-in slide-in-from-top-2 duration-300"
+          onClick={enableSound}
+          onTouchStart={enableSound}
+        >
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 hover:bg-black backdrop-blur-xl border border-cyan-400/40 text-cyan-200 shadow-2xl text-xs sm:text-sm font-semibold tracking-wide cursor-pointer active:scale-95">
             <Volume2 className="h-4 w-4 text-cyan-400 animate-bounce" />
-            <span className="text-xs sm:text-sm font-medium tracking-wide">
-              Tap anywhere for sound 🔊
-            </span>
+            <span>Tap anywhere to unmute sound 🔊</span>
           </div>
         </div>
       )}
 
-      {/* Skip Button */}
+      {/* Skip Button (Responsive, thumb-friendly on mobile) */}
       {showSkip && (
         <button
           type="button"
@@ -220,10 +227,11 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
             e.stopPropagation();
             handleComplete();
           }}
-          className="fixed bottom-6 right-5 sm:bottom-8 sm:right-8 z-30 flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white border border-white/25 bg-black/60 hover:bg-white/20 hover:border-cyan-400/60 backdrop-blur-xl shadow-2xl transition-all duration-200 active:scale-95 cursor-pointer animate-in fade-in slide-in-from-bottom-3 duration-300"
+          className="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-30 flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold text-white border border-white/25 bg-black/70 hover:bg-white/20 hover:border-cyan-400/60 backdrop-blur-xl shadow-2xl transition-all duration-200 active:scale-95 cursor-pointer animate-in fade-in slide-in-from-bottom-3 duration-300"
+          style={{ marginBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
           <span>Skip to Login</span>
-          <ArrowRight className="h-4 w-4 text-cyan-400" />
+          <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-400" />
         </button>
       )}
     </div>

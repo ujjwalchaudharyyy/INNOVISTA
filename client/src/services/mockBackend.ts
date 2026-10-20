@@ -91,7 +91,7 @@ const DEFAULT_LINKS: MockLink[] = [
   },
   {
     id: "link-demo-video",
-    title: "LinkPulse 4K UI & Voice Walkthrough Video",
+    title: "LinkPulse UI & Voice Walkthrough Video",
     shortCode: "demo-video",
     originalUrl: "https://youtube.com/watch?v=linkpulse-innovista",
     clickCount: 3120,

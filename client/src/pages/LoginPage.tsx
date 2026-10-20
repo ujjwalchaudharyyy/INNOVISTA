@@ -416,16 +416,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onWatchIntro }) => {
           </span>
         </div>
 
-                {/* Replay 4K Intro & Audio Deck in Top-Right */}
+                {/* Replay Intro & Audio Deck in Top-Right */}
         <div className="pointer-events-auto flex items-center gap-2 shrink-0">
           {onWatchIntro && (
             <button
               onClick={onWatchIntro}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-semibold shadow-lg hover:shadow-cyan-500/20 transition cursor-pointer active:scale-95"
-              title="Watch 4K Cinematic Intro"
+              title="Watch Intro Video"
             >
               <Play className="h-3.5 w-3.5 fill-cyan-400 text-cyan-400" />
-              <span className="text-[10px] sm:text-[11px] font-bold">4K Intro</span>
+              <span className="text-[10px] sm:text-[11px] font-bold">Intro</span>
             </button>
           )}
 
