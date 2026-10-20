@@ -657,23 +657,130 @@ Frontend will be available at: **`http://localhost:5173`**
 
 ## ☁️ 1-Click Vercel Deployment
 
-LinkPulse is pre-configured with root and client `vercel.json` descriptors for zero-configuration deployment on Vercel:
+<div align="center">
 
-1. Import this repository into your **[Vercel Dashboard](https://vercel.com/new)**.
-2. Configure Environment Variables in Vercel:
-   - `VITE_API_URL`: Your hosted backend URL (e.g., `https://your-api.onrender.com` or `https://api.yourdomain.com`).
-3. Click **Deploy**. Vercel will automatically build the client and handle single-page application (SPA) routing seamlessly.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ujjwalchaudharyyy/INNOVISTA)
+
+![Zero Config](https://img.shields.io/badge/⚙️_Zero-Configuration-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![SPA](https://img.shields.io/badge/🔀_SPA-Routing_Ready-22C55E?style=for-the-badge)
+![Auto Build](https://img.shields.io/badge/🏗️_Auto-Build-3B82F6?style=for-the-badge)
+
+*LinkPulse mein root aur client dono jagah `vercel.json` pehle se configured hai, isliye **zero-configuration deployment** hota hai.*
+
+</div>
+
+```mermaid
+flowchart LR
+  A["📥 Step 1<br/>Import repo<br/>in Vercel"] --> B["🔧 Step 2<br/>Add env variable<br/>VITE_API_URL"] --> C["🚀 Step 3<br/>Click Deploy"] --> D["✅ Live<br/>Client built and<br/>SPA routing handled"]
+
+  classDef s1 fill:#CECBF6,stroke:#534AB7,color:#26215C,stroke-width:1.5px
+  classDef s2 fill:#FAC775,stroke:#854F0B,color:#412402,stroke-width:1.5px
+  classDef s3 fill:#B5D4F4,stroke:#185FA5,color:#042C53,stroke-width:1.5px
+  classDef s4 fill:#C0DD97,stroke:#3B6D11,color:#173404,stroke-width:1.5px
+
+  class A s1
+  class B s2
+  class C s3
+  class D s4
+```
+
+<table>
+<tr>
+<td width="33%" valign="top" align="center">
+
+### 📥 Step 1
+**Import Repository**
+
+Apni **[Vercel Dashboard](https://vercel.com/new)** mein ye repository import karo.
+
+</td>
+<td width="33%" valign="top" align="center">
+
+### 🔧 Step 2
+**Environment Variables**
+
+Vercel mein variable configure karo (neeche table dekho).
+
+</td>
+<td width="33%" valign="top" align="center">
+
+### 🚀 Step 3
+**Click Deploy**
+
+Vercel khud **client build** karega aur **SPA routing** seamlessly handle karega.
+
+</td>
+</tr>
+</table>
+
+### 🔧 Environment Variables
+
+| Variable | Required | Description | Example |
+|:---:|:---:|:---|:---|
+| `VITE_API_URL` | ![Required](https://img.shields.io/badge/-REQUIRED-EF4444?style=flat-square) | Tumhara hosted **backend URL** | `https://your-api.onrender.com` <br/> `https://api.yourdomain.com` |
+
+> 💡 **Tip:** Backend alag deploy karna hota hai (jaise Render par). Pehle backend ka URL lo, phir use `VITE_API_URL` mein daalo.
+
+**🌐 Live deployment:** 👉 [**innovista-black.vercel.app**](https://innovista-black.vercel.app/)
 
 ---
 
 ## 🔑 Demo Credentials
 
-Pre-seeded authentication credentials for platform evaluation:
+<div align="center">
 
-| Role | Email Address | Password | Permissions |
-| :--- | :--- | :--- | :--- |
-| **Standard User (Sarah Chen)** | `demo@linkpulse.io` | `Demo@123456` | Full link creation, campaigns, QR studio, bulk CSV, analytics |
-| **Administrator (Alex Vance)** | `admin@linkpulse.io` | `Admin@123456` | All user capabilities + Admin Shield, domain blocklists, platform metrics |
+![Pre-seeded](https://img.shields.io/badge/🌱_Pre--Seeded-Accounts-22C55E?style=for-the-badge)
+![Evaluation](https://img.shields.io/badge/🧪_For-Platform_Evaluation-3B82F6?style=for-the-badge)
+
+*Platform evaluate karne ke liye pehle se banaye gaye login credentials.*
+
+</div>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 👤 Standard User
+![Role](https://img.shields.io/badge/Role-User-3B82F6?style=flat-square) ![Name](https://img.shields.io/badge/Name-Sarah_Chen-6366F1?style=flat-square)
+
+| | |
+|:---|:---|
+| 📧 **Email** | `demo@linkpulse.io` |
+| 🔒 **Password** | `Demo@123456` |
+
+**✅ Permissions**
+- 🔗 Full link creation
+- 🎯 Campaigns
+- 🔳 QR Studio
+- 📥 Bulk CSV
+- 📊 Analytics
+
+</td>
+<td width="50%" valign="top">
+
+### 👑 Administrator
+![Role](https://img.shields.io/badge/Role-Admin-EF4444?style=flat-square) ![Name](https://img.shields.io/badge/Name-Alex_Vance-DC2626?style=flat-square)
+
+| | |
+|:---|:---|
+| 📧 **Email** | `admin@linkpulse.io` |
+| 🔒 **Password** | `Admin@123456` |
+
+**✅ Permissions**
+- ✨ All user capabilities
+- 🛡️ Admin Shield
+- 🚫 Domain blocklists
+- 🛰️ Platform metrics
+
+</td>
+</tr>
+</table>
+
+<div align="center">
+
+[![Try Live Demo](https://img.shields.io/badge/🚀_Login_on_Live_Demo-innovista--black.vercel.app-00C853?style=for-the-badge)](https://innovista-black.vercel.app/)
+
+</div>
 
 ---
 
