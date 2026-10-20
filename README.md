@@ -226,6 +226,8 @@ LinkPulse features an audio and visual presentation layer on the Login and Onboa
 - **Telemetry Parsers**: UAParser.js, Node.js Crypto (SHA-256)
 
 ---
+
+
 # Road Map ~
 
 <img width="425" height="376" alt="image" src="https://github.com/user-attachments/assets/190b055e-3d27-4487-86ef-2b5ed1096b85" />
@@ -235,9 +237,9 @@ LinkPulse features an audio and visual presentation layer on the Login and Onboa
 
 
 
-## 📂 Project Directory Structure
 
-## 📂 Project Structure
+
+## 📂 Project Directory Structure
 
 ```mermaid
 flowchart LR
@@ -266,26 +268,70 @@ flowchart LR
   class RF misc
 ```
 
+
+
 ## 📡 API Specification
 
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Public | Create new user account with hashed password |
-| `POST` | `/api/auth/login` | Public | Authenticate user & return signed JWT token |
-| `GET` | `/api/auth/me` | Authenticated | Fetch current user session profile |
-| `GET` | `/r/:code` | Public | **Hot-path**: Process redirect, record telemetry, return `302` |
-| `POST` | `/r/:code/verify` | Public | Verify password for password-protected links |
-| `GET` | `/api/links` | Authenticated | List all active links owned by current user |
-| `POST` | `/api/links` | Authenticated | Create a new short link with optional rules & campaign |
-| `PUT` | `/api/links/:id` | Authenticated | Update destination, cap, or expiration |
-| `DELETE` | `/api/links/:id` | Authenticated | Deactivate / remove link |
-| `GET` | `/api/analytics/overview`| Authenticated | Aggregated metrics (total clicks, top link, device breakdown) |
-| `GET` | `/api/analytics/:id` | Authenticated | Granular timeseries telemetry for a single link |
-| `GET` | `/api/campaigns` | Authenticated | List campaigns with aggregated link metrics |
-| `POST` | `/api/campaigns` | Authenticated | Create marketing campaign grouping |
-| `POST` | `/api/bulk/import` | Authenticated | Ingest and validate batch CSV link entries |
-| `GET` | `/api/admin/metrics` | Admin Only | Platform-wide traffic telemetry & infrastructure stats |
-| `POST` | `/api/admin/blocklist`| Admin Only | Add domain to malicious reputation blocklist |
+## 📡 API Reference
+
+<div align="center">
+
+![GET](https://img.shields.io/badge/GET-22C55E?style=for-the-badge)
+![POST](https://img.shields.io/badge/POST-3B82F6?style=for-the-badge)
+![PUT](https://img.shields.io/badge/PUT-F59E0B?style=for-the-badge)
+![DELETE](https://img.shields.io/badge/DELETE-EF4444?style=for-the-badge)
+&nbsp;│&nbsp;
+![Public](https://img.shields.io/badge/🌍_Public-22C55E?style=for-the-badge)
+![Auth](https://img.shields.io/badge/🔐_Auth-F59E0B?style=for-the-badge)
+![Admin](https://img.shields.io/badge/👑_Admin-EF4444?style=for-the-badge)
+
+</div>
+
+### 🔐 Authentication
+
+| Method | Endpoint | Access | What it does |
+|:---:|:---|:---:|:---|
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/api/auth/register` | ![Public](https://img.shields.io/badge/Public-22C55E?style=flat-square) | 📝 Create new account with hashed password |
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/api/auth/login` | ![Public](https://img.shields.io/badge/Public-22C55E?style=flat-square) | 🔑 Authenticate user & return signed JWT |
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/api/auth/me` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 👤 Fetch current user session profile |
+
+### ⚡ Redirect Engine (Hot-Path)
+
+| Method | Endpoint | Access | What it does |
+|:---:|:---|:---:|:---|
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/r/:code` | ![Public](https://img.shields.io/badge/Public-22C55E?style=flat-square) | 🚀 **Hot-path**: process redirect, record telemetry, return `302` |
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/r/:code/verify` | ![Public](https://img.shields.io/badge/Public-22C55E?style=flat-square) | 🔒 Verify password for protected links |
+
+### 🔗 Links Management
+
+| Method | Endpoint | Access | What it does |
+|:---:|:---|:---:|:---|
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/api/links` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 📋 List all active links of current user |
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/api/links` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | ✨ Create short link with optional rules & campaign |
+| ![PUT](https://img.shields.io/badge/PUT-F59E0B?style=flat-square) | `/api/links/:id` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | ✏️ Update destination, click-cap or expiry |
+| ![DELETE](https://img.shields.io/badge/DELETE-EF4444?style=flat-square) | `/api/links/:id` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 🗑️ Deactivate / remove link |
+
+### 📊 Analytics & Campaigns
+
+| Method | Endpoint | Access | What it does |
+|:---:|:---|:---:|:---|
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/api/analytics/overview` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 📈 Total clicks, top link, device breakdown |
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/api/analytics/:id` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 🔍 Granular timeseries for a single link |
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/api/campaigns` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 🎯 List campaigns with aggregated metrics |
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/api/campaigns` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 🏷️ Create marketing campaign grouping |
+
+### 📥 Bulk Import
+
+| Method | Endpoint | Access | What it does |
+|:---:|:---|:---:|:---|
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/api/bulk/import` | ![Auth](https://img.shields.io/badge/Auth-F59E0B?style=flat-square) | 📦 Ingest & validate batch CSV link entries |
+
+### 👑 Admin Shield
+
+| Method | Endpoint | Access | What it does |
+|:---:|:---|:---:|:---|
+| ![GET](https://img.shields.io/badge/GET-22C55E?style=flat-square) | `/api/admin/metrics` | ![Admin](https://img.shields.io/badge/Admin-EF4444?style=flat-square) | 🛰️ Platform-wide traffic & infrastructure stats |
+| ![POST](https://img.shields.io/badge/POST-3B82F6?style=flat-square) | `/api/admin/blocklist` | ![Admin](https://img.shields.io/badge/Admin-EF4444?style=flat-square) | 🚫 Add domain to malicious blocklist |
 
 ---
 
