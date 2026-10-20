@@ -150,8 +150,7 @@ export const IntroVideoPage: React.FC<IntroVideoPageProps> = ({ onComplete }) =>
           willChange: "transform",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
-          imageRendering: "-webkit-optimize-contrast",
-          filter: "contrast(1.08) saturate(1.18) brightness(1.02)",
+          filter: "contrast(1.05) saturate(1.10) brightness(1.02)",
         }}
       />
 

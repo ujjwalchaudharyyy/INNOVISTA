@@ -368,11 +368,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onWatchIntro }) => {
         onTimeUpdate={handleTimeUpdate}
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         style={{
-          transform: "translate3d(0, 0, 0) scale(1.04)",
+          transform: "translate3d(0, 0, 0)",
           willChange: "transform",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
-          filter: "contrast(1.22) saturate(1.45) brightness(1.15)",
+          filter: "contrast(1.05) saturate(1.08) brightness(1.02)",
         }}
       />
 
