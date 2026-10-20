@@ -88,7 +88,7 @@ export const App: React.FC = () => {
         />
       );
     }
-    return <LoginPage />;
+    return <LoginPage onWatchIntro={() => setShowIntro(true)} />;
   }
 
   const handleLinkCreated = () => setRefreshKey((prev) => prev + 1);
