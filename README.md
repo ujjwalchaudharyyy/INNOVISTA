@@ -348,3 +348,48 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <div align="center">
   <sub>Built with precision for high-scale link infrastructure. LinkPulse © 2026.</sub>
 </div>
+
+
+
+## 👥 Meet Team Tech4All
+
+<div align="center">
+
+### 👑 Team Leader
+
+<a href="https://github.com/ujjwalchaudharyyy">
+  <img src="https://github.com/ujjwalchaudharyyy.png" width="120" alt="Ujjwal Chaudhary" /><br/>
+  <b>Ujjwal Chaudhary</b>
+</a><br/>
+<sub>🚩 Team Leader</sub>
+
+<br/><br/>
+
+### 🤝 Team Members
+
+<table>
+  <tr>
+    <td align="center" width="180">
+      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Vaibhavi%20Pandey&backgroundColor=6C5CE7&radius=50" width="90" alt="Vaibhavi Pandey" /><br/>
+      <b>Vaibhavi Pandey</b><br/>
+      <sub>💜 Team Member</sub>
+    </td>
+    <td align="center" width="180">
+      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Tushar&backgroundColor=00B894&radius=50" width="90" alt="Tushar" /><br/>
+      <b>Tushar</b><br/>
+      <sub>💚 Team Member</sub>
+    </td>
+    <td align="center" width="180">
+      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Sumit&backgroundColor=0984E3&radius=50" width="90" alt="Sumit" /><br/>
+      <b>Sumit</b><br/>
+      <sub>💙 Team Member</sub>
+    </td>
+    <td align="center" width="180">
+      <img src="https://api.dicebear.com/7.x/initials/svg?seed=Sapna&backgroundColor=E84393&radius=50" width="90" alt="Sapna" /><br/>
+      <b>Sapna</b><br/>
+      <sub>💖 Team Member</sub>
+    </td>
+  </tr>
+</table>
+
+</div>
