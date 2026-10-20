@@ -34,7 +34,7 @@ import {
   Pie, 
   Cell 
 } from "recharts";
-import { api, API_BASE } from "../services/api";
+import { api, API_BASE, getFullShortUrl } from "../services/api";
 
 export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate }) => {
   const [data, setData] = useState<any | null>(null);
@@ -98,7 +98,7 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
   };
 
   const copyLink = (code: string, id: string) => {
-    navigator.clipboard.writeText(`${API_BASE}/r/${code}`);
+    navigator.clipboard.writeText(getFullShortUrl(code));
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -511,7 +511,7 @@ export const OverviewPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCre
                     {copiedId === link.id ? <Check className="h-4 w-4 text-emerald-500 dark:text-emerald-400" /> : <Copy className="h-4 w-4" />}
                   </button>
                   <a
-                    href={`${API_BASE}/r/${link.shortCode}`}
+                    href={getFullShortUrl(link.shortCode)}
                     target="_blank"
                     rel="noreferrer"
                     className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition"

@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   AlertCircle
 } from "lucide-react";
-import { api, API_BASE } from "../services/api";
+import { api, API_BASE, getFullShortUrl } from "../services/api";
+import { analyzeUrlSafety, UrlSafetyResult } from "../services/urlSafety";
 
 interface CreateLinkModalProps {
   isOpen: boolean;
@@ -51,6 +52,16 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
   // Created Result
   const [createdLink, setCreatedLink] = useState<any | null>(null);
   const [copied, setCopied] = useState(false);
+  const [safetyResult, setSafetyResult] = useState<UrlSafetyResult | null>(null);
+
+  const handleUrlChange = (val: string) => {
+    setOriginalUrl(val);
+    if (val.trim().length > 3) {
+      setSafetyResult(analyzeUrlSafety(val));
+    } else {
+      setSafetyResult(null);
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -76,6 +87,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
     setError(null);
     setCreatedLink(null);
     setCopied(false);
+    setSafetyResult(null);
   };
 
   const applyUtmPreset = (source: string, medium: string) => {
@@ -120,9 +132,20 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
     setLoading(true);
 
     try {
+      let cleanUrl = originalUrl.trim();
+      if (cleanUrl && !/^https?:\/\//i.test(cleanUrl)) {
+        cleanUrl = "https://" + cleanUrl;
+      }
+
+      if (safetyResult && safetyResult.riskLevel === "MALICIOUS") {
+        setError(`AI Shield blocked link: Flagged as fake / dangerous (${safetyResult.threats.join(", ")}).`);
+        setLoading(false);
+        return;
+      }
+
       const payload: any = {
-        title: title || originalUrl,
-        originalUrl,
+        title: title || cleanUrl,
+        originalUrl: cleanUrl,
         customAlias: customAlias.trim() || undefined,
         password: password.trim() || undefined,
         clickLimit: clickLimit ? parseInt(clickLimit, 10) : null,
@@ -142,7 +165,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
     }
   };
 
-  const fullShortUrl = createdLink ? `${API_BASE}/r/${createdLink.shortCode}` : "";
+  const fullShortUrl = createdLink ? getFullShortUrl(createdLink.shortCode) : "";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(fullShortUrl);
@@ -191,17 +214,71 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
         {step === 1 && (
           <div className="space-y-4 pt-5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
-                Destination URL <span className="text-rose-500">*</span>
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  Destination URL <span className="text-rose-500">*</span>
+                </label>
+                {safetyResult && originalUrl.trim().length > 3 && (
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                    safetyResult.riskLevel === "SAFE"
+                      ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                      : safetyResult.riskLevel === "SUSPICIOUS"
+                      ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                      : "bg-rose-500/10 text-rose-500 border border-rose-500/20 animate-pulse"
+                  }`}>
+                    {safetyResult.riskLevel === "SAFE" && "? Verified Safe"}
+                    {safetyResult.riskLevel === "SUSPICIOUS" && "?? Suspicious URL"}
+                    {safetyResult.riskLevel === "MALICIOUS" && "?? Fake / Phishing Link"}
+                    <span className="font-mono">({safetyResult.score}/100)</span>
+                  </span>
+                )}
+              </div>
               <input
-                type="url"
+                type="text"
                 required
                 value={originalUrl}
-                onChange={(e) => setOriginalUrl(e.target.value)}
+                onChange={(e) => handleUrlChange(e.target.value)}
                 placeholder="https://example.com/long-landing-page-url..."
                 className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
               />
+
+              {/* AI Shield Fake Link Live Diagnostic Card */}
+              {safetyResult && originalUrl.trim().length > 3 && (
+                <div className={`mt-2.5 p-3 rounded-xl border text-xs transition-all animate-in fade-in ${
+                  safetyResult.riskLevel === "SAFE"
+                    ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-400"
+                    : safetyResult.riskLevel === "SUSPICIOUS"
+                    ? "bg-amber-500/10 border-amber-500/25 text-amber-300"
+                    : "bg-rose-500/15 border-rose-500/30 text-rose-300"
+                }`}>
+                  <div className="flex items-center justify-between font-bold mb-1">
+                    <span className="flex items-center gap-1.5">
+                      <ShieldCheck className={`h-4 w-4 ${
+                        safetyResult.riskLevel === "SAFE" ? "text-emerald-400" : safetyResult.riskLevel === "SUSPICIOUS" ? "text-amber-400" : "text-rose-400"
+                      }`} />
+                      AI Shield Link Analysis
+                    </span>
+                    <span className="text-[10px] font-mono">
+                      Domain: {safetyResult.domain || "Scanning..."}
+                    </span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed opacity-90">
+                    {safetyResult.reasons.join(". ")}
+                  </p>
+                  {safetyResult.threats.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {safetyResult.threats.map((threat, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-black/30 border border-current opacity-80"
+                        >
+                          {threat}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div>

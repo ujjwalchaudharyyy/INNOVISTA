@@ -5,6 +5,7 @@ import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
 import { CreateLinkModal } from "./components/CreateLinkModal";
 import { LoginPage } from "./pages/LoginPage";
+import { RedirectPage } from "./pages/RedirectPage";
 import { OverviewPage } from "./pages/OverviewPage";
 import { LinksPage } from "./pages/LinksPage";
 import { CampaignsPage } from "./pages/CampaignsPage";
@@ -54,6 +55,11 @@ export const App: React.FC = () => {
       localStorage.setItem("linkpulse_theme", "light");
     }
   }, [isDark]);
+
+  // ── High-Speed Short Link Redirect Interceptor (/r/:code) ──────────────
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/r/")) {
+    return <RedirectPage />;
+  }
 
   if (isLoading) {
     return (

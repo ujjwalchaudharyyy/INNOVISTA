@@ -22,7 +22,7 @@ import {
   Share2,
   X
 } from "lucide-react";
-import { api, API_BASE } from "../services/api";
+import { api, API_BASE, getFullShortUrl } from "../services/api";
 
 export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate }) => {
   const [links, setLinks] = useState<any[]>([]);
@@ -58,7 +58,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
   };
 
   const copyUrl = (shortCode: string, id: string) => {
-    const fullUrl = `${API_BASE}/r/${shortCode}`;
+    const fullUrl = getFullShortUrl(shortCode);
     navigator.clipboard.writeText(fullUrl);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -286,7 +286,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                         <Share2 className="h-4 w-4" />
                       </button>
                       <a
-                        href={`${API_BASE}/r/${link.shortCode}`}
+                        href={getFullShortUrl(link.shortCode)}
                         target="_blank"
                         rel="noreferrer"
                         className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
@@ -436,7 +436,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                             </button>
 
                             <a
-                              href={`${API_BASE}/r/${link.shortCode}`}
+                              href={getFullShortUrl(link.shortCode)}
                               target="_blank"
                               rel="noreferrer"
                               title="Visit Destination"
@@ -532,7 +532,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
             {/* Short Link Bar */}
             <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
               <span className="font-mono text-xs font-semibold text-indigo-600 dark:text-cyan-400 truncate">
-                {`${API_BASE}/r/${sharingLink.shortCode}`}
+                {getFullShortUrl(sharingLink.shortCode)}
               </span>
               <button
                 onClick={() => copyUrl(sharingLink.shortCode, `share-${sharingLink.id}`)}
@@ -582,7 +582,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                 </a>
                 <a
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                    `${API_BASE}/r/${sharingLink.shortCode}`
+                    getFullShortUrl(sharingLink.shortCode)
                   )}`}
                   target="_blank"
                   rel="noreferrer"
@@ -593,7 +593,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
                 </a>
                 <a
                   href={`https://t.me/share/url?url=${encodeURIComponent(
-                    `${API_BASE}/r/${sharingLink.shortCode}`
+                    getFullShortUrl(sharingLink.shortCode)
                   )}&text=${encodeURIComponent(sharingLink.title || "Check this link")}`}
                   target="_blank"
                   rel="noreferrer"
@@ -610,7 +610,7 @@ export const LinksPage: React.FC<{ onOpenCreate: () => void }> = ({ onOpenCreate
               <div className="flex items-center gap-3">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
-                    `${API_BASE}/r/${sharingLink.shortCode}`
+                    getFullShortUrl(sharingLink.shortCode)
                   )}&color=6366f1`}
                   alt="QR Code"
                   className="h-12 w-12 rounded-lg bg-white p-1 border border-slate-200 dark:border-slate-700"

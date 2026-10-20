@@ -3,6 +3,13 @@ import { handleMockRequest } from "./mockBackend";
 
 export const API_BASE = import.meta.env.VITE_API_URL || "";
 
+export const getFullShortUrl = (shortCode: string): string => {
+  if (!shortCode) return "";
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const base = API_BASE ? API_BASE : origin;
+  return `${base}/r/${shortCode}`;
+};
+
 // ─── Always use mock if no explicit backend URL is set ───────────────────────
 // This ensures ZERO "Unable to reach server" errors whether backend is running
 // or not. If VITE_API_URL is set (production), it tries real backend first.

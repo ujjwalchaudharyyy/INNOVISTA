@@ -378,11 +378,18 @@ export function handleMockRequest(config: {
   if (url === "/links" && method === "post") {
     const links = getStoredLinks();
     const shortCode = body?.customAlias?.trim() || Math.random().toString(36).substring(2, 8);
+    
+    // Normalize target URL with https:// if protocol was omitted
+    let targetUrl = body?.originalUrl?.trim() || "";
+    if (targetUrl && !/^https?:\/\//i.test(targetUrl)) {
+      targetUrl = "https://" + targetUrl;
+    }
+
     const newLink: MockLink = {
       id: "link_" + Math.random().toString(36).substring(2, 9),
-      title: body?.title || body?.originalUrl,
+      title: body?.title || targetUrl,
       shortCode,
-      originalUrl: body?.originalUrl,
+      originalUrl: targetUrl,
       clickCount: 0,
       isActive: true,
       createdAt: new Date().toISOString(),

@@ -22,6 +22,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         bypass(req) {
+          // When browser navigates to a short link, let SPA RedirectPage handle it
+          if (req.headers.accept?.includes('text/html')) {
+            return '/index.html';
+          }
           if (/\.(jpg|jpeg|png|webp|svg|gif|mp4|mp3|ico|woff2?)(\?.*)?$/.test(req.url ?? '')) return req.url;
         },
       },
