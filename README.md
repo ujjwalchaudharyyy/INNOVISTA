@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/b9a00a15-3000-4f3c-be0f-9864d93a625f
 <div align="center">
 
 # ⚡ LinkPulse (INNOVISTA)
@@ -29,6 +31,25 @@ https://innovista-black.vercel.app/
 **PPT/Project Presentation:**
 
 https://drive.google.com/file/d/1Xu_WUUwz6HMP2dZkR6-R-k0KauUAfkcz/view?usp=drive_link
+
+
+# Intro Experience (Demo Video) ~
+
+> A short cinematic intro plays before login, setting the tone for LinkPulse's high-speed link infrastructure.
+
+https://github.com/user-attachments/assets/fc3a1fd4-8612-4eb6-b7fa-93a316c0af80
+
+
+
+**What you see in the video:**
+
+1. **Link universe** – glass-style browser cards carrying URLs (like `https://linkpulse.com`) float through space, representing the links the platform manages.
+2. **Edge-speed burst** – glowing light streaks rush together and converge, visualising LinkPulse's sub-50ms edge redirection.
+3. **Welcome screen** – the "WELCOME TO LINKPULSE" title appears over a faded analytics-dashboard backdrop.
+4. **Login handoff** – the app lands on the login page with the Earth hero and the "Sub-50ms Atomic Redirection" tagline.
+5. **Controls** – a **Sound ON/OFF** toggle (ambient beat + AI voice) and a **Skip to Login** button for returning users.
+
+> 🔊 Turn the sound on. The intro uses the background music and AI voice described in [Multimedia & AI Audio Engine](#-multimedia--ai-audio-engine).
 
 
 # Login Page ~ 
