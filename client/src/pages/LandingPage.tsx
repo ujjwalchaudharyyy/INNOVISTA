@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Sparkles, ArrowRight, ShieldCheck, Zap, BarChart3, QrCode, Lock, Check, LogIn } from "lucide-react";
+import { BrandLogo } from "../components/BrandLogo";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
@@ -45,17 +46,7 @@ export const LandingPage: React.FC<{ onGetStarted: () => void }> = ({ onGetStart
     <div className="min-h-screen bg-[#F4F7FB] text-[#0B1026] flex flex-col justify-between selection:bg-[#00A8E8]/20 selection:text-[#0B1026]">
       {/* Header */}
       <header className="h-20 border-b border-slate-200/80 bg-white/90 backdrop-blur-md px-6 lg:px-16 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00A8E8] text-white shadow-md shadow-[#00A8E8]/20">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-[#0B1026] flex items-center gap-2">
-            LinkPulse
-            <span className="text-[10px] font-bold bg-[#00A8E8]/10 text-[#00A8E8] px-2 py-0.5 rounded border border-[#00A8E8]/20">
-              PRO
-            </span>
-          </span>
-        </div>
+        <BrandLogo size="md" badgeText="PRO" />
 
         <div className="flex items-center gap-3">
           <button

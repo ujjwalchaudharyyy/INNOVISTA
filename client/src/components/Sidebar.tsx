@@ -1,4 +1,5 @@
 import React from "react";
+import { BrandLogo } from "./BrandLogo";
 import { 
   LayoutDashboard, 
   Link2, 
@@ -79,31 +80,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Brand Header */}
         <div className="flex h-16 items-center justify-between px-4 border-b border-slate-200 dark:border-slate-800/80 shrink-0">
           <div
-            className="flex items-center gap-3 overflow-hidden cursor-pointer group"
+            className="flex items-center gap-3 overflow-hidden cursor-pointer"
             onClick={() => setCurrentTab("overview")}
             title="LinkPulse Enterprise Dashboard"
           >
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-              <Sparkles className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-              </span>
-            </div>
-            {!collapsed && (
-              <div className="flex flex-col min-w-0">
-                <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-                  LinkPulse
-                  <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    PRO
-                  </span>
-                </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                  Edge Cloud v2.4
-                </span>
-              </div>
-            )}
+            <BrandLogo
+              size="md"
+              showText={!collapsed}
+              subtext="Edge Cloud v2.4"
+              badgeText="PRO"
+            />
           </div>
           <button
             onClick={() => setCollapsed(!collapsed)}

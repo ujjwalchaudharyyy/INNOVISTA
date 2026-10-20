@@ -1,8 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, ArrowRight, Lock, Mail, User, AlertCircle, Zap, Shield, Activity, Eye, EyeOff, Volume2, VolumeX, Globe } from "lucide-react";
+import { 
+  Sparkles, 
+  ArrowRight, 
+  Lock, 
+  Mail, 
+  User, 
+  AlertCircle, 
+  Zap, 
+  Shield, 
+  Activity, 
+  Eye, 
+  EyeOff, 
+  Volume2, 
+  VolumeX, 
+  Globe, 
+  CheckCircle2, 
+  Server, 
+  Cpu, 
+  Radio, 
+  Key, 
+  Check, 
+  Info, 
+  ChevronRight,
+  Terminal
+} from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { sounds } from "../services/sounds";
+import { BrandLogo } from "../components/BrandLogo";
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -11,13 +36,35 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("Demo@123456");
   const [name, setName] = useState("Sarah Chen");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
+  const [resetNotice, setResetNotice] = useState<string | null>(null);
+
+  // Interactive mouse spotlight tracking
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+
+  // Simulated live edge telemetry node hop
+  const [activeHopIndex, setActiveHopIndex] = useState(0);
+  const edgeHops = [
+    { code: "SFO-1", city: "San Francisco", latency: "14ms" },
+    { code: "LHR-4", city: "London Edge", latency: "34ms" },
+    { code: "NRT-2", city: "Tokyo Cluster", latency: "41ms" },
+    { code: "SIN-1", city: "Singapore Hub", latency: "28ms" },
+  ];
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const isMutedRef = useRef(false);
+
+  // Live Edge Hop Rotation
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveHopIndex((prev) => (prev + 1) % edgeHops.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, [edgeHops.length]);
 
   // Background Audio — auto-start on first user interaction (browser policy)
   useEffect(() => {
@@ -29,15 +76,12 @@ export const LoginPage: React.FC = () => {
       audioRef.current.play().then(() => {
         started = true;
         setIsAudioMuted(false);
-        // Remove all listeners once audio starts
         cleanup();
       }).catch(() => {});
     };
 
-    // Try autoplay immediately (works if user already interacted with page)
     startAudio();
 
-    // Listen to ALL possible user interactions to unlock audio
     const events = ["click", "touchstart", "keydown", "mousedown", "scroll", "pointerdown"];
     events.forEach(e => window.addEventListener(e, startAudio, { passive: true }));
 
@@ -131,8 +175,27 @@ export const LoginPage: React.FC = () => {
     setError(null);
   };
 
+  // Password strength calculation for registration mode
+  const getPasswordStrength = () => {
+    if (!password) return { score: 0, label: "Too weak", color: "bg-slate-700" };
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score <= 1) return { score: 1, label: "Weak", color: "bg-rose-500" };
+    if (score <= 3) return { score: 2, label: "Good", color: "bg-amber-400" };
+    return { score: 3, label: "Strong", color: "bg-emerald-400" };
+  };
+
+  const strength = getPasswordStrength();
+
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-y-auto overflow-x-hidden select-none bg-black font-sans">
+    <div 
+      onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+      className="relative min-h-screen w-full flex items-center justify-center overflow-y-auto overflow-x-hidden select-none bg-black font-sans"
+    >
       
       {/* Background Loop Audio */}
       <audio
@@ -175,15 +238,23 @@ export const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* HORIZONTAL VIGNETTE OVERLAY */}
+      {/* HORIZONTAL VIGNETTE OVERLAY WITH DEEP CYBER GRADIENT */}
       <div 
         className="fixed inset-0 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.85) 100%)",
+          background: "linear-gradient(to right, rgba(2, 6, 23, 0.94) 0%, rgba(2, 6, 23, 0.6) 25%, rgba(0, 0, 0, 0.15) 50%, rgba(2, 6, 23, 0.6) 75%, rgba(2, 6, 23, 0.94) 100%)",
         }}
       />
 
-      {/* 3D STAR FIELD — edges only, Earth center 100% clear */}
+      {/* DYNAMIC INTERACTIVE MOUSE SPOTLIGHT AURA */}
+      <div
+        className="fixed inset-0 pointer-events-none z-[6] transition-opacity duration-300 hidden md:block"
+        style={{
+          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.12), transparent 70%)`,
+        }}
+      />
+
+      {/* 3D STAR FIELD CANVAS */}
       <canvas
         ref={(canvas) => {
           if (!canvas || (canvas as any).__stars_init) return;
@@ -198,34 +269,31 @@ export const LoginPage: React.FC = () => {
           resize();
           window.addEventListener("resize", resize);
 
-          // Color palette for realistic stars
           const starColors = [
-            [255, 255, 255],   // pure white
-            [200, 220, 255],   // cool blue
-            [255, 240, 220],   // warm yellow
-            [180, 200, 255],   // icy blue
-            [255, 210, 180],   // soft orange
+            [255, 255, 255],
+            [165, 243, 252],
+            [224, 231, 255],
+            [129, 140, 248],
+            [254, 243, 199],
           ];
 
-          // Generate stars — ONLY in edge zones, never near center
           interface Star {
             x: number; y: number; z: number; size: number;
             speed: number; offset: number; color: number[];
             driftX: number; driftY: number;
           }
           const stars: Star[] = [];
-          for (let i = 0; i < 120; i++) {
+          for (let i = 0; i < 140; i++) {
             let x: number, y: number;
-            // Keep generating until star is far from center
             do {
               x = Math.random() * 2 - 1;
               y = Math.random() * 2 - 1;
-            } while (Math.sqrt(x * x + y * y) < 0.55); // 55% exclusion = Earth fully clear
+            } while (Math.sqrt(x * x + y * y) < 0.52);
 
             stars.push({
               x, y,
               z: Math.random(),
-              size: Math.random() * 1.4 + 0.2,
+              size: Math.random() * 1.5 + 0.2,
               speed: Math.random() * 0.008 + 0.002,
               offset: Math.random() * Math.PI * 2,
               color: starColors[Math.floor(Math.random() * starColors.length)],
@@ -242,10 +310,8 @@ export const LoginPage: React.FC = () => {
             const cy = canvas.height / 2;
 
             for (const star of stars) {
-              // Gentle drift
               star.x += star.driftX;
               star.y += star.driftY;
-              // Wrap around edges
               if (star.x > 1.1) star.x = -1.1;
               if (star.x < -1.1) star.x = 1.1;
               if (star.y > 1.1) star.y = -1.1;
@@ -253,28 +319,23 @@ export const LoginPage: React.FC = () => {
 
               const sx = cx + star.x * cx;
               const sy = cy + star.y * cy;
-
-              // Double-check: skip if somehow drifted into center
               const dist = Math.sqrt((sx - cx) ** 2 + (sy - cy) ** 2);
-              if (dist < Math.min(cx, cy) * 0.5) continue;
+              if (dist < Math.min(cx, cy) * 0.48) continue;
 
               const depth = 0.3 + star.z * 0.7;
               const sz = star.size * depth;
-              // Smooth sine twinkle
               const twinkle = 0.5 + 0.5 * Math.sin(t * star.speed + star.offset);
-              const alpha = twinkle * depth * 0.7;
+              const alpha = twinkle * depth * 0.75;
               const [r, g, b] = star.color;
 
-              // Star core
               ctx.beginPath();
               ctx.arc(sx, sy, sz, 0, Math.PI * 2);
               ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
               ctx.fill();
 
-              // Soft glow halo for brighter stars
               if (sz > 0.8) {
                 const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, sz * 4);
-                grad.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.2})`);
+                grad.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.25})`);
                 grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
                 ctx.beginPath();
                 ctx.arc(sx, sy, sz * 4, 0, Math.PI * 2);
@@ -289,106 +350,181 @@ export const LoginPage: React.FC = () => {
         className="fixed inset-0 z-[5] pointer-events-none"
       />
 
-      {/* TOP RIGHT CONTROLS: AUDIO ONLY */}
-      <div className="fixed top-5 right-5 z-30">
-        <button
-          onClick={toggleSound}
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/60 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
-          title="Toggle Ambient Audio"
-        >
-          {isAudioMuted ? (
-            <>
-              <VolumeX className="h-3.5 w-3.5 text-slate-400" />
-              <span className="text-[11px] text-slate-400">Muted</span>
-            </>
-          ) : (
-            <>
-              <Volume2 className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-              <span className="text-[11px] text-cyan-300">Live Beat</span>
-            </>
-          )}
-        </button>
+      {/* TOP NAVIGATION / STATUS BAR — Mobile & Desktop optimized */}
+      <div className="fixed top-3 left-3 right-3 sm:top-5 sm:left-5 sm:right-5 z-30 flex items-center justify-between pointer-events-none gap-2">
+        
+        {/* Live Cluster PoPs Pill */}
+        <div className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 backdrop-blur-xl border border-white/10 shadow-lg text-slate-300 shrink-0">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide text-slate-200">
+            32 Edge PoPs <span className="hidden sm:inline">Online</span>
+          </span>
+          <span className="text-[10px] text-cyan-400 font-mono hidden md:inline">
+            • 38ms SLA
+          </span>
+        </div>
+
+        {/* Audio Equalizer Deck in Top-Right */}
+        <div className="pointer-events-auto shrink-0">
+          <button
+            onClick={toggleSound}
+            className="group flex items-center gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-slate-950/80 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
+            title="Toggle Ambient Audio Deck"
+          >
+            {isAudioMuted ? (
+              <>
+                <VolumeX className="h-3.5 w-3.5 text-slate-400" />
+                <span className="text-[10px] sm:text-[11px] text-slate-400">Muted</span>
+              </>
+            ) : (
+              <>
+                {/* 4 Animated Audio Frequency Bars */}
+                <div className="flex items-end gap-[2px] h-3.5 w-3">
+                  <span className="w-[2px] h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDuration: "500ms" }} />
+                  <span className="w-[2px] h-3.5 bg-cyan-300 rounded-full animate-pulse" style={{ animationDuration: "350ms" }} />
+                  <span className="w-[2px] h-1.5 bg-sky-400 rounded-full animate-pulse" style={{ animationDuration: "600ms" }} />
+                  <span className="w-[2px] h-3 bg-indigo-400 rounded-full animate-pulse" style={{ animationDuration: "420ms" }} />
+                </div>
+                <span className="text-[10px] sm:text-[11px] text-cyan-300 font-medium">Ambient Beat</span>
+              </>
+            )}
+          </button>
+        </div>
+
       </div>
 
       {/* MAIN VIEWPORT SPLIT LAYOUT (Earth centered in between) */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-5 sm:px-10 lg:px-14 min-h-screen flex flex-col lg:flex-row items-center justify-between gap-10 py-12">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-8 lg:gap-12 pt-20 pb-12 sm:py-16">
         
-        {/* ── LEFT SIDE OF EARTH: Bold, Stylish Modern Branding ── */}
-        <div className="w-full lg:max-w-lg space-y-6 text-left animate-in fade-in slide-in-from-left-6 duration-700">
+        {/* ── LEFT SIDE: Futuristic Command Deck & Brand Showcase ── */}
+        <div className="w-full lg:max-w-xl space-y-4 sm:space-y-6 text-center lg:text-left flex flex-col items-center lg:items-start animate-in fade-in slide-in-from-left-6 duration-700">
           
-          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/15 shadow-lg">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
-            </span>
-            <span className="text-xs font-bold tracking-wider text-cyan-300 uppercase">
-              Autonomous Edge Engine v2.0
-            </span>
+          {/* Brand Logo with Glowing Aura */}
+          <div className="pt-2">
+            <BrandLogo
+              size="lg"
+              badgeText="ENTERPRISE"
+              subtext="Autonomous Edge Routing & Global Hot-Path v2.4"
+              animated={true}
+            />
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05] drop-shadow-2xl">
-              Link<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">Pulse</span>
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-[1.15] drop-shadow-2xl">
+              Sub-50ms Atomic Redirection.{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 block sm:inline mt-1 sm:mt-0">
+                Deep Edge Intelligence.
+              </span>
             </h1>
-            <p className="text-xl sm:text-2xl font-bold tracking-tight text-slate-200">
-              Instant Global Redirection & Deep Edge Intelligence.
+            <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed max-w-lg">
+              Next-generation short link management engineered for global performance with zero-cookie SHA-256 IP telemetry, vector QR codes, and AI fraud protection.
             </p>
           </div>
 
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal max-w-md">
-            Ultra-fast atomic routing across 32 distributed edge clusters with zero-cookie SHA-256 IP telemetry, dynamic vector QR codes, and AI fraud protection.
-          </p>
+          {/* Interactive Live Telemetry Hop Card (Responsive 2x2 grid on mobile, 4 columns on sm+) */}
+          <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 backdrop-blur-xl border border-white/10 hover:border-cyan-500/30 transition shadow-xl">
+            <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+              <span className="flex items-center gap-1.5 text-cyan-400">
+                <Radio className="h-3.5 w-3.5 animate-pulse" />
+                Live Edge Hop Telemetry
+              </span>
+              <span className="font-mono text-emerald-400 text-[10px]">In-Flight</span>
+            </div>
 
-          {/* 3 Sleek Feature Pills */}
-          <div className="flex flex-wrap gap-2.5 pt-1">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-xs font-semibold text-slate-200 hover:border-cyan-400/40 hover:bg-white/10 transition">
-              <Zap className="h-3.5 w-3.5 text-cyan-400" />
-              <span>&lt;50ms Hot-Path</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-xs font-semibold text-slate-200 hover:border-emerald-400/40 hover:bg-white/10 transition">
-              <Shield className="h-3.5 w-3.5 text-emerald-400" />
-              <span>SHA-256 IP Hash</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-xs font-semibold text-slate-200 hover:border-indigo-400/40 hover:bg-white/10 transition">
-              <Activity className="h-3.5 w-3.5 text-indigo-400" />
-              <span>Zero-Log Telemetry</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {edgeHops.map((hop, idx) => {
+                const isActive = activeHopIndex === idx;
+                return (
+                  <div
+                    key={hop.code}
+                    className={`p-2 sm:p-2.5 rounded-xl border transition-all text-center ${
+                      isActive
+                        ? "bg-cyan-500/15 border-cyan-400 shadow-md shadow-cyan-500/20 scale-[1.02]"
+                        : "bg-white/[0.02] border-white/5 opacity-70"
+                    }`}
+                  >
+                    <div className="text-[11px] font-mono font-bold text-white flex items-center justify-center gap-1">
+                      {hop.code}
+                      {isActive && <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />}
+                    </div>
+                    <div className="text-[9px] text-slate-400 truncate mt-0.5">{hop.city}</div>
+                    <div className={`text-[10px] font-mono font-bold mt-1 ${isActive ? "text-cyan-300" : "text-slate-500"}`}>
+                      {hop.latency}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Live Telemetry Ping Status */}
-          <div className="pt-2 flex items-center gap-3 text-xs font-semibold text-slate-400">
+          {/* 4 Sleek Feature Capability Chips */}
+          <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 text-[11px] sm:text-xs font-semibold text-slate-200 hover:border-cyan-400/40 hover:bg-white/[0.08] transition">
+              <Zap className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+              <span className="truncate">&lt;50ms Hot-Path</span>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 text-[11px] sm:text-xs font-semibold text-slate-200 hover:border-emerald-400/40 hover:bg-white/[0.08] transition">
+              <Shield className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <span className="truncate">SHA-256 IP Hash</span>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 text-[11px] sm:text-xs font-semibold text-slate-200 hover:border-indigo-400/40 hover:bg-white/[0.08] transition">
+              <Cpu className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+              <span className="truncate">AI Bot Defense</span>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 text-[11px] sm:text-xs font-semibold text-slate-200 hover:border-sky-400/40 hover:bg-white/[0.08] transition">
+              <Activity className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+              <span className="truncate">99.999% SLA</span>
+            </div>
+          </div>
+
+          {/* Architecture Status Badges */}
+          <div className="pt-1 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold text-slate-400">
             <div className="flex items-center gap-1.5 text-emerald-400">
               <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>32 PoPs Active</span>
+              <span>Clusters Synced</span>
             </div>
             <span>•</span>
-            <span>99.99% Edge SLA</span>
+            <span>Zero Data Leak</span>
             <span>•</span>
-            <span className="font-mono text-cyan-400">38ms Global</span>
+            <span className="font-mono text-cyan-400">Quantum Fast</span>
           </div>
 
         </div>
 
-        {/* ── RIGHT SIDE OF EARTH: Compact, Interactive Glowing Login Card ── */}
+        {/* ── RIGHT SIDE: Next-Gen Glowing Cyber Glass Login Card ── */}
         <div className="w-full lg:w-auto flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-6 duration-700">
           
-          <div className="w-full max-w-[400px] rounded-3xl bg-slate-950/65 hover:bg-slate-950/85 backdrop-blur-2xl border border-white/15 hover:border-cyan-400/50 p-7 sm:p-8 text-white shadow-2xl shadow-black/90 hover:shadow-[0_0_50px_-5px_rgba(6,182,212,0.35)] transition-all duration-300 group relative overflow-hidden">
+          <div className="w-full max-w-[420px] rounded-3xl bg-slate-950/75 hover:bg-slate-950/90 backdrop-blur-2xl border border-white/15 hover:border-cyan-400/50 p-5 sm:p-7 md:p-8 text-white shadow-2xl shadow-black/95 hover:shadow-[0_0_60px_-10px_rgba(6,182,212,0.35)] transition-all duration-300 group relative overflow-hidden">
             
-            {/* Top Interactive Cyan Accent Glow Line */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+            {/* Top Interactive Animated Gradient Light Beam */}
+            <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-transparent via-cyan-400 via-indigo-500 to-transparent opacity-75 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Card Header with Mini Logo & Cluster Security Badge */}
+            <div className="flex items-center justify-between pb-4 sm:pb-5 border-b border-white/10 mb-4 sm:mb-5">
+              <BrandLogo size="sm" showBadge={false} />
+              
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-[10px] font-semibold">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+                <span>TLS 1.3 Verified</span>
+              </div>
+            </div>
 
             {/* Segmented Tab Switcher */}
-            <div className="flex p-1 rounded-xl bg-white/5 border border-white/10 mb-6 group-hover:border-white/20 transition">
+            <div className="flex p-1 rounded-xl bg-white/5 border border-white/10 mb-4 sm:mb-5 group-hover:border-white/20 transition">
               <button
                 type="button"
                 onClick={() => {
                   sounds.playClick();
                   setIsRegister(false);
                   setError(null);
+                  setResetNotice(null);
                 }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   !isRegister
-                    ? "bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-md shadow-cyan-500/25"
+                    ? "bg-gradient-to-r from-cyan-500 via-sky-600 to-indigo-600 text-white shadow-lg shadow-cyan-500/30 font-extrabold"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -400,10 +536,11 @@ export const LoginPage: React.FC = () => {
                   sounds.playClick();
                   setIsRegister(true);
                   setError(null);
+                  setResetNotice(null);
                 }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   isRegister
-                    ? "bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-md shadow-cyan-500/25"
+                    ? "bg-gradient-to-r from-cyan-500 via-sky-600 to-indigo-600 text-white shadow-lg shadow-cyan-500/30 font-extrabold"
                     : "text-slate-400 hover:text-slate-200"
                 }`}
               >
@@ -419,22 +556,30 @@ export const LoginPage: React.FC = () => {
               </div>
             )}
 
+            {/* Password Reset Notice */}
+            {resetNotice && (
+              <div className="mb-4 p-3 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-200 text-xs flex items-center gap-2 animate-in fade-in">
+                <Info className="h-4 w-4 shrink-0 text-cyan-400" />
+                <span className="text-xs leading-tight">{resetNotice}</span>
+              </div>
+            )}
+
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
               {isRegister && (
                 <div>
                   <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                     Full Name
                   </label>
-                  <div className="relative">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-hover:text-cyan-400 transition" />
+                  <div className="relative group/field">
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within/field:text-cyan-400 transition" />
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Sarah Chen"
-                      className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                      className="w-full bg-white/[0.04] hover:bg-white/[0.07] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
                     />
                   </div>
                 </div>
@@ -444,85 +589,155 @@ export const LoginPage: React.FC = () => {
                 <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                   Email Address
                 </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-hover:text-cyan-400 transition" />
+                <div className="relative group/field">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within/field:text-cyan-400 transition" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="demo@linkpulse.io"
-                    className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                    className="w-full bg-white/[0.04] hover:bg-white/[0.07] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-hover:text-cyan-400 transition" />
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+                    Password
+                  </label>
+                  {!isRegister && (
+                    <button
+                      type="button"
+                      onClick={() => setResetNotice("Demo Environment: Use 1-Click Access below or login with Sarah Chen's credentials.")}
+                      className="text-[10px] text-cyan-400 hover:text-cyan-300 transition cursor-pointer"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
+
+                <div className="relative group/field">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within/field:text-cyan-400 transition" />
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-white/[0.04] hover:bg-white/[0.08] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl pl-10 pr-10 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
+                    className="w-full bg-white/[0.04] hover:bg-white/[0.07] focus:bg-white/[0.12] border border-white/10 hover:border-white/20 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 rounded-xl pl-10 pr-10 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none transition shadow-inner"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer p-1"
+                    title={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+
+                {/* Password Strength Meter in Registration Mode */}
+                {isRegister && (
+                  <div className="mt-2 space-y-1 animate-in fade-in">
+                    <div className="flex items-center justify-between text-[10px] font-medium text-slate-400">
+                      <span>Password Security</span>
+                      <span className={strength.score === 3 ? "text-emerald-400" : strength.score === 2 ? "text-amber-400" : "text-rose-400"}>
+                        {strength.label}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5 h-1">
+                      <div className={`rounded-full transition-all ${strength.score >= 1 ? strength.color : "bg-white/10"}`} />
+                      <div className={`rounded-full transition-all ${strength.score >= 2 ? strength.color : "bg-white/10"}`} />
+                      <div className={`rounded-full transition-all ${strength.score >= 3 ? strength.color : "bg-white/10"}`} />
+                    </div>
+                  </div>
+                )}
               </div>
 
+              {/* Remember Me Toggle */}
+              {!isRegister && (
+                <div className="flex items-center justify-between pt-0.5">
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="rounded bg-white/10 border-white/20 text-cyan-500 focus:ring-cyan-400 focus:ring-offset-0 h-3.5 w-3.5"
+                    />
+                    <span className="text-[11px] text-slate-300">Remember this workstation</span>
+                  </label>
+                </div>
+              )}
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-cyan-500 hover:from-cyan-400 hover:to-indigo-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.45)] hover:brightness-110 text-white font-bold text-xs tracking-wider uppercase shadow-md shadow-cyan-500/25 transition active:scale-[0.98] disabled:opacity-50 mt-1 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-sky-600 to-indigo-600 hover:from-cyan-400 hover:via-sky-500 hover:to-indigo-500 hover:shadow-[0_0_35px_rgba(6,182,212,0.5)] hover:brightness-110 text-white font-black text-xs tracking-wider uppercase shadow-lg shadow-cyan-500/25 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 mt-1 cursor-pointer"
               >
-                <span>{loading ? "Authenticating..." : !isRegister ? "Sign In to Workspace" : "Create Account"}</span>
-                <ArrowRight className="h-4 w-4" />
+                {loading ? (
+                  <>
+                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Verifying Credentials...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{!isRegister ? "Sign In to Workspace" : "Launch Edge Account"}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </form>
 
             {/* Quick 1-Click Demo Logins */}
-            <div className="mt-5 pt-4 border-t border-white/10">
+            <div className="mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-white/10">
               <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                <span>Quick Demo Access</span>
-                <span className="text-cyan-400 font-normal">1-Click Auto Fill</span>
+                <span className="flex items-center gap-1.5">
+                  <Key className="h-3 w-3 text-cyan-400" />
+                  1-Click Instant Access
+                </span>
+                <span className="text-cyan-400 font-mono text-[9px]">Zero-Typing</span>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => fillCredentials("demo@linkpulse.io", "Demo@123456")}
-                  className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-cyan-400/50 text-left transition cursor-pointer active:scale-95 group/btn"
+                  className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-cyan-400/50 text-left transition cursor-pointer active:scale-95 group/btn shadow-xs min-w-0 overflow-hidden"
                 >
-                  <div className="flex items-center gap-1.5 text-[9px] font-bold text-cyan-400 uppercase">
-                    <User className="h-3 w-3" />
-                    <span>User</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wide truncate">
+                      Sarah Chen
+                    </span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 group-hover/btn:animate-ping shrink-0 ml-1" />
                   </div>
-                  <div className="text-[11px] font-semibold text-slate-200 truncate mt-0.5">demo@linkpulse.io</div>
+                  <div className="text-[10px] sm:text-[11px] font-semibold text-slate-200 truncate mt-0.5">demo@linkpulse.io</div>
+                  <div className="text-[9px] text-slate-500 truncate mt-0.5">Hot-Path User</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => fillCredentials("admin@linkpulse.io", "Admin@123456")}
-                  className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-indigo-400/50 text-left transition cursor-pointer active:scale-95 group/btn"
+                  className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-indigo-400/50 text-left transition cursor-pointer active:scale-95 group/btn shadow-xs min-w-0 overflow-hidden"
                 >
-                  <div className="flex items-center gap-1.5 text-[9px] font-bold text-indigo-400 uppercase">
-                    <Shield className="h-3 w-3" />
-                    <span>Admin</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wide truncate">
+                      Alex Mercer
+                    </span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 group-hover/btn:animate-ping shrink-0 ml-1" />
                   </div>
-                  <div className="text-[11px] font-semibold text-slate-200 truncate mt-0.5">admin@linkpulse.io</div>
+                  <div className="text-[10px] sm:text-[11px] font-semibold text-slate-200 truncate mt-0.5">admin@linkpulse.io</div>
+                  <div className="text-[9px] text-slate-500 truncate mt-0.5">Edge Admin</div>
                 </button>
               </div>
+            </div>
+
+            {/* Security Guarantee Footer */}
+            <div className="mt-3.5 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 text-[9px] sm:text-[10px] text-slate-400 text-center">
+              <Shield className="h-3 w-3 text-emerald-400 shrink-0" />
+              <span className="truncate">256-bit AES Edge-Encrypted • Autonomous Engine</span>
             </div>
 
           </div>

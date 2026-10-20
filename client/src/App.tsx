@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BrandLogo } from "./components/BrandLogo";
 import { useAuth } from "./context/AuthContext";
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
@@ -175,20 +176,11 @@ export const App: React.FC = () => {
             <div>
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                      LinkPulse
-                      <span className="text-[10px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-500/30">
-                        PRO
-                      </span>
-                    </h2>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Enterprise Infrastructure</p>
-                  </div>
-                </div>
+                <BrandLogo
+                  size="md"
+                  badgeText="PRO"
+                  subtext="Enterprise Infrastructure"
+                />
 
                 <button
                   onClick={() => setMobileMenuOpen(false)}

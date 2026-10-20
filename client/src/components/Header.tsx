@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrandLogo } from "./BrandLogo";
 import { Search, Sun, Moon, Menu, X, Plus, Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -35,12 +36,9 @@ export const Header: React.FC<HeaderProps> = ({
         {/* LinkPulse logo — visible only on mobile */}
         <div 
           onClick={onOpenMobileMenu}
-          className="flex lg:hidden items-center gap-2 shrink-0 cursor-pointer"
+          className="flex lg:hidden items-center shrink-0 cursor-pointer"
         >
-          <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-md shadow-indigo-500/20">
-            <Sparkles className="h-4 w-4 text-white" />
-          </div>
-          <span className="text-sm font-black text-slate-900 dark:text-white tracking-tight">LinkPulse</span>
+          <BrandLogo size="sm" showBadge={false} />
         </div>
 
         {/* Search Bar — Desktop full, mobile toggleable */}
