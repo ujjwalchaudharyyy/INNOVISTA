@@ -33,6 +33,16 @@ https://innovista-black.vercel.app/
 
 
 
+# Dashboard ~ 
+
+<img width="1912" height="1031" alt="image" src="https://github.com/user-attachments/assets/66b4924e-2a8c-4be9-9da0-5c87365ff2cd" />
+
+
+
+
+
+
+
 ## 📌 Executive Summary
 
 Modern link routing is more than a simple HTTP `302` redirect. Enterprise platforms require **atomic click enforcement**, **zero-latency destination lookup**, **fraud/malware domain screening**, **campaign attribution funnels**, and **deep privacy-preserving analytics** without relying on invasive client-side cookies.
