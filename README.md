@@ -58,58 +58,50 @@ Modern link routing is more than a simple HTTP `302` redirect. Enterprise platfo
 
 ## 🏛 System Architecture
 
+## 🏛 System Architecture
+
 ```mermaid
 flowchart TB
-  subgraph CLIENT["🖥️ CLIENT LAYER · Vite + React 18"]
-    direction LR
+  subgraph CLIENT["🖥️ CLIENT LAYER - Vite + React 18"]
     C1["🎬 4K Video UI<br/>Glassmorphism"]
     C2["🎵 Audio Engine<br/>Beat Looper"]
     C3["🤖 AI Voice<br/>Speech TTS"]
     C4["📊 Charts<br/>Recharts Studio"]
   end
 
-  subgraph GATEWAY["🌐 API GATEWAY · Express + TypeScript"]
-    direction TB
-    EX["⚙️ Express Engine<br/>CORS · Rate Limiter · Body Parsers · Error Handler"]
-
-    subgraph MGMT["🛠️ Management Path · /api/*"]
-      direction TB
-      M1["🔐 Auth & JWT (bcrypt)"]
-      M2["🔗 Links & Vanity Studio"]
-      M3["🎯 Campaign Aggregator"]
-      M4["📥 Bulk CSV Validator"]
-      M5["🛡️ Admin Shield & Audit"]
-      M1 ~~~ M2 ~~~ M3 ~~~ M4 ~~~ M5
-    end
-
-    subgraph HOT["⚡ Hot-Path · /r/:code"]
-      direction TB
-      H1["🕵️ Domain Reputation Check"]
-      H2["🔑 Password Challenge"]
-      H3["⏳ Expiry & Click-Cap Filter"]
-      H4["📡 Telemetry Worker"]
-      H5["🚀 HTTP 302 Redirect"]
-      H1 --> H2 --> H3 --> H4 --> H5
-    end
-
-    EX --> MGMT
-    EX --> HOT
+  subgraph GATEWAY["🌐 API GATEWAY - Express + TypeScript"]
+    EX["⚙️ Express Engine<br/>CORS, Rate Limiter, Parsers, Error Handler"]
+    MG["🛠️ MANAGEMENT PATH /api/*<br/><br/>🔐 Auth and JWT bcrypt<br/>🔗 Links and Vanity Studio<br/>🎯 Campaign Aggregator<br/>📥 Bulk CSV Validator<br/>🛡️ Admin Shield and Audit"]
+    H1["⚡ HOT-PATH /r/:code<br/>🕵️ Domain Reputation Check"]
+    H2["🔑 Password Challenge"]
+    H3["⏳ Expiry and Click-Cap Filter"]
+    H4["📡 Telemetry Worker"]
+    H5["🚀 HTTP 302 Redirect"]
+    EX --> MG
+    EX --> H1
+    H1 --> H2 --> H3 --> H4 --> H5
   end
 
-  subgraph DATA["🗄️ DATA PERSISTENCE LAYER · Prisma ORM"]
-    direction LR
-    D1[("👤 Users<br/>RBAC · Hash")]
-    D2[("🔗 Links<br/>Caps · Vanity")]
-    D3[("📈 ClickEvents<br/>Hashed IP · UA")]
-    D4[("🎯 Campaigns<br/>Attribution")]
-    D5[("🚫 Blocklist<br/>Domain Shield")]
-    D1 <--> D2 <--> D3
-    D2 <--> D4
+  subgraph DATA["🗄️ DATA PERSISTENCE LAYER"]
+    PR["💎 Prisma ORM"]
+    D1["👤 Users<br/>RBAC and Hash"]
+    D2["🔗 Links<br/>Caps and Vanity"]
+    D3["📈 ClickEvents<br/>Hashed IP and UA"]
+    D4["🎯 Campaigns<br/>Attribution"]
+    D5["🚫 Blocklist<br/>Domain Shield"]
+    PR --> D1
+    PR --> D2
+    PR --> D3
+    PR --> D4
+    PR --> D5
   end
 
-  CLIENT -->|"HTTPS / JSON REST"| EX
-  MGMT -->|"Prisma ORM"| DATA
-  HOT -->|"Prisma ORM"| DATA
+  C1 --> EX
+  C2 --> EX
+  C3 --> EX
+  C4 --> EX
+  MG --> PR
+  H5 --> PR
 
   classDef client fill:#CECBF6,stroke:#534AB7,color:#26215C,stroke-width:1.5px
   classDef engine fill:#9FE1CB,stroke:#0F6E56,color:#04342C,stroke-width:1.5px
@@ -119,18 +111,14 @@ flowchart TB
 
   class C1,C2,C3,C4 client
   class EX engine
-  class M1,M2,M3,M4,M5 mgmt
+  class MG mgmt
   class H1,H2,H3,H4,H5 hot
-  class D1,D2,D3,D4,D5 data
+  class PR,D1,D2,D3,D4,D5 data
 
   style CLIENT fill:#EEEDFE,stroke:#534AB7,stroke-width:2px,color:#26215C
   style GATEWAY fill:#E1F5EE,stroke:#0F6E56,stroke-width:2px,color:#04342C
-  style MGMT fill:#FAECE7,stroke:#993C1D,stroke-width:2px,color:#4A1B0C
-  style HOT fill:#FAEEDA,stroke:#854F0B,stroke-width:2px,color:#412402
   style DATA fill:#E6F1FB,stroke:#185FA5,stroke-width:2px,color:#042C53
 ```
-
-
 ## ⚡ Redirection Sequence & Telemetry Lifecycle
 
 ```
