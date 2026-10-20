@@ -5,6 +5,7 @@ import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
 import { CreateLinkModal } from "./components/CreateLinkModal";
 import { LoginPage } from "./pages/LoginPage";
+import { IntroVideoPage } from "./pages/IntroVideoPage";
 import { RedirectPage } from "./pages/RedirectPage";
 import { OverviewPage } from "./pages/OverviewPage";
 import { LinksPage } from "./pages/LinksPage";
@@ -43,6 +44,12 @@ export const App: React.FC = () => {
     return saved ? saved === "dark" : true;
   });
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showIntro, setShowIntro] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    if (window.location.pathname.startsWith("/r/")) return false;
+    const seen = sessionStorage.getItem("linkpulse_seen_intro");
+    return !seen;
+  });
 
   useEffect(() => {
     if (isDark) {
@@ -73,7 +80,17 @@ export const App: React.FC = () => {
   }
 
   if (!user) {
-    return <LoginPage />;
+    if (showIntro) {
+      return (
+        <IntroVideoPage
+          onComplete={() => {
+            sessionStorage.setItem("linkpulse_seen_intro", "true");
+            setShowIntro(false);
+          }}
+        />
+      );
+    }
+    return <LoginPage onWatchIntro={() => setShowIntro(true)} />;
   }
 
   const handleLinkCreated = () => setRefreshKey((prev) => prev + 1);
