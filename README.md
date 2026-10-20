@@ -333,25 +333,57 @@ flowchart LR
 ---
 ## 🛠 Tech Stack Specification
 
-### Frontend
-- **Framework**: React 18.3 with TypeScript
-- **Tooling & Bundler**: Vite 8.3
-- **Styling**: Tailwind CSS, PostCSS, Custom Glassmorphism Theme
-- **Data Visualization**: Recharts (Area, Bar, Pie, Responsive Containers)
-- **Icons**: Lucide React
-- **HTTP Client**: Axios with automated JWT auth interceptors
+<div align="center">
 
-### Backend
-- **Runtime**: Node.js (v18+)
-- **Application Framework**: Express.js with TypeScript
-- **ORM**: Prisma ORM (v5+)
-- **Database**: SQLite (Development) / PostgreSQL (Production ready)
-- **Security**: JSON Web Tokens (JWT), bcryptjs (Salt factor 10), Express Rate Limiter
-- **Telemetry Parsers**: UAParser.js, Node.js Crypto (SHA-256)
+![React](https://img.shields.io/badge/React_18.3-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js_18+-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma_5+-3982CE?style=for-the-badge&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+
+</div>
+
+<br/>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🎨 Frontend
+
+| | Technology | Details |
+|:---:|:---|:---|
+| ⚛️ | ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) | **Framework:** React 18.3 with TypeScript |
+| ⚡ | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) | **Bundler:** Vite 8.3 |
+| 🎨 | ![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) | **Styling:** Tailwind CSS, PostCSS, custom glassmorphism theme |
+| 📊 | ![Recharts](https://img.shields.io/badge/Recharts-22B5BF?style=flat-square) | **Charts:** Area, Bar, Pie, Responsive Containers |
+| 🔷 | ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=flat-square&logo=lucide&logoColor=white) | **Icons:** Lucide React |
+| 🌐 | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=axios&logoColor=white) | **HTTP:** Axios with automated JWT auth interceptors |
+
+</td>
+<td width="50%" valign="top">
+
+### ⚙️ Backend
+
+| | Technology | Details |
+|:---:|:---|:---|
+| 🟢 | ![Node](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=node.js&logoColor=white) | **Runtime:** Node.js v18+ |
+| 🚂 | ![Express](https://img.shields.io/badge/Express-404D59?style=flat-square&logo=express&logoColor=white) | **Framework:** Express.js with TypeScript |
+| 💎 | ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=flat-square&logo=prisma&logoColor=white) | **ORM:** Prisma v5+ |
+| 🗄️ | ![DB](https://img.shields.io/badge/SQLite_/_PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white) | **Database:** SQLite (dev) / PostgreSQL (prod-ready) |
+| 🔐 | ![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white) | **Security:** JWT, bcryptjs (salt factor 10), Express Rate Limiter |
+| 📡 | ![Crypto](https://img.shields.io/badge/UAParser_+_Crypto-F59E0B?style=flat-square) | **Telemetry:** UAParser.js, Node.js Crypto (SHA-256) |
+
+</td>
+</tr>
+</table>
 
 ---
-
-
 # Road Map ~
 
 <img width="425" height="376" alt="image" src="https://github.com/user-attachments/assets/190b055e-3d27-4487-86ef-2b5ed1096b85" />
@@ -395,8 +427,6 @@ flowchart LR
 
 
 ## 📡 API Specification
-
-## 📡 API Reference
 
 <div align="center">
 
