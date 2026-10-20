@@ -186,6 +186,14 @@ LinkPulse features an audio and visual presentation layer on the Login and Onboa
 - **Telemetry Parsers**: UAParser.js, Node.js Crypto (SHA-256)
 
 ---
+# Road Map ~
+
+<img width="425" height="376" alt="image" src="https://github.com/user-attachments/assets/190b055e-3d27-4487-86ef-2b5ed1096b85" />
+
+
+
+
+
 
 ## 📂 Project Directory Structure
 
