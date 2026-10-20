@@ -861,19 +861,135 @@ Vercel khud **client build** karega aur **SPA routing** seamlessly handle karega
 
 ---
 
-## Local Setup !
-
-<img width="942" height="592" alt="image" src="https://github.com/user-attachments/assets/34e2485b-d3d0-418d-82ec-ad8f321085aa" />
-
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
 <div align="center">
-  <sub>Built with precision for high-scale link infrastructure. LinkPulse © 2026.</sub>
+
+## 💻 Local Setup
+
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)
+![React](https://img.shields.io/badge/Frontend-Vite-646CFF?logo=vite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+
+*Get INNOVISTA running locally in under 5 minutes.*
+
 </div>
 
+---
+
+### 📋 Prerequisites
+
+| Tool | Version | Verify |
+|------|---------|--------|
+| 🟢 Node.js | v18 or higher | `node -v` |
+| 📦 npm | v9 or higher | `npm -v` |
+| 🔧 Git | Latest | `git --version` |
+
+### 🗺️ Architecture at a Glance
+
+| Layer | Folder | Port | URL |
+|-------|--------|------|-----|
+| ⚙️ Backend (API) | `server/` | `5000` | http://localhost:5000 |
+| 🎨 Frontend (UI) | `client/` | `5173` | http://localhost:5173 |
+
+> [!NOTE]
+> Run the backend and frontend in **two separate terminals**.
+
+---
+
+### 🚀 Step-by-Step Setup
+
+#### 1️⃣ Clone the repository
+
+```bash
+git clone https://github.com/ujjwalchaudharyyy/INNOVISTA.git
+cd INNOVISTA
+```
+
+#### 2️⃣ Backend setup &nbsp;·&nbsp; Terminal 1
+
+```bash
+cd server
+npm install
+
+# Environment variables (skip if .env.example does not exist)
+cp .env.example .env
+
+# Create database tables
+npx prisma db push
+
+# Load demo data
+npx tsx prisma/seed.ts
+
+# Start the API server  →  http://localhost:5000
+npm run dev
+```
+
+#### 3️⃣ Frontend setup &nbsp;·&nbsp; Terminal 2
+
+```bash
+cd client
+npm install
+
+# Start the UI  →  http://localhost:5173
+npm run dev
+```
+
+> [!TIP]
+> Open **http://localhost:5173** in your browser. If the demo data loads, you're all set. ✅
+
+---
+
+### ⚡ Quick Start (Copy-Paste)
+
+<details>
+<summary><b>Click to expand the one-shot commands</b></summary>
+
+<br>
+
+**Terminal 1 (Backend)**
+```bash
+git clone https://github.com/ujjwalchaudharyyy/INNOVISTA.git && cd INNOVISTA/server
+npm install && npx prisma db push && npx tsx prisma/seed.ts && npm run dev
+```
+
+**Terminal 2 (Frontend)**
+```bash
+cd INNOVISTA/client
+npm install && npm run dev
+```
+
+</details>
+
+---
+
+### 🛠️ Troubleshooting
+
+<details>
+<summary><b>Click to view common issues and fixes</b></summary>
+
+<br>
+
+| ❌ Problem | ✅ Fix |
+|-----------|--------|
+| Port already in use | Stop the other process, or change the port in `.env` / `vite.config.ts` |
+| `Cannot find module '@prisma/client'` | Run `npx prisma generate` inside `server/` |
+| Database / Prisma error | Check `DATABASE_URL` in `server/.env`, then re-run `npx prisma db push` |
+| Frontend can't reach the API | Confirm the backend is running on port `5000` |
+| Empty app, no demo data | Re-run `npx tsx prisma/seed.ts` |
+| Want a clean database | `npx prisma db push --force-reset` and then re-seed |
+
+</details>
+
+---
+
+### 🔄 Useful Commands
+
+| Command | Location | Purpose |
+|---------|----------|---------|
+| `npm run dev` | `server/` or `client/` | Start in development mode |
+| `npx prisma studio` | `server/` | Browse the database in a GUI |
+| `npx prisma generate` | `server/` | Regenerate the Prisma client |
+| `npx prisma db push` | `server/` | Sync schema to the database |
 
 
 ## 👥 Meet Team Tech4All
