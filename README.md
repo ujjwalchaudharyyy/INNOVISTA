@@ -456,9 +456,61 @@ flowchart LR
 </table>
 
 ---
-# Road Map ~
+### 🗺 Roadmap
 
-<img width="425" height="376" alt="image" src="https://github.com/user-attachments/assets/190b055e-3d27-4487-86ef-2b5ed1096b85" />
+<div align="center">
+
+![Progress](https://img.shields.io/badge/Progress-50%25-22C55E?style=for-the-badge)
+![Done](https://img.shields.io/badge/✅_Completed-5-22C55E?style=for-the-badge)
+![Planned](https://img.shields.io/badge/🚧_Upcoming-5-F59E0B?style=for-the-badge)
+
+</div>
+
+```mermaid
+flowchart LR
+  A["✅ Phase 1<br/>Core Platform"] --> B["🚧 Phase 2<br/>Growth Features"] --> C["🔮 Phase 3<br/>Scale and Ecosystem"]
+
+  classDef done fill:#C0DD97,stroke:#3B6D11,color:#173404,stroke-width:1.5px
+  classDef next fill:#FAC775,stroke:#854F0B,color:#412402,stroke-width:1.5px
+  classDef future fill:#CECBF6,stroke:#534AB7,color:#26215C,stroke-width:1.5px
+
+  class A done
+  class B next
+  class C future
+```
+
+### ✅ Phase 1: Core Platform (Completed)
+
+| Status | Feature | Description |
+|:---:|:---|:---|
+| ![Done](https://img.shields.io/badge/-DONE-22C55E?style=flat-square) | ⚡ **Atomic Redirects & Click Telemetry** | Sub-15ms hot-path with privacy-first analytics |
+| ![Done](https://img.shields.io/badge/-DONE-22C55E?style=flat-square) | 🔳 **QR Studio** | SVG and PNG QR codes with scan attribution |
+| ![Done](https://img.shields.io/badge/-DONE-22C55E?style=flat-square) | 🎯 **Campaigns & Bulk CSV Import** | Campaign funnels and validated batch uploads |
+| ![Done](https://img.shields.io/badge/-DONE-22C55E?style=flat-square) | 🛡️ **Admin Domain Shield** | Platform-wide malicious domain blocklist |
+| ![Done](https://img.shields.io/badge/-DONE-22C55E?style=flat-square) | 🎙 **AI Voice & Cinematic UI** | 4K video, beat looper and AI narration |
+
+### 🚧 Phase 2: Growth Features (Upcoming)
+
+| Status | Feature | Description |
+|:---:|:---|:---|
+| ![Planned](https://img.shields.io/badge/-PLANNED-F59E0B?style=flat-square) | 🌐 **Custom Domains** | Use your own domain for short links |
+| ![Planned](https://img.shields.io/badge/-PLANNED-F59E0B?style=flat-square) | 👥 **Team Workspaces & Invites** | Collaborate with roles and permissions |
+| ![Planned](https://img.shields.io/badge/-PLANNED-F59E0B?style=flat-square) | 🗺️ **Geo-Location Map Analytics** | Visual world map of clicks |
+
+### 🔮 Phase 3: Scale & Ecosystem (Future)
+
+| Status | Feature | Description |
+|:---:|:---|:---|
+| ![Future](https://img.shields.io/badge/-FUTURE-8B5CF6?style=flat-square) | 🔑 **Public API Keys & Webhooks** | Let developers integrate LinkPulse |
+| ![Future](https://img.shields.io/badge/-FUTURE-8B5CF6?style=flat-square) | 🔗 **Link-in-Bio Pages** | Personal landing pages with multiple links |
+
+---
+
+<div align="center">
+
+💡 **Koi idea ya feature request hai?** [Open an issue](https://github.com/ujjwalchaudharyyy/INNOVISTA/issues) ya Pull Request bhejo!
+
+</div>
 
 
 
