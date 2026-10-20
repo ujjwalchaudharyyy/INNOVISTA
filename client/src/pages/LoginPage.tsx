@@ -22,15 +22,14 @@ import {
   Check, 
   Info, 
   ChevronRight,
-  Terminal,
-  Film
+  Terminal
 } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { sounds } from "../services/sounds";
 import { BrandLogo } from "../components/BrandLogo";
 
-export const LoginPage: React.FC<{ onWatchIntro?: () => void }> = ({ onWatchIntro }) => {
+export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState("demo@linkpulse.io");
@@ -412,18 +411,8 @@ export const LoginPage: React.FC<{ onWatchIntro?: () => void }> = ({ onWatchIntr
           </span>
         </div>
 
-        {/* Top-Right Controls: 4K Intro Replay + Audio Deck */}
-        <div className="pointer-events-auto shrink-0 flex items-center gap-2">
-          {onWatchIntro && (
-            <button
-              onClick={onWatchIntro}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-slate-950/80 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
-              title="Watch 4K Cinematic Intro Trailer"
-            >
-              <Film className="h-3.5 w-3.5 text-cyan-400" />
-              <span className="text-[10px] sm:text-[11px] text-cyan-300 font-medium hidden xs:inline">4K Intro</span>
-            </button>
-          )}
+        {/* Audio Equalizer Deck in Top-Right */}
+        <div className="pointer-events-auto shrink-0">
           <button
             onClick={toggleSound}
             className="group flex items-center gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-slate-950/80 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 hover:border-cyan-400/50 text-slate-300 hover:text-white transition text-xs font-semibold cursor-pointer shadow-lg active:scale-95"
