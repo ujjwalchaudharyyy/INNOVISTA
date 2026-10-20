@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { 
   Sparkles, 
   ArrowRight, 
@@ -42,9 +42,6 @@ export const LoginPage: React.FC = () => {
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [resetNotice, setResetNotice] = useState<string | null>(null);
 
-  // Interactive mouse spotlight tracking
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-
   // Simulated live edge telemetry node hop
   const [activeHopIndex, setActiveHopIndex] = useState(0);
   const edgeHops = [
@@ -54,21 +51,172 @@ export const LoginPage: React.FC = () => {
     { code: "SIN-1", city: "Singapore Hub", latency: "28ms" },
   ];
 
+  // DOM element refs for non-re-rendering high-performance updates
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
   const isMutedRef = useRef(false);
 
-  // Live Edge Hop Rotation
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveHopIndex((prev) => (prev + 1) % edgeHops.length);
-    }, 2800);
-    return () => clearInterval(timer);
-  }, [edgeHops.length]);
+  // High performance direct spotlight update (0 React re-renders)
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (spotlightRef.current) {
+      spotlightRef.current.style.background = `radial-gradient(650px circle at ${e.clientX}px ${e.clientY}px, rgba(6, 182, 212, 0.12), transparent 70%)`;
+    }
+  }, []);
 
-  // Background Audio — auto-start on first user interaction (browser policy)
+  // 1. ROCK-SOLID EARTH VIDEO PLAYBACK (No freeze on remount, no disappear on logout)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.loop = true;
+
+    const playVideo = () => {
+      const promise = video.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          // If browser policy blocks auto-playback, unlock on first interaction
+          const unlock = () => {
+            if (videoRef.current) {
+              videoRef.current.play().catch(() => {});
+            }
+            window.removeEventListener("click", unlock);
+            window.removeEventListener("touchstart", unlock);
+            window.removeEventListener("keydown", unlock);
+          };
+          window.addEventListener("click", unlock, { once: true, passive: true });
+          window.addEventListener("touchstart", unlock, { once: true, passive: true });
+          window.addEventListener("keydown", unlock, { once: true, passive: true });
+        });
+      }
+    };
+
+    playVideo();
+
+    return () => {
+      // Free hardware decoder when unmounting
+      if (video) {
+        video.pause();
+      }
+    };
+  }, []);
+
+  // 2. STARFIELD ANIMATION ENGINE WITH CLEAN LIFECYCLE (Zero CPU leaks, stops cleanly on login)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    let isCancelled = false;
+
+    const resize = () => {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const starColors = [
+      [255, 255, 255],
+      [165, 243, 252],
+      [224, 231, 255],
+      [129, 140, 248],
+      [254, 243, 199],
+    ];
+
+    interface Star {
+      x: number; y: number; z: number; size: number;
+      speed: number; offset: number; color: number[];
+      driftX: number; driftY: number;
+    }
+    const stars: Star[] = [];
+    for (let i = 0; i < 140; i++) {
+      let x: number, y: number;
+      do {
+        x = Math.random() * 2 - 1;
+        y = Math.random() * 2 - 1;
+      } while (Math.sqrt(x * x + y * y) < 0.52);
+
+      stars.push({
+        x, y,
+        z: Math.random(),
+        size: Math.random() * 1.5 + 0.2,
+        speed: Math.random() * 0.008 + 0.002,
+        offset: Math.random() * Math.PI * 2,
+        color: starColors[Math.floor(Math.random() * starColors.length)],
+        driftX: (Math.random() - 0.5) * 0.00008,
+        driftY: (Math.random() - 0.5) * 0.00008,
+      });
+    }
+
+    let t = 0;
+    const render = () => {
+      if (isCancelled) return;
+      t++;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      for (const star of stars) {
+        star.x += star.driftX;
+        star.y += star.driftY;
+        if (star.x > 1.1) star.x = -1.1;
+        if (star.x < -1.1) star.x = 1.1;
+        if (star.y > 1.1) star.y = -1.1;
+        if (star.y < -1.1) star.y = 1.1;
+
+        const sx = cx + star.x * cx;
+        const sy = cy + star.y * cy;
+        const dist = Math.sqrt((sx - cx) ** 2 + (sy - cy) ** 2);
+        if (dist < Math.min(cx, cy) * 0.48) continue;
+
+        const depth = 0.3 + star.z * 0.7;
+        const sz = star.size * depth;
+        const twinkle = 0.5 + 0.5 * Math.sin(t * star.speed + star.offset);
+        const alpha = twinkle * depth * 0.75;
+        const [r, g, b] = star.color;
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+        ctx.fill();
+
+        if (sz > 0.8) {
+          const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, sz * 4);
+          grad.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.25})`);
+          grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+          ctx.beginPath();
+          ctx.arc(sx, sy, sz * 4, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
+      }
+      animId = requestAnimationFrame(render);
+    };
+
+    animId = requestAnimationFrame(render);
+
+    return () => {
+      isCancelled = true;
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  // 3. BACKGROUND AUDIO LOOP WITH CLEAN LIFECYCLE
   useEffect(() => {
     let started = false;
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.35;
 
     const startAudio = () => {
       if (started || isMutedRef.current || !audioRef.current) return;
@@ -89,26 +237,22 @@ export const LoginPage: React.FC = () => {
       events.forEach(e => window.removeEventListener(e, startAudio));
     };
 
-    // Seamless loop: jump back before track ends
-    const loopInterval = setInterval(() => {
-      if (isMutedRef.current || !audioRef.current || audioRef.current.paused) return;
-      const d = audioRef.current.duration;
-      const c = audioRef.current.currentTime;
-      if (d && d > 4 && c >= d - 3) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
-      }
-    }, 50);
-
     return () => {
       cleanup();
-      clearInterval(loopInterval);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
       }
     };
   }, []);
+
+  // 4. TELEMETRY HOP ROTATION
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveHopIndex((prev) => (prev + 1) % edgeHops.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, [edgeHops.length]);
 
   const toggleSound = (e?: React.MouseEvent) => {
     if (e) {
@@ -130,12 +274,13 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleTimeUpdate = () => {
+    // Seamless hardware-accelerated video loop protection
     if (videoRef.current) {
       const duration = videoRef.current.duration;
       const currentTime = videoRef.current.currentTime;
-      if (duration && duration > 4 && currentTime >= duration - 3) {
+      if (duration && duration > 4 && currentTime >= duration - 0.25) {
         videoRef.current.currentTime = 0;
-        videoRef.current.play();
+        videoRef.current.play().catch(() => {});
       }
     }
   };
@@ -193,7 +338,7 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div 
-      onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+      onMouseMove={handleMouseMove}
       className="relative min-h-screen w-full flex items-center justify-center overflow-y-auto overflow-x-hidden select-none bg-black font-sans"
     >
       
@@ -202,30 +347,18 @@ export const LoginPage: React.FC = () => {
         ref={audioRef}
         src="/bg-music.mp3"
         autoPlay
+        loop
         preload="auto"
       />
 
-      {/* SVG Sharpen Filter — unsharp mask to maximize perceived clarity */}
-      <svg width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <filter id="lp-sharpen" x="0%" y="0%" width="100%" height="100%" colorInterpolationFilters="sRGB">
-            <feConvolveMatrix
-              order="3"
-              kernelMatrix="0 -0.4 0  -0.4 2.6 -0.4  0 -0.4 0"
-              divisor="1"
-              preserveAlpha="true"
-            />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* BACKGROUND VIDEO — GPU rendered + SVG unsharp mask sharpening */}
+      {/* BACKGROUND VIDEO — Hardware accelerated Earth Loop (100% reliable on remount) */}
       <video
         ref={videoRef}
         src="/login-bg.mp4"
         autoPlay
         muted
         playsInline
+        loop
         preload="auto"
         onTimeUpdate={handleTimeUpdate}
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
@@ -234,7 +367,7 @@ export const LoginPage: React.FC = () => {
           willChange: "transform",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
-          filter: "url(#lp-sharpen) contrast(1.06) saturate(1.08)",
+          filter: "contrast(1.06) saturate(1.08) brightness(1.02)",
         }}
       />
 
@@ -246,107 +379,18 @@ export const LoginPage: React.FC = () => {
         }}
       />
 
-      {/* DYNAMIC INTERACTIVE MOUSE SPOTLIGHT AURA */}
+      {/* DYNAMIC INTERACTIVE MOUSE SPOTLIGHT AURA (Updated via DOM ref, 0 React re-renders) */}
       <div
+        ref={spotlightRef}
         className="fixed inset-0 pointer-events-none z-[6] transition-opacity duration-300 hidden md:block"
         style={{
-          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.12), transparent 70%)`,
+          background: "radial-gradient(650px circle at 50% 50%, rgba(6, 182, 212, 0.08), transparent 70%)",
         }}
       />
 
-      {/* 3D STAR FIELD CANVAS */}
+      {/* 3D STAR FIELD CANVAS (Managed by clean useEffect, zero thread lock) */}
       <canvas
-        ref={(canvas) => {
-          if (!canvas || (canvas as any).__stars_init) return;
-          (canvas as any).__stars_init = true;
-          const ctx = canvas.getContext("2d");
-          if (!ctx) return;
-
-          const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-          };
-          resize();
-          window.addEventListener("resize", resize);
-
-          const starColors = [
-            [255, 255, 255],
-            [165, 243, 252],
-            [224, 231, 255],
-            [129, 140, 248],
-            [254, 243, 199],
-          ];
-
-          interface Star {
-            x: number; y: number; z: number; size: number;
-            speed: number; offset: number; color: number[];
-            driftX: number; driftY: number;
-          }
-          const stars: Star[] = [];
-          for (let i = 0; i < 140; i++) {
-            let x: number, y: number;
-            do {
-              x = Math.random() * 2 - 1;
-              y = Math.random() * 2 - 1;
-            } while (Math.sqrt(x * x + y * y) < 0.52);
-
-            stars.push({
-              x, y,
-              z: Math.random(),
-              size: Math.random() * 1.5 + 0.2,
-              speed: Math.random() * 0.008 + 0.002,
-              offset: Math.random() * Math.PI * 2,
-              color: starColors[Math.floor(Math.random() * starColors.length)],
-              driftX: (Math.random() - 0.5) * 0.00008,
-              driftY: (Math.random() - 0.5) * 0.00008,
-            });
-          }
-
-          let t = 0;
-          const render = () => {
-            t++;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-
-            for (const star of stars) {
-              star.x += star.driftX;
-              star.y += star.driftY;
-              if (star.x > 1.1) star.x = -1.1;
-              if (star.x < -1.1) star.x = 1.1;
-              if (star.y > 1.1) star.y = -1.1;
-              if (star.y < -1.1) star.y = 1.1;
-
-              const sx = cx + star.x * cx;
-              const sy = cy + star.y * cy;
-              const dist = Math.sqrt((sx - cx) ** 2 + (sy - cy) ** 2);
-              if (dist < Math.min(cx, cy) * 0.48) continue;
-
-              const depth = 0.3 + star.z * 0.7;
-              const sz = star.size * depth;
-              const twinkle = 0.5 + 0.5 * Math.sin(t * star.speed + star.offset);
-              const alpha = twinkle * depth * 0.75;
-              const [r, g, b] = star.color;
-
-              ctx.beginPath();
-              ctx.arc(sx, sy, sz, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-              ctx.fill();
-
-              if (sz > 0.8) {
-                const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, sz * 4);
-                grad.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.25})`);
-                grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
-                ctx.beginPath();
-                ctx.arc(sx, sy, sz * 4, 0, Math.PI * 2);
-                ctx.fillStyle = grad;
-                ctx.fill();
-              }
-            }
-            requestAnimationFrame(render);
-          };
-          render();
-        }}
+        ref={canvasRef}
         className="fixed inset-0 z-[5] pointer-events-none"
       />
 
