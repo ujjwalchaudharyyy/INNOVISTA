@@ -615,13 +615,65 @@ flowchart LR
 
 ## 🚀 Quickstart & Deployment
 
-### Prerequisites
-- Node.js 18.x or higher
-- npm 9.x or higher
+<div align="center">
 
-### Local Development Setup
+![Node](https://img.shields.io/badge/Node.js-18.x+-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![npm](https://img.shields.io/badge/npm-9.x+-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+![Backend](https://img.shields.io/badge/Backend-localhost:5000-22C55E?style=for-the-badge)
+![Frontend](https://img.shields.io/badge/Frontend-localhost:5173-3B82F6?style=for-the-badge)
 
-#### 1. Backend Server Setup
+</div>
+
+### 📋 Prerequisites
+
+<table>
+<tr>
+<td width="50%" align="center">
+
+### 🟢 Node.js
+![Node](https://img.shields.io/badge/Version-18.x_or_higher-43853D?style=flat-square&logo=node.js&logoColor=white)
+
+Check karo: `node -v`
+
+</td>
+<td width="50%" align="center">
+
+### 📦 npm
+![npm](https://img.shields.io/badge/Version-9.x_or_higher-CB3837?style=flat-square&logo=npm&logoColor=white)
+
+Check karo: `npm -v`
+
+</td>
+</tr>
+</table>
+
+### 💻 Local Development Setup
+
+```mermaid
+flowchart LR
+  A["📥 Clone<br/>repo"] --> B["⚙️ Backend<br/>install, db push, seed"] --> C["▶️ Backend runs<br/>port 5000"] --> D["🎨 Frontend<br/>install"] --> E["🚀 Frontend runs<br/>port 5173"]
+
+  classDef s0 fill:#D3D1C7,stroke:#5F5E5A,color:#2C2C2A,stroke-width:1.5px
+  classDef be fill:#9FE1CB,stroke:#0F6E56,color:#04342C,stroke-width:1.5px
+  classDef fe fill:#CECBF6,stroke:#534AB7,color:#26215C,stroke-width:1.5px
+
+  class A s0
+  class B,C be
+  class D,E fe
+```
+
+#### 📥 Step 0: Clone the repository
+
+```bash
+git clone https://github.com/ujjwalchaudharyyy/INNOVISTA.git
+cd INNOVISTA
+```
+
+---
+
+#### ⚙️ Step 1: Backend Server Setup
+![Backend](https://img.shields.io/badge/Express-TypeScript-404D59?style=flat-square&logo=express&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-ORM-3982CE?style=flat-square&logo=prisma&logoColor=white)
+
 ```bash
 # Navigate to server directory
 cd server
@@ -638,9 +690,14 @@ npx tsx prisma/seed.ts
 # Start backend server in development mode
 npm run dev
 ```
-Server will be available at: **`http://localhost:5000`**
 
-#### 2. Frontend Client Setup
+> ✅ **Server will be available at:** [`http://localhost:5000`](http://localhost:5000)
+
+---
+
+#### 🎨 Step 2: Frontend Client Setup
+![React](https://img.shields.io/badge/React-18-20232A?style=flat-square&logo=react&logoColor=61DAFB) ![Vite](https://img.shields.io/badge/Vite-Dev_Server-646CFF?style=flat-square&logo=vite&logoColor=white)
+
 ```bash
 # Open a new terminal and navigate to client directory
 cd client
@@ -651,10 +708,25 @@ npm install
 # Launch Vite development server
 npm run dev
 ```
-Frontend will be available at: **`http://localhost:5173`**
+
+> ✅ **Frontend will be available at:** [`http://localhost:5173`](http://localhost:5173)
 
 ---
 
+### 🎉 You're all set!
+
+<div align="center">
+
+| Service | URL | Status |
+|:---:|:---:|:---:|
+| ⚙️ **Backend API** | `http://localhost:5000` | ![Running](https://img.shields.io/badge/-RUNNING-22C55E?style=flat-square) |
+| 🎨 **Frontend App** | `http://localhost:5173` | ![Running](https://img.shields.io/badge/-RUNNING-22C55E?style=flat-square) |
+
+🔑 Login ke liye [Demo Credentials](#-demo-credentials) use karo.
+
+</div>
+
+---
 ## ☁️ 1-Click Vercel Deployment
 
 <div align="center">
