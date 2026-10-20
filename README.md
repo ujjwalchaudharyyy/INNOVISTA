@@ -151,36 +151,97 @@ User (Browser)               LinkPulse Gateway                Prisma DB         
 
 ## 🚀 Core Capabilities
 
-### 1. Sub-15ms Atomic Hot-Path (`/r/:code`)
-- Highly optimized database transactions ensure atomic click counting with zero race conditions under concurrent spikes.
-- Automated hard-cap enforcement immediately blocks traffic once a link reaches its configured threshold.
-- Temporary or permanent expiry timestamps prevent stale URL forwarding.
+<div align="center">
 
-### 2. Cryptographic Security Barrier (Protected Links)
-- Allows creators to gate sensitive destinations behind a cryptographic password challenge.
-- Displays a branded frosted-glass authentication interstitial before forwarding.
+![Speed](https://img.shields.io/badge/⚡_Speed-Sub--15ms-22C55E?style=for-the-badge)
+![Privacy](https://img.shields.io/badge/🕵️_Privacy-GDPR_Ready-3B82F6?style=for-the-badge)
+![Security](https://img.shields.io/badge/🛡️_Security-Domain_Shield-EF4444?style=for-the-badge)
+![Analytics](https://img.shields.io/badge/📊_Analytics-Real--Time-F59E0B?style=for-the-badge)
 
-### 3. GDPR-Compliant Privacy Telemetry
-- **Zero Raw PII Storage**: Client IP addresses are never saved in plain text. LinkPulse computes a one-way daily-salted `SHA-256(IP + SALT + Date)` hash to calculate distinct unique visitors without tracking users across sessions.
-- User-Agent parser identifies Device Categories (Desktop, Mobile, Tablet, Bot), Operating Systems, and Browser engines for real-time traffic analysis.
+</div>
 
-### 4. Dynamic Vector & Raster QR Studio (`/qr`)
-- Live vector rendering produces high-precision SVG and high-resolution PNG matrices.
-- Embedded campaign scan attribution (`?src=qr`) segments physical scans from direct digital clicks.
+<br/>
 
-### 5. Multi-Channel Campaign Attribution Funnels
-- Organize links into color-coded marketing campaigns (e.g., `Q4 Launch`, `Black Friday`, `Influencer Outreach`).
-- Compare aggregated traffic and conversion performance across distinct distribution channels.
+<table>
+<tr>
+<td width="50%" valign="top">
 
-### 6. High-Speed Bulk CSV Ingestion Matrix
-- Upload multi-column CSV manifests containing thousands of target URLs.
-- Real-time client-side parsing matrix validates syntax, detects duplicate custom aliases, and reports formatting errors before submission.
+### ⚡ 1. Sub-15ms Atomic Hot-Path
+![Route](https://img.shields.io/badge/Route-/r/:code-22C55E?style=flat-square) ![Type](https://img.shields.io/badge/Atomic-Transactions-0F6E56?style=flat-square)
 
-### 7. Automated Domain Shield
-- Platform-wide threat mitigation blocklist prevents malicious domains (phishing, malware, scam URLs) from entering the redirection pipeline.
+- 🧮 Optimized DB transactions give **atomic click counting** with zero race conditions during traffic spikes
+- 🚧 **Hard-cap enforcement** blocks traffic the moment a link hits its limit
+- ⏳ Temporary or permanent **expiry timestamps** stop stale URL forwarding
+
+</td>
+<td width="50%" valign="top">
+
+### 🔐 2. Cryptographic Security Barrier
+![Feature](https://img.shields.io/badge/Protected-Links-8B5CF6?style=flat-square) ![UI](https://img.shields.io/badge/Frosted-Glass_UI-6366F1?style=flat-square)
+
+- 🔑 Gate sensitive destinations behind a **password challenge**
+- 🪟 Branded **frosted-glass interstitial** is shown before forwarding
+- 🛂 Only verified visitors reach the destination
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🕵️ 3. GDPR-Compliant Privacy Telemetry
+![GDPR](https://img.shields.io/badge/GDPR-Compliant-3B82F6?style=flat-square) ![Hash](https://img.shields.io/badge/SHA--256-Daily_Salt-1D4ED8?style=flat-square)
+
+- 🚫 **Zero raw PII storage**: IPs are never saved in plain text
+- 🔒 One-way hash `SHA-256(IP + SALT + Date)` counts **unique visitors** without cross-session tracking
+- 📱 User-Agent parser detects **Desktop, Mobile, Tablet, Bot**, OS and browser engine
+
+</td>
+<td width="50%" valign="top">
+
+### 🔳 4. Dynamic Vector & Raster QR Studio
+![Route](https://img.shields.io/badge/Route-/qr-F59E0B?style=flat-square) ![Format](https://img.shields.io/badge/SVG-+_PNG-D97706?style=flat-square)
+
+- 🎨 Live rendering of high-precision **SVG** and high-resolution **PNG** QR codes
+- 🏷️ Embedded **scan attribution** (`?src=qr`) separates physical scans from digital clicks
+- 📥 Download ready for print or web
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🎯 5. Multi-Channel Campaign Funnels
+![Campaigns](https://img.shields.io/badge/Color--Coded-Campaigns-EC4899?style=flat-square) ![Compare](https://img.shields.io/badge/Channel-Comparison-DB2777?style=flat-square)
+
+- 🗂️ Organize links into campaigns like `Q4 Launch`, `Black Friday`, `Influencer Outreach`
+- 📊 Compare **traffic and conversion** performance across distribution channels
+
+</td>
+<td width="50%" valign="top">
+
+### 📥 6. High-Speed Bulk CSV Ingestion
+![Bulk](https://img.shields.io/badge/Bulk-1000s_of_URLs-14B8A6?style=flat-square) ![Validation](https://img.shields.io/badge/Live-Validation-0D9488?style=flat-square)
+
+- 📄 Upload multi-column CSV files with **thousands of target URLs**
+- ✅ Client-side matrix checks syntax and detects **duplicate aliases**
+- 🧾 Formatting errors are reported **before submission**
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+
+### 🛡️ 7. Automated Domain Shield
+![Shield](https://img.shields.io/badge/Threat-Mitigation-EF4444?style=flat-square) ![Blocklist](https://img.shields.io/badge/Platform--Wide-Blocklist-DC2626?style=flat-square)
+
+- 🚫 Platform-wide blocklist keeps **phishing, malware and scam domains** out of the redirection pipeline
+- 👑 Admins can add malicious domains instantly from the Admin panel
+
+</td>
+</tr>
+</table>
 
 ---
-
 ## 🎙 Multimedia & AI Audio Engine
 
 LinkPulse features an audio and visual presentation layer on the Login and Onboarding views:
