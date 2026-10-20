@@ -187,34 +187,40 @@ flowchart TB
 ```
 ## ⚡ Redirection Sequence & Telemetry Lifecycle
 
-```
-User (Browser)               LinkPulse Gateway                Prisma DB             Destination
-      │                              │                            │                      │
-      │── 1. GET /r/ph-launch ───────►│                            │                      │
-      │                              │── 2. Query Link & Rules ──►│                      │
-      │                              │◄── Return Link Record ─────│                      │
-      │                              │                            │                      │
-      │                              │── 3. Validate Constraints: │                      │
-      │                              │   • Is Link Active?        │                      │
-      │                              │   • Has Link Expired?      │                      │
-      │                              │   • Has Click Cap Hit?     │                      │
-      │                              │   • Is Destination Safe?   │                      │
-      │                              │                            │                      │
-      │                              │── 4. Atomic Increment ────►│                      │
-      │                              │   & Asynchronous Telemetry:│                      │
-      │                              │   • Hash IP: SHA256(IP+Day)│                      │
-      │                              │   • Parse UA: Device/OS    │                      │
-      │                              │   • Track Country/Referrer │                      │
-      │                              │                            │                      │
-      │◄── 5. HTTP 302 Found ────────│                            │                      │
-      │       Location: destination  │                            │                      │
-      │                              │                            │                      │
-      │──────────────────────────────┼────────────────────────────┼─────────────────────►│
-      │                              │                            │    Follow 302        │
-```
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as 👤 User Browser
+  participant G as ⚡ LinkPulse Gateway
+  participant D as 🗄️ Prisma DB
+  participant T as 🌍 Destination
 
----
+  U->>G: GET /r/ph-launch
+  G->>D: Query link and rules
+  D-->>G: Return link record
 
+  rect rgb(250, 238, 218)
+    Note over G: 🛡️ Validate constraints
+    Note over G: ✅ Is link active?
+    Note over G: ⏳ Has link expired?
+    Note over G: 🚧 Has click cap hit?
+    Note over G: 🔍 Is destination safe?
+  end
+
+  rect rgb(225, 245, 238)
+    G->>D: Atomic increment
+    Note over G,D: 📡 Asynchronous telemetry
+    Note over G,D: 🔒 Hash IP: SHA256 of IP plus Day
+    Note over G,D: 📱 Parse UA: Device and OS
+    Note over G,D: 🌎 Track Country and Referrer
+  end
+
+  G-->>U: HTTP 302 Found, Location: destination
+
+  rect rgb(230, 241, 251)
+    U->>T: Follow 302 🚀
+  end
+```
 ## 🚀 Core Capabilities
 
 <div align="center">
