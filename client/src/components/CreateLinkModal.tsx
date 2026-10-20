@@ -556,27 +556,38 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClos
         )}
 
         {/* STEP 3: Success Result */}
+        {/* STEP 3: Success Result */}
         {step === 3 && createdLink && (
-          <div className="space-y-5 pt-5 text-center">
-            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 flex items-center justify-center mx-auto text-2xl">
-              ✓
+          <div className="space-y-4 pt-4 text-center">
+            <div className="h-12 w-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 flex items-center justify-center mx-auto text-xl font-bold">
+              ?
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Your Short Link is Live!</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Ready for campaigns, social shares, and QR codes.</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Your Short Link is Ready!</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Short link redirects instantly to your destination.</p>
             </div>
 
-            <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
-              <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400 font-semibold truncate text-left">{fullShortUrl}</span>
-              <button
-                onClick={copyToClipboard}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition shrink-0 cursor-pointer"
-              >
-                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                <span>{copied ? "Copied" : "Copy"}</span>
-              </button>
-            </div>
+            {/* Generated Short Link & Destination Display */}
+            <div className="space-y-2 text-left">
+              <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shadow-xs">
+                <div className="min-w-0">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Shortened Link</div>
+                  <span className="font-mono text-sm text-indigo-600 dark:text-cyan-400 font-bold truncate block">{fullShortUrl}</span>
+                </div>
+                <button
+                  onClick={copyToClipboard}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shrink-0 cursor-pointer shadow-md shadow-indigo-600/30 active:scale-95"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  <span>{copied ? "Copied!" : "Copy"}</span>
+                </button>
+              </div>
 
+              <div className="px-3 py-2 rounded-lg bg-slate-200/50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+                <span className="truncate">Destination: <strong className="text-slate-800 dark:text-slate-200 font-mono text-[11px]">{createdLink.originalUrl}</strong></span>
+                <span className="text-[10px] text-emerald-500 font-bold shrink-0 ml-2">? Verified Route</span>
+              </div>
+            </div>
             {/* Quick 1-Click Social Share */}
             <div className="pt-1">
               <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">

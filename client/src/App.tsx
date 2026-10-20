@@ -44,10 +44,8 @@ export const App: React.FC = () => {
     return saved ? saved === "dark" : true;
   });
   const [refreshKey, setRefreshKey] = useState(0);
-  const [showIntro, setShowIntro] = useState<boolean>(() => {
-    // Show intro only once per browser session (resets on tab close)
-    return !sessionStorage.getItem("linkpulse_intro_seen");
-  });
+  // Always start with 4K Welcome Video on every visit
+  const [showIntro, setShowIntro] = useState<boolean>(true);
 
   useEffect(() => {
     if (isDark) {
@@ -78,16 +76,6 @@ export const App: React.FC = () => {
   }
 
   if (!user) {
-    if (showIntro) {
-      return (
-        <IntroVideoPage
-          onComplete={() => {
-            sessionStorage.setItem("linkpulse_intro_seen", "1");
-            setShowIntro(false);
-          }}
-        />
-      );
-    }
     return <LoginPage onWatchIntro={() => setShowIntro(true)} />;
   }
 
