@@ -31,7 +31,7 @@ https://innovista-black.vercel.app/
 https://drive.google.com/file/d/1Xu_WUUwz6HMP2dZkR6-R-k0KauUAfkcz/view?usp=drive_link
 
 
-# Prototype ~ 
+# Login Page ~ 
 
 <img width="1911" height="1002" alt="image" src="https://github.com/user-attachments/assets/07b7e325-ce5a-4ace-b2be-9adc31a5a901" />
 
