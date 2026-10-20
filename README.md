@@ -336,6 +336,11 @@ Pre-seeded authentication credentials for platform evaluation:
 
 ---
 
+## Local Setup !
+
+<img width="942" height="592" alt="image" src="https://github.com/user-attachments/assets/34e2485b-d3d0-418d-82ec-ad8f321085aa" />
+
+
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
