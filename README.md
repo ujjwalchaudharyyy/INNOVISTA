@@ -244,18 +244,93 @@ User (Browser)               LinkPulse Gateway                Prisma DB         
 ---
 ## 🎙 Multimedia & AI Audio Engine
 
-LinkPulse features an audio and visual presentation layer on the Login and Onboarding views:
+<div align="center">
 
-| Feature | Technical Implementation | Behavior |
-| :--- | :--- | :--- |
-| **4K Cosmic Background** | Native HTML5 Video Canvas with hardware-accelerated CSS filters (`contrast`, `saturate`, `brightness`). | Continuous seamless loop with trailing 3-second auto-trim. |
-| **Trap Beat Looper** | Custom HTML5 Audio Engine (`/bg-music.mp3`). | Auto-loops continuously; precision 40ms interval crops last 3 seconds to maintain tight rhythm. |
-| **Autonomous AI Voice** | Browser Web Speech API (`SpeechSynthesisUtterance`). | Synthesizes calm AI narration (rate `0.95`, pitch `0.92`) introducing LinkPulse capabilities 3 seconds after music starts. |
-| **Smart Audio Ducking** | Dynamic gain & volume scaling (`0.38` ➔ `0.16`). | Reduces music volume during AI narration so voice output remains crystal clear. |
-| **Sound State Protection** | Memory-backed `isMutedRef` + gesture event lifecycle. | Guarantees clicking "Sound Off" cleanly stops playback and prevents accidental auto-resumption. |
+![Video](https://img.shields.io/badge/🌌_4K_Video-Cosmic_Loop-6366F1?style=for-the-badge)
+![Audio](https://img.shields.io/badge/🎵_Audio-Trap_Beat-EC4899?style=for-the-badge)
+![Voice](https://img.shields.io/badge/🤖_AI_Voice-Web_Speech_API-22C55E?style=for-the-badge)
+![Ducking](https://img.shields.io/badge/🔉_Smart-Ducking-F59E0B?style=for-the-badge)
+
+*LinkPulse ke **Login** aur **Onboarding** views mein ek immersive audio-visual layer hai.*
+
+</div>
+
+### 🔄 How it works
+
+```mermaid
+flowchart LR
+  A["🌌 Login opens<br/>4K video loops"] --> B["🎵 Beat starts<br/>Music loop"]
+  B -->|"after 3 sec"| C["🤖 AI voice intro<br/>LinkPulse capabilities"]
+  C --> D["🔉 Smart ducking<br/>0.38 to 0.16"]
+
+  classDef video fill:#CECBF6,stroke:#534AB7,color:#26215C,stroke-width:1.5px
+  classDef music fill:#F4C0D1,stroke:#993556,color:#4B1528,stroke-width:1.5px
+  classDef voice fill:#9FE1CB,stroke:#0F6E56,color:#04342C,stroke-width:1.5px
+  classDef duck fill:#FAC775,stroke:#854F0B,color:#412402,stroke-width:1.5px
+
+  class A video
+  class B music
+  class C voice
+  class D duck
+```
+
+### 🧩 Feature breakdown
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### 🌌 4K Cosmic Background
+![HTML5](https://img.shields.io/badge/HTML5-Video_Canvas-E34F26?style=flat-square&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS-Filters-1572B6?style=flat-square&logo=css3&logoColor=white)
+
+- 🛠️ **Tech:** Native HTML5 Video Canvas with hardware-accelerated CSS filters (`contrast`, `saturate`, `brightness`)
+- ✨ **Behavior:** Continuous seamless loop with trailing **3-second auto-trim**
+
+</td>
+<td width="50%" valign="top">
+
+#### 🎵 Trap Beat Looper
+![Audio](https://img.shields.io/badge/HTML5-Audio_Engine-EC4899?style=flat-square) ![File](https://img.shields.io/badge/File-bg--music.mp3-DB2777?style=flat-square)
+
+- 🛠️ **Tech:** Custom HTML5 Audio Engine (`/bg-music.mp3`)
+- ✨ **Behavior:** Auto-loops continuously, with a precision **40ms interval** that crops the last 3 seconds to keep the rhythm tight
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+#### 🤖 Autonomous AI Voice
+![API](https://img.shields.io/badge/Web_Speech-API-22C55E?style=flat-square) ![Rate](https://img.shields.io/badge/rate-0.95-16A34A?style=flat-square) ![Pitch](https://img.shields.io/badge/pitch-0.92-15803D?style=flat-square)
+
+- 🛠️ **Tech:** Browser Web Speech API (`SpeechSynthesisUtterance`)
+- ✨ **Behavior:** Calm AI narration introducing LinkPulse capabilities **3 seconds after the music starts**
+
+</td>
+<td width="50%" valign="top">
+
+#### 🔉 Smart Audio Ducking
+![Gain](https://img.shields.io/badge/Volume-0.38_→_0.16-F59E0B?style=flat-square) ![Mode](https://img.shields.io/badge/Dynamic-Gain_Scaling-D97706?style=flat-square)
+
+- 🛠️ **Tech:** Dynamic gain and volume scaling (`0.38` ➔ `0.16`)
+- ✨ **Behavior:** Music volume drops during AI narration so the voice stays **crystal clear**
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+
+#### 🔇 Sound State Protection
+![Ref](https://img.shields.io/badge/Memory--backed-isMutedRef-3B82F6?style=flat-square) ![Events](https://img.shields.io/badge/Gesture-Event_Lifecycle-1D4ED8?style=flat-square)
+
+- 🛠️ **Tech:** Memory-backed `isMutedRef` plus gesture event lifecycle
+- ✨ **Behavior:** Clicking **"Sound Off"** cleanly stops playback and prevents accidental auto-resumption
+
+</td>
+</tr>
+</table>
 
 ---
-
 ## 🛠 Tech Stack Specification
 
 ### Frontend
